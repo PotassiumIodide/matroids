@@ -1,3 +1,5 @@
 __pycache__
+.venv
+venv
 .pytest_cache
-# .envrc # 環境変数にパスワード等を設定する場合必ずコメントアウトを外す
+# .envrc # Remember to remove `#` if you set kind of passwords as envrironment variables.
