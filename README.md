@@ -79,3 +79,11 @@ $ deactivate
 > source .venv/bin/activate
 > ```
 > For now, there is already `.envrc` but it may be removed for security reasons. 
+
+### 4. Import Packages
+
+You need to import packages, and so after making sure that the virtual environment has been activated, run:
+
+```bash
+$ python -m pip install -r requirements.txt
+```
