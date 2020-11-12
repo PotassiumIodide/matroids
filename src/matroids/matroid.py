@@ -31,6 +31,8 @@ class Matroid(Generic[T]):
             return construct.indeps_from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
             return construct.indeps_from_rank_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
+            return construct.indeps_from_closure_matroid((self.__first, self.__second))
         # TODO: Implement the other constructions from other axioms
         else:
             raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
