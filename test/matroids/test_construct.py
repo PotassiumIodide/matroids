@@ -12,14 +12,17 @@ from src.matroids.construct import (
     deps_from_bases_matroid,
     deps_from_circuits_matroid,
     deps_from_rank_matroid,
+    deps_from_closure_matroid,
     bases_from_indeps_matroid,
     bases_from_deps_matroid,
     bases_from_circuits_matroid,
     bases_from_rank_matroid,
+    bases_from_closure_matroid,
     circuits_from_indeps_matroid,
     circuits_from_deps_matroid,
     circuits_from_bases_matroid,
     circuits_from_rank_matroid,
+    circuits_from_closure_matroid,
     rank_function_from_indeps_matroid,
     rank_function_from_deps_matroid,
     rank_function_from_bases_matroid,
@@ -178,6 +181,22 @@ def test_deps_from_rank_matroid(rank_matroid, expected):
     assert all(map(lambda D1: D1 in Ds2, Ds1)) and all(map(lambda D2: D2 in Ds1, Ds2))
 
 
+@pytest.mark.parametrize('closure_matroid, expected', [
+    (( {1,2,3}, lambda X: {1,2,3} )                      , [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}]       ),
+    (( {1,2,3}, lambda X: {1,2,3} if 1 in X else {2,3} ) , [{2},{3},{1,2},{1,3},{2,3},{1,2,3}]           ),
+    (( {1,2,3}, lambda X: {3} if X <= {3} else {1,2,3} ) , [{3},{1,2},{1,3},{2,3},{1,2,3}]               ),
+    (( {1,2,3}, lambda X: {1,2,3} if X else X )          , [{1,2},{1,3},{2,3},{1,2,3}]                   ),
+    (( {1,2,3}, lambda X: X | {3} )                      , [{3},{1,3},{2,3},{1,2,3}]                     ),
+    (( {1,2,3}, lambda X: X if X <= {1} else X | {2,3} ) , [{2,3},{1,2,3}]                               ),
+    (( {1,2,3}, lambda X: X if len(X) <= 1 else {1,2,3} ), [{1,2,3}]                                     ),
+    (( {1,2,3}, lambda X: X )                            , []                                            ),
+])
+def test_deps_from_closure_matroid(closure_matroid, expected):
+    Ds1 = deps_from_closure_matroid(closure_matroid)
+    Ds2 = expected
+    assert all(map(lambda D1: D1 in Ds2, Ds1)) and all(map(lambda D2: D2 in Ds1, Ds2))
+
+
 @pytest.mark.parametrize('indeps_matroid, expected', [
     (( {1,2,3}, [set()] )                                      , [set()]             ),
     (( {1,2,3}, [set(),{1}] )                                  , [{1}]               ),
@@ -242,6 +261,23 @@ def test_bases_from_rank_matroid(rank_matroid, expected):
     assert all(map(lambda B1: B1 in Bs2, Bs1)) and all(map(lambda B2: B2 in Bs1, Bs2))
 
 
+
+@pytest.mark.parametrize('closure_matroid, expected', [
+    (( {1,2,3}, lambda X: {1,2,3} )                      , [set()]             ),
+    (( {1,2,3}, lambda X: {1,2,3} if 1 in X else {2,3} ) , [{1}]               ),
+    (( {1,2,3}, lambda X: {3} if X <= {3} else {1,2,3} ) , [{1},{2}]           ),
+    (( {1,2,3}, lambda X: {1,2,3} if X else X )          , [{1},{2},{3}]       ),
+    (( {1,2,3}, lambda X: X | {3} )                      , [{1,2}]             ),
+    (( {1,2,3}, lambda X: X if X <= {1} else X | {2,3} ) , [{1,2},{1,3}]       ),
+    (( {1,2,3}, lambda X: X if len(X) <= 1 else {1,2,3} ), [{1,2},{1,3},{2,3}] ),
+    (( {1,2,3}, lambda X: X )                            , [{1,2,3}]           ),
+])
+def test_bases_from_closure_matroid(closure_matroid, expected):
+    Bs1 = bases_from_closure_matroid(closure_matroid)
+    Bs2 = expected
+    assert all(map(lambda B1: B1 in Bs2, Bs1)) and all(map(lambda B2: B2 in Bs1, Bs2))
+
+
 @pytest.mark.parametrize('indeps_matroid, expected', [
     (( {1,2,3}, [set()] )                                      , [{1},{2},{3}]       ),
     (( {1,2,3}, [set(),{1}] )                                  , [{2},{3}]           ),
@@ -302,6 +338,22 @@ def test_circuits_from_bases_matroid(bases_matroid, expected):
 ])
 def test_circuits_from_rank_matroid(rank_matroid, expected):
     Cs1 = circuits_from_rank_matroid(rank_matroid)
+    Cs2 = expected
+    assert all(map(lambda C1: C1 in Cs2, Cs1)) and all(map(lambda C2: C2 in Cs1, Cs2))
+
+
+@pytest.mark.parametrize('closure_matroid, expected', [
+    (( {1,2,3}, lambda X: {1,2,3} )                      , [{1},{2},{3}]                                 ),
+    (( {1,2,3}, lambda X: {1,2,3} if 1 in X else {2,3} ) , [{2},{3}]                                     ),
+    (( {1,2,3}, lambda X: {3} if X <= {3} else {1,2,3} ) , [{3},{1,2}]                                   ),
+    (( {1,2,3}, lambda X: {1,2,3} if X else X )          , [{1,2},{1,3},{2,3}]                           ),
+    (( {1,2,3}, lambda X: X | {3} )                      , [{3}]                                         ),
+    (( {1,2,3}, lambda X: X if X <= {1} else X | {2,3} ) , [{2,3}]                                       ),
+    (( {1,2,3}, lambda X: X if len(X) <= 1 else {1,2,3} ), [{1,2,3}]                                     ),
+    (( {1,2,3}, lambda X: X )                            , []                                            ),
+])
+def test_circuits_from_closure_matroid(closure_matroid, expected):
+    Cs1 = circuits_from_closure_matroid(closure_matroid)
     Cs2 = expected
     assert all(map(lambda C1: C1 in Cs2, Cs1)) and all(map(lambda C2: C2 in Cs1, Cs2))
 
