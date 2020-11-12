@@ -330,6 +330,19 @@ def rank_function_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) ->
     return rank_function_from_indeps_matroid((E, indeps_from_circuits_matroid(matroid)))
 
 
+def rank_function_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> Callable[[set[T]], int]:
+    """Construct a rank function from a matroid defined by circuits.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], set[T]]]): A matroid defined by a closure function.
+
+    Returns:
+        Callable[[set[T]], int]: The rank function of a given matroid.
+    """
+    E, _ = matroid
+    return rank_function_from_circuits_matroid((E, circuits_from_closure_matroid(matroid)))
+
+
 def closure_function_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
     """Construct a closure function from a matroid defined by independent sets.
 
