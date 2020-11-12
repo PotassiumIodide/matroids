@@ -59,6 +59,20 @@ def indeps_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) ->
     return [I for I in powset(E) if r(I) == len(I)]
 
 
+def indeps_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
+    """Construct independent sets from a matroid defined by a closure function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], int]]): A matroid defined by a closure function.
+
+    Returns:
+        list[set[T]]: The independent sets of a given matroid.
+    """
+    E, cl = matroid
+    # Is = { I ⊆ E : i ∈ cl(I - i), ∀i ∈ I }
+    return [I for I in powset(E) if all(map(lambda i: i not in cl(I - {i}), I))]
+
+
 def deps_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct dependent sets from a matroid defined by dependent sets.
 
