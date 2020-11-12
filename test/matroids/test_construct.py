@@ -177,7 +177,6 @@ def test_deps_from_circuits_matroid(circuits_matroid, expected):
 def test_deps_from_rank_matroid(rank_matroid, expected):
     Ds1 = deps_from_rank_matroid(rank_matroid)
     Ds2 = expected
-    print(Ds1, Ds2)
     assert all(map(lambda D1: D1 in Ds2, Ds1)) and all(map(lambda D2: D2 in Ds1, Ds2))
 
 
@@ -508,6 +507,4 @@ def test_closure_function_from_rank_matroid(rank_matroid, expected):
     E, _ = rank_matroid
     cl1 = closure_function_from_rank_matroid(rank_matroid)
     cl2 = expected
-    for X in powset(E):
-        print(cl1(X), cl2(X))
     assert all(cl1(X) == cl2(X) for X in powset(E))

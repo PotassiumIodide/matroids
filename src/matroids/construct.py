@@ -378,8 +378,9 @@ def closure_function_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]])
     Returns:
         Callable[[set[T]], set[T]]: The closure function of a given matroid.
     """
-    E, _ = matroid
-    return closure_function_from_rank_matroid((E, rank_function_from_circuits_matroid(matroid)))
+    E, Cs = matroid
+    # cl(X) = X ∪ { e ∈ E : ∃C ∈ Cs s.t. e ∈ C ⊆ X ∪ {e} }
+    return lambda X: X | { e for e in E if any(map(lambda C: e in C and C <= X | {e}, Cs))}
 
 
 def closure_function_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> Callable[[set[T]], set[T]]:
