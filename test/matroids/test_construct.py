@@ -35,6 +35,8 @@ from src.matroids.construct import (
     closure_function_from_rank_matroid,
     closure_function_from_flats_matroid,
     flats_from_closure_matroid,
+    flats_from_open_sets_matroid,
+    open_sets_from_flats_matroid,
 )
 
 
@@ -561,3 +563,35 @@ def test_flats_from_closure_matroid(closure_matroid, expected):
     Fs1 = flats_from_closure_matroid(closure_matroid)
     Fs2 = expected
     assert all(map(lambda F1: F1 in Fs2, Fs1)) and all(map(lambda F2: F2 in Fs1, Fs2))
+
+
+@pytest.mark.parametrize('open_sets_matroid, expected', [
+    (( {1,2,3}, [set()] )                                      , [{1,2,3}]                                     ),
+    (( {1,2,3}, [set(),{1}] )                                  , [{2,3},{1,2,3}]                               ),
+    (( {1,2,3}, [set(),{1,2}] )                                , [{3},{1,2,3}]                                 ),
+    (( {1,2,3}, [set(),{1,2,3}] )                              , [set(),{1,2,3}]                               ),
+    (( {1,2,3}, [set(),{1},{2},{1,2}] )                        , [{3},{1,3},{2,3},{1,2,3}]                     ),
+    (( {1,2,3}, [set(),{1},{2,3},{1,2,3}] )                    , [set(),{1},{2,3},{1,2,3}]                     ),
+    (( {1,2,3}, [set(),{1,2},{1,3},{2,3},{1,2,3}] )            , [set(),{1},{2},{3},{1,2,3}]                   ),
+    (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
+])
+def test_flats_from_open_sets_matroid(open_sets_matroid, expected):
+    Fs1 = flats_from_open_sets_matroid(open_sets_matroid)
+    Fs2 = expected
+    assert all(map(lambda F1: F1 in Fs2, Fs1)) and all(map(lambda F2: F2 in Fs1, Fs2))
+
+
+@pytest.mark.parametrize('flats_matroid, expected', [
+    (( {1,2,3}, [{1,2,3}]                                     ), [set()]                                       ),
+    (( {1,2,3}, [{2,3},{1,2,3}]                               ), [set(),{1}]                                   ),
+    (( {1,2,3}, [{3},{1,2,3}]                                 ), [set(),{1,2}]                                 ),
+    (( {1,2,3}, [set(),{1,2,3}]                               ), [set(),{1,2,3}]                               ),
+    (( {1,2,3}, [{3},{1,3},{2,3},{1,2,3}]                     ), [set(),{1},{2},{1,2}]                         ),
+    (( {1,2,3}, [set(),{1},{2,3},{1,2,3}]                     ), [set(),{1},{2,3},{1,2,3}]                     ),
+    (( {1,2,3}, [set(),{1},{2},{3},{1,2,3}]                   ), [set(),{1,2},{1,3},{2,3},{1,2,3}]             ),
+    (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
+])
+def test_open_sets_from_flats_matroid(flats_matroid, expected):
+    Os1 = open_sets_from_flats_matroid(flats_matroid)
+    Os2 = expected
+    assert all(map(lambda O1: O1 in Os2, Os1)) and all(map(lambda O2: O2 in Os1, Os2))

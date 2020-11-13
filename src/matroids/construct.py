@@ -440,3 +440,31 @@ def flats_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]
     E, cl = matroid
     # Fs = { F ⊆ E | cl(F) = F }
     return [F for F in powset(E) if cl(F) == F]
+
+
+def flats_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct flats from a matroid defined by open sets.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by open sets.
+
+    Returns:
+        list[set[T]]: The flats of a given matroid.
+    """
+    E, Os = matroid
+    # Fs = { E - O : O ∈ Os }
+    return [ E - O for O in Os ]
+
+
+def open_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct open sets from a matroid defined by flats
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by flats
+
+    Returns:
+        list[set[T]]: The open sets of a given matroid.
+    """
+    E, Fs = matroid
+    # Os = { E - F : F ∈ Fs }
+    return [E - F for F in Fs]
