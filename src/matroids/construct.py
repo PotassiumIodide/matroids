@@ -188,8 +188,9 @@ def bases_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> 
     Returns:
         list[set[T]]: The bases of a given matroid.
     """
-    E, _ = matroid
-    return bases_from_indeps_matroid((E, indeps_from_rank_matroid(matroid)))
+    E, r = matroid
+    # Bs = { B ⊆ E : |B| = r(B) = r(E) }
+    return [B for B in powset(E) if (len(B) == r(B)) and (len(B) == r(E)) ]
 
 
 def bases_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> list[set[T]]:
