@@ -208,6 +208,20 @@ def bases_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]
     return bases_from_indeps_matroid((E, indeps_from_closure_matroid(matroid)))
 
 
+def bases_from_spanning_sets_matroid(matroid: tuple[set[T],list[set[T]]]) -> list[set[T]]:
+    """Construct bases from a matroid defined by spanning sets.
+
+    Args:
+        matroid (tuple[set[T],list[set[T]]]): A matroid defined by spanning sets.
+
+    Returns:
+        list[set[T]]: The bases of a given matroid.
+    """
+    E, Ss = matroid
+    # Bs: The minimal set of Ss.
+    return [B for B in Ss if all(map(lambda S: not S < B, Ss))]
+
+
 def circuits_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct circuits from a matroid defined by independent sets.
 

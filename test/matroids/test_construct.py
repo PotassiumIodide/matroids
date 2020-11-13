@@ -18,6 +18,7 @@ from src.matroids.construct import (
     bases_from_circuits_matroid,
     bases_from_rank_matroid,
     bases_from_closure_matroid,
+    bases_from_spanning_sets_matroid,
     circuits_from_indeps_matroid,
     circuits_from_deps_matroid,
     circuits_from_bases_matroid,
@@ -280,6 +281,22 @@ def test_bases_from_rank_matroid(rank_matroid, expected):
 ])
 def test_bases_from_closure_matroid(closure_matroid, expected):
     Bs1 = bases_from_closure_matroid(closure_matroid)
+    Bs2 = expected
+    assert all(map(lambda B1: B1 in Bs2, Bs1)) and all(map(lambda B2: B2 in Bs1, Bs2))
+
+
+@pytest.mark.parametrize('spanning_sets_matroid, expected', [
+    (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), [set()]             ),
+    (( {1,2,3}, [{1},{1,2},{1,3},{1,2,3}] )                    , [{1}]               ),
+    (( {1,2,3}, [{1},{2},{1,2},{1,3},{2,3},{1,2,3}] )          , [{1},{2}]           ),
+    (( {1,2,3}, [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] )      , [{1},{2},{3}]       ),
+    (( {1,2,3}, [{1,2},{1,2,3}] )                              , [{1,2}]             ),
+    (( {1,2,3}, [{1,2},{1,3},{1,2,3}] )                        , [{1,2},{1,3}]       ),
+    (( {1,2,3}, [{1,2},{1,3},{2,3},{1,2,3}] )                  , [{1,2},{1,3},{2,3}] ),
+    (( {1,2,3}, [{1,2,3}] )                                    , [{1,2,3}]           ),
+])
+def test_bases_from_spanning_sets_matroid(spanning_sets_matroid, expected):
+    Bs1 = bases_from_spanning_sets_matroid(spanning_sets_matroid)
     Bs2 = expected
     assert all(map(lambda B1: B1 in Bs2, Bs1)) and all(map(lambda B2: B2 in Bs1, Bs2))
 
