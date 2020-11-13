@@ -6,7 +6,8 @@ from .checker import (
     satisfies_bases_axiom,
     satisfies_circuits_axiom,
     satisfies_rank_function_axiom,
-    satisfies_closure_axiom
+    satisfies_closure_axiom,
+    satisfies_open_sets_axiom,
 )
 from .exception import MatroidAxiomError
 from .types import MatroidAxiom
@@ -23,6 +24,7 @@ def validate_matroid_axiom(func):
             axiom is MatroidAxiom.CIRCUITS         and not satisfies_circuits_axiom(maybe_matroid),
             axiom is MatroidAxiom.RANK_FUNCTION    and not satisfies_rank_function_axiom(maybe_matroid),
             axiom is MatroidAxiom.CLOSURE_FUNCTION and not satisfies_closure_axiom(maybe_matroid),
+            axiom is MatroidAxiom.OPEN_SETS        and not satisfies_open_sets_axiom(maybe_matroid),
         ]):
             raise MatroidAxiomError(f"The given family doesn't satisfy {axiom.value}!")
 
@@ -92,6 +94,17 @@ def validate_closure_function(func):
     def __wrapper(*args, **kwargs):
         if not satisfies_closure_axiom(args[0]):
             raise MatroidAxiomError("The given family doesn't satisfy the axiom of Closure Function!")
+        return func(*args, **kwargs)
+    
+    return __wrapper
+
+
+def validate_closure_function(func):
+
+    @wraps(func)
+    def __wrapper(*args, **kwargs):
+        if not satisfies_open_sets_axiom(args[0]):
+            raise MatroidAxiomError("The given family doesn't satisfy the axiom of Open Sets!")
         return func(*args, **kwargs)
     
     return __wrapper

@@ -7,6 +7,7 @@ from src.matroids.checker import (
     satisfies_circuits_axiom,
     satisfies_rank_function_axiom,
     satisfies_closure_axiom,
+    satisfies_open_sets_axiom,
 )
 
 
@@ -93,15 +94,6 @@ def test_satisfies_rank_function_axiom(maybe_matroid, expected):
 
 
 # functions for checking the closure axiom.
-def cl(x: set[int]) -> set[int]:
-    if x in [set(), {1}]:
-        return x
-    elif x in [{2}, {3}, {2, 3}]:
-        return {2, 3}
-    else:
-        return {1, 2, 3}
-
-
 def ncl1(x: set[int]) -> set[int]:
     if x == {1,2,3} or not x:
         return set()
@@ -126,7 +118,6 @@ def ncl2(x: set[int]) -> set[int]:
     (( {1, 2, 3}, lambda x: x                               ),  True),
     (( {1, 2, 3}, lambda x: x if len(x) <= 1 else {1, 2, 3} ),  True),
     (( {1, 2, 3}, lambda x: {1, 2, 3} if x else x           ),  True),
-    (( {1, 2, 3}, cl                                        ),  True),
     (( set()    , lambda x: x                               ),  True),
     (( {1, 2, 3}, lambda x: x if x else {1, 2, 3}           ), False),
     (( {1, 2, 3}, lambda x: {1}                             ), False),
@@ -136,3 +127,20 @@ def ncl2(x: set[int]) -> set[int]:
 ])
 def test_satisfies_closure_function_axiom(maybe_matroid, expected):
     assert satisfies_closure_axiom(maybe_matroid) == expected
+
+
+@pytest.mark.parametrize('maybe_matroid, expected', [
+    (( {1,2,3}, [set()] )                                      , True ),
+    (( {1,2,3}, [set(),{1}] )                                  , True ),
+    (( {1,2,3}, [set(),{1,2}] )                                , True ),
+    (( {1,2,3}, [set(),{1,2,3}] )                              , True ),
+    (( {1,2,3}, [set(),{1},{2},{1,2}] )                        , True ),
+    (( {1,2,3}, [set(),{1},{2,3},{1,2,3}] )                    , True ),
+    (( {1,2,3}, [set(),{1,2},{1,3},{2,3},{1,2,3}] )            , True ),
+    (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), True ),
+    (( {1,2,3}, [set(),{1,3},{2,3}] )                          , False),
+    (( {1,2,3}, [set(),{1},{1,2},{1,2,3}] )                    , False),
+    (( {4,5,6}, [set(),{1},{2},{1,2}] )                        , False),
+])
+def test_satisfies_open_sets_axiom(maybe_matroid, expected):
+    assert satisfies_open_sets_axiom(maybe_matroid) == expected

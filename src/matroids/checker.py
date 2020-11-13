@@ -284,3 +284,46 @@ def satisfies_flats_axiom( maybe_matroid                        : tuple[set[T], 
             pass
     
     return True
+
+
+def satisfies_open_sets_axiom( maybe_matroid          : tuple[set[T], list[set[T]]]
+                             , clearly_has_emptyset   : bool=False
+                             , clearly_closed_by_union: bool=False
+                             , clearly_exists_another : bool=False) -> bool:
+    """Judge whether the given pair of a ground set and a collection of subsets is a matroid.
+    This is done due to the axiom of open sets.
+
+    Args:
+        maybe_matroid (tuple[set[T], list[set[T]]]): A tuple (E, Os), where E is a ground set and Os is a family of subsets of E.
+        clearly_has_emptyset (bool, optional)   : If this is True, the check of (O1) will be skipped. Defaults to False.
+        clearly_closed_by_union (bool, optional): If this is True, the check of (O2) will be skipped. Defaults to False.
+        clearly_exists_another (bool, optional) : If this is True, the check of (O3) will be skipped. Defaults to False.
+
+    Returns:
+        bool: True if the given family satisfies the axiom of open sets, False otherwise.
+    """
+    E, Os = maybe_matroid
+
+    # [Prerequisits] O ∈ Os => O ⊆ E
+    if not all(map(lambda O: O <= E, Os)):
+        return False
+
+    # (O1) ∅ ∈ Os
+    if (not clearly_has_emptyset) and (set() not in Os):
+        print("Hey")
+        return False
+    
+    # (O2) O1, O2 ∈ Os => O1 ∪ O2 ∈ Os
+    if not clearly_closed_by_union:
+        for (O1, O2) in combinations(Os, 2):
+            if O1 | O2 not in Os:
+                return False
+    
+    # (O3) ∀O1, O2 ∈ Os, ∀o ∈ O1 ∩ O2, ∃O3 ∈ Os s.t. (O1 ∪ O2)\(O1 ∩ O2) ⊆ O3 ⊊ (O1 ∪ O2)\{o}
+    if not clearly_exists_another:
+        for O1, O2 in combinations(Os, 2):
+            for o in O1 & O2:
+                if not any(map(lambda O3: ((O1 | O2) - (O1 & O2)) <= O3 < (O1 | O2 - {o}), Os)):
+                    return False
+    return True
+
