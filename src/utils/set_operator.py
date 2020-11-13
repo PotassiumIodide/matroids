@@ -25,12 +25,7 @@ def is_minimal(someset: set[T], set_collection: list[set[T]]) -> bool:
     Returns:
         bool: True if the given set is minimal, otherwise False
     """
-    for s in set_collection:
-        if s == someset or not s:
-            continue
-        elif s <= someset:
-            return False
-    return True
+    return bool(someset) and all(map(lambda X: (X == set()) or not (X < someset), set_collection))
 
 
 def find_minimal_sets(set_collection: list[set[T]]) -> list[set[T]]:
@@ -42,7 +37,7 @@ def find_minimal_sets(set_collection: list[set[T]]) -> list[set[T]]:
     Returns:
         list[set[T]]: All of the minimal sets in the given collection of sets.
     """
-    return [s for s in set_collection if is_minimal(s, set_collection) and s]
+    return [s for s in set_collection if is_minimal(s, set_collection)]
 
 
 def is_maximal(someset: set[T], set_collection: list[set[T]]) -> bool:
@@ -55,12 +50,7 @@ def is_maximal(someset: set[T], set_collection: list[set[T]]) -> bool:
     Returns:
         bool: True if the given set is maximal, otherwise False
     """
-    for s in set_collection:
-        if s == someset or not s:
-            continue
-        elif someset <= s:
-            return False
-    return True
+    return all(map(lambda X: not (someset < X), set_collection))
 
 
 def find_maximal_sets(set_collection: list[set[T]]) -> list[set[T]]:
@@ -73,3 +63,18 @@ def find_maximal_sets(set_collection: list[set[T]]) -> list[set[T]]:
         list[set[T]]: All of the minimal sets in the given collection of sets.
     """
     return [s for s in set_collection if is_maximal(s, set_collection)]
+
+
+infinite = 99999999
+# α(M)を求めるための関数
+def _search_node(setE={}, setU=[{}], setS={}, num=0, d=0, length=0):
+    ans = [infinite]
+    if d >= length:
+        return infinite
+    for i in range(d, length):
+        if (setU[i] - setS) != set():  # setSにない要素がある=>必ずsetEの要素
+            if setE == setS | setU[i]:  # i番目の要素を追加することでEを満たしたらその場でノードの最小値として返す
+                return num+1
+            ans.append(_search_node(setE, setU, setS | setU[i], num+1, i+1, length))
+    return min(ans)
+

@@ -105,7 +105,7 @@ def satisfies_bases_axiom( maybe_matroid: tuple[set[T], list[set[T]]]
     """
     E, Bs = maybe_matroid
     # (B1) Bs ≠ ∅ (non-empty)
-    if not Bs and not clearly_non_empty:
+    if not clearly_non_empty and not Bs:
         return False
 
     # [Prerequisits] B ∈ Bs => B ⊆ E
@@ -173,7 +173,7 @@ def satisfies_rank_function_axiom( maybe_matroid                        : tuple[
                                  , clearly_bounded_above_by_cardinality : bool=False
                                  , clearly_monotonic                    : bool=False
                                  , clearly_submodular                   : bool=False) -> bool:
-    """Judge whether the given pair of a ground set and a function from set to non-negative integers.
+    """Judge whether the given pair of a ground set and a function from set to non-negative integers is a matroid.
     This is done due to the axiom of a rank function.
 
     Args:
@@ -212,7 +212,7 @@ def satisfies_closure_axiom( maybe_matroid                        : tuple[set[T]
                            , clearly_increasing                   : bool=False
                            , clearly_monotonic                    : bool=False
                            , clearly_MacLane_Steinitz_exchangable : bool=False) -> bool:
-    """Judge whether the given pair of a ground set and a function from set to set.
+    """Judge whether the given pair of a ground set and a function from set to set is a matroid.
     This is done due to the axiom of a closure operator.
 
     Args:
@@ -246,5 +246,41 @@ def satisfies_closure_axiom( maybe_matroid                        : tuple[set[T]
                 for e2 in (e2 for e2 in E if e2 in (X | {e1}) - cl(X)):
                     if e1 not in cl(X | {e2}) - cl(X):
                         return False
+    
+    return True
+
+
+def satisfies_flats_axiom( maybe_matroid                        : tuple[set[T], list[set[T]]]
+                         , clearly_has_ground_set               : bool=False
+                         , clearly_closed_by_intersection       : bool=False
+                         , clearly_complement_partitionable     : bool=False) -> bool:
+    """Judge whether the given pair of a ground set and a collection of subsets is a matroid.
+    This is done due to the axiom of flats.
+
+    Args:
+        maybe_matroid (tuple[set[T], list[set[T]]]): A tuple (E, Fs), where E is a ground set and Fs is a family of subsets of E.
+        clearly_has_ground_set (bool, optional)          : If this is True, the check of (F1) will be skipped. Defaults to False.
+        clearly_closed_by_intersection (bool, optional)  : If this is True, the check of (F2) will be skipped. Defaults to False.
+        clearly_complement_partitionable (bool, optional): If this is True, the check of (F3) will be skipped. Defaults to False.
+
+    Returns:
+        bool: True if the given family satisfies the axiom of flats, False otherwise.
+    """
+    E, Fs = maybe_matroid
+
+    # (F1) E ∈ Fs
+    if not clearly_has_ground_set and E not in Fs:
+        return False
+    
+    # (F2) F1, F2 ∈ Fs => F1 ∩ F2 ∈ Fs
+    if not clearly_closed_by_intersection and any(map(lambda F1, F2: F1 & F2 not in Fs ,combinations(Fs, 2))):
+        return False
+    
+    # TODO: Implement the check of (F3)
+    # (F3) F ∈ Fs and {F1,F2, ..., Fk} is the set of minimal members of Fs s.t. F ⊊ ∪[i∈{1..k}] Fi,
+    #      F1 - F, F2 - F, ... , Fk - F partitions E - F.
+    if not clearly_complement_partitionable:
+        for F in Fs:
+            pass
     
     return True
