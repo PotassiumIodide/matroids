@@ -258,8 +258,9 @@ def circuits_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) 
     Returns:
         list[set[T]]: The circuits of a given matroid.
     """
-    E, _ = matroid
-    return circuits_from_deps_matroid((E, deps_from_rank_matroid(matroid)))
+    E, r = matroid
+    # Cs = { C ⊆ E : C ≠ ∅ and r(C\{c}) = |C| - 1 = r(C), ∀c ∈ C }
+    return [C for C in powset(E) if (C != set()) and all(map(lambda c: (r(C - {c}) == len(C) - 1) and (len(C) - 1 == r(C)), C))]
 
 
 def circuits_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> list[set[T]]:
