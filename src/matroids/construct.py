@@ -428,6 +428,20 @@ def closure_function_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) ->
     return lambda X: reduce(and_, (F for F in Fs if X <= F), E)
 
 
+def flats_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
+    """Construct flats from a matroid defined by a rank function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], int]]): A matroid defined by a rank function.
+
+    Returns:
+        list[set[T]]: The flats of a given matroid.
+    """
+    E, r = matroid
+    # Fs = { F ⊆ E : r(F ∪ {e}) = r(F) + 1, ∀e ∈ E\F }
+    return [ F for F in powset(E) if all(map(lambda e: r(F | {e}) == r(F) + 1, E - F))]
+
+
 def flats_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> list[set[T]]:
     """Construct flats from a matroid defined by a closure function.
 

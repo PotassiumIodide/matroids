@@ -34,6 +34,7 @@ from src.matroids.construct import (
     closure_function_from_circuits_matroid,
     closure_function_from_rank_matroid,
     closure_function_from_flats_matroid,
+    flats_from_rank_matroid,
     flats_from_closure_matroid,
     flats_from_open_sets_matroid,
     open_sets_from_flats_matroid,
@@ -547,6 +548,22 @@ def test_closure_function_from_flats_matroid(flats_matroid, expected):
     cl1 = closure_function_from_flats_matroid(flats_matroid)
     cl2 = expected
     assert all(cl1(X) == cl2(X) for X in powset(E))
+
+
+@pytest.mark.parametrize('rank_matroid, expected', [
+    (( {1,2,3}, lambda X: 0 )                                   , [{1,2,3}]                                     ),
+    (( {1,2,3}, lambda X: 1 if 1 in X else 0 )                  , [{2,3},{1,2,3}]                               ),
+    (( {1,2,3}, lambda X: 0 if X <= {3} else 1 )                , [{3},{1,2,3}]                                 ),
+    (( {1,2,3}, lambda X: 1 if X else 0 )                       , [set(),{1,2,3}]                               ),
+    (( {1,2,3}, lambda X: len(X) - 1 if 3 in X else len(X) )    , [{3},{1,3},{2,3},{1,2,3}]                     ),
+    (( {1,2,3}, lambda X: len(X) - 1 if {2,3} <= X else len(X) ), [set(),{1},{2,3},{1,2,3}]                     ),
+    (( {1,2,3}, lambda X: 2 if X == {1,2,3} else len(X) )       , [set(),{1},{2},{3},{1,2,3}]                   ),
+    (( {1,2,3}, len )                                           , [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
+])
+def test_flats_from_rank_matroid(rank_matroid, expected):
+    Fs1 = flats_from_rank_matroid(rank_matroid)
+    Fs2 = expected
+    assert all(map(lambda F1: F1 in Fs2, Fs1)) and all(map(lambda F2: F2 in Fs1, Fs2))
 
 
 @pytest.mark.parametrize('closure_matroid, expected', [
