@@ -327,3 +327,43 @@ def satisfies_open_sets_axiom( maybe_matroid          : tuple[set[T], list[set[T
                     return False
     return True
 
+
+def satisfies_hyperplanes_axiom( maybe_matroid: tuple[set[T], list[set[T]]]
+                               , clearly_has_no_ground_set: bool=False
+                               , clearly_clutter          : bool=False
+                               , clearly_exists_another   : bool=False) -> bool:
+    """Judge whether the given pair of a ground set and a collection of subsets is a matroid.
+    This is done due to the axiom of hyperplanes.
+
+    Args:
+        maybe_matroid (tuple[set[T], list[set[T]]]): A tuple (E, Hs), where E is a ground set and Hs is a family of subsets of E.
+        clearly_has_no_ground_set (bool, optional): If this is True, the check of (H1) will be skipped. Defaults to False.
+        clearly_clutter (bool, optional)          : If this is True, the check of (H2) will be skipped. Defaults to False.
+        clearly_exists_another (bool, optional)   : If this is True, the check of (H3) will be skipped. Defaults to False.
+    
+    Returns:
+        bool: True if the given family satisfies the axiom of hyperplanes, False otherwise.
+    """
+    E, Hs = maybe_matroid
+    # [Prerequisits] H ∈ Hs => H ⊆ E
+    if any(map(lambda H: not H <= E, Hs)):
+        return False
+    
+    # (H1) E ∉ Hs
+    if (not clearly_has_no_ground_set) and (E in Hs):
+        return False
+    
+    # (H2) H1, H2 ∈ Hs and H1 ⊆ H2 => H1 = H2
+    if not clearly_clutter:
+        for H1, H2 in combinations(Hs, 2):
+            if ((H1 <= H2) or (H2 <= H1)) and H1 != H2:
+                return False
+    
+    # (H3) H1, H2 ∈ Hs with H1 ≠ H2 and e ∈ E - (H1 ∪ H2) => ∃H3 ∈ Hs s.t. (H1 ∩ H2) ∪ {e} ⊆ H3.
+    if not clearly_exists_another:
+        for H1, H2 in combinations(Hs, 2):
+            for e in (E - (H1 | H2)):
+                if not any(map(lambda H3: ((H1 & H2) | {e}) <= H3, Hs)):
+                    return False
+    return True
+

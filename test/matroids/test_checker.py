@@ -8,6 +8,7 @@ from src.matroids.checker import (
     satisfies_rank_function_axiom,
     satisfies_closure_axiom,
     satisfies_open_sets_axiom,
+    satisfies_hyperplanes_axiom,
 )
 
 
@@ -144,3 +145,21 @@ def test_satisfies_closure_function_axiom(maybe_matroid, expected):
 ])
 def test_satisfies_open_sets_axiom(maybe_matroid, expected):
     assert satisfies_open_sets_axiom(maybe_matroid) == expected
+
+
+@pytest.mark.parametrize('maybe_matroid, expected', [
+    (( {1,2,3}, [] )                         , True ),
+    (( {1,2,3}, [{2,3}] )                    , True ),
+    (( {1,2,3}, [{3}] )                      , True ),
+    (( {1,2,3}, [set()] )                    , True ),
+    (( {1,2,3}, [{1,3},{2,3}] )              , True ),
+    (( {1,2,3}, [{1},{2,3}] )                , True ),
+    (( {1,2,3}, [{1},{2},{3}] )              , True ),
+    (( {1,2,3}, [{1,2},{1,3},{2,3}] )        , True ),
+    (( {1,2,3}, [{1,2},{1,3},{2,3},{1,2,3}] ), False),
+    (( {1,2,3}, [{3},{1,3},{2,3}] )          , False),
+    (( {1,2,3}, [{1},{2}] )                  , False),
+    (( {4,5,6}, [{1,2},{1,3},{2,3}] )        , False),
+])
+def test_satisfies_hyperplanes_axiom(maybe_matroid, expected):
+    assert satisfies_hyperplanes_axiom(maybe_matroid) == expected
