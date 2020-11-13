@@ -141,3 +141,12 @@ class Matroid(Generic[T]):
         # TODO: Implement the other constructions from other axioms
         else:
             raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
+    
+    @property
+    def spanning_sets(self) -> list[set[T]]:
+        if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
+            return construct.spanning_sets_from_rank_matroid((self.__first, self.__second))
+        
+        # TODO: Implement the other constructions from other axioms
+        else:
+            raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")

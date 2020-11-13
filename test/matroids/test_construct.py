@@ -38,6 +38,7 @@ from src.matroids.construct import (
     flats_from_closure_matroid,
     flats_from_open_sets_matroid,
     open_sets_from_flats_matroid,
+    spanning_sets_from_rank_matroid,
 )
 
 
@@ -612,3 +613,19 @@ def test_open_sets_from_flats_matroid(flats_matroid, expected):
     Os1 = open_sets_from_flats_matroid(flats_matroid)
     Os2 = expected
     assert all(map(lambda O1: O1 in Os2, Os1)) and all(map(lambda O2: O2 in Os1, Os2))
+
+
+@pytest.mark.parametrize('rank_matroid, expected', [
+    (( {1,2,3}, lambda X: 0 )                                   , [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
+    (( {1,2,3}, lambda X: 1 if 1 in X else 0 )                  , [{1},{1,2},{1,3},{1,2,3}]                     ),
+    (( {1,2,3}, lambda X: 0 if X <= {0,3} else 1 )              , [{1},{2},{1,2},{1,3},{2,3},{1,2,3}]           ),
+    (( {1,2,3}, lambda X: 1 if X else 0 )                       , [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}]       ),
+    (( {1,2,3}, lambda X: len(X) - 1 if 3 in X else len(X) )    , [{1,2},{1,2,3}]                               ),
+    (( {1,2,3}, lambda X: len(X) - 1 if {2,3} <= X else len(X) ), [{1,2},{1,3},{1,2,3}]                         ),
+    (( {1,2,3}, lambda X: 2 if X == {1,2,3} else len(X) )       , [{1,2},{1,3},{2,3},{1,2,3}]                   ),
+    (( {1,2,3}, len )                                           , [{1,2,3}]                                     ),
+])
+def test_spanning_sets_from_rank_matroid(rank_matroid, expected):
+    Ss1 = spanning_sets_from_rank_matroid(rank_matroid)
+    Ss2 = expected
+    assert all(map(lambda S1: S1 in Ss2, Ss1)) and all(map(lambda S2: S2 in Ss1, Ss2))

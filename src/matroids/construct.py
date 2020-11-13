@@ -482,3 +482,17 @@ def open_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[s
     E, Fs = matroid
     # Os = { E - F : F ∈ Fs }
     return [E - F for F in Fs]
+
+
+def spanning_sets_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
+    """Construct spanning sets from a matroid defined by a rank function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], int]]): A matroid defined by a rank function
+
+    Returns:
+        list[set[T]]: The spanning set of a given matroid.
+    """
+    E, r = matroid
+    # Ss = { S ⊆ E : r(S) = r(E) }
+    return [S for S in powset(E) if r(S) == r(E)]
