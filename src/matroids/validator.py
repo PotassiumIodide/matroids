@@ -18,10 +18,10 @@ def validate_matroid_axiom(func):
         maybe_matroid, axiom = args[0], args[1]
         if any([
             axiom is MatroidAxiom.INDEPENDENT_SETS and not satisfies_independent_axiom(maybe_matroid),
-            axiom is MatroidAxiom.DEPENDENT_SETS and not satisfies_dependent_axiom(maybe_matroid),
-            axiom is MatroidAxiom.BASES and not satisfies_bases_axiom(maybe_matroid),
-            axiom is MatroidAxiom.CIRCUITS and not satisfies_circuits_axiom(maybe_matroid),
-            axiom is MatroidAxiom.RANK_FUNCTION and not satisfies_rank_function_axiom(maybe_matroid),
+            axiom is MatroidAxiom.DEPENDENT_SETS   and not satisfies_dependent_axiom(maybe_matroid),
+            axiom is MatroidAxiom.BASES            and not satisfies_bases_axiom(maybe_matroid),
+            axiom is MatroidAxiom.CIRCUITS         and not satisfies_circuits_axiom(maybe_matroid),
+            axiom is MatroidAxiom.RANK_FUNCTION    and not satisfies_rank_function_axiom(maybe_matroid),
             axiom is MatroidAxiom.CLOSURE_FUNCTION and not satisfies_closure_axiom(maybe_matroid),
         ]):
             raise MatroidAxiomError(f"The given family doesn't satisfy {axiom.value}!")

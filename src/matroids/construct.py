@@ -1,4 +1,6 @@
-from typing import Callable, TypeVar
+from functools import reduce
+from operator  import and_
+from typing    import Callable, TypeVar
 
 from utils.set_operator import powset
 
@@ -410,6 +412,20 @@ def closure_function_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]],
     E, r = matroid
     # cl(X) = {e ∈ E | r(X) = r(X ∪ {e})}, ∀X ⊆ E
     return lambda X: {e for e in E if r(X) == r(X | {e})}
+
+
+def closure_function_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
+    """Construct a closure function from a matroid defined by flats.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by flats.
+
+    Returns:
+        Callable[[set[T]], set[T]]: The closure function of a given matroid.
+    """
+    E, Fs = matroid
+    # cl(X) = ∩ { F ∈ Fs : X ⊆ F }
+    return lambda X: reduce(and_, (F for F in Fs if X <= F), E)
 
 
 def flats_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> list[set[T]]:
