@@ -9,6 +9,7 @@ from .checker import (
     satisfies_closure_axiom,
     satisfies_open_sets_axiom,
     satisfies_hyperplanes_axiom,
+    satisfies_spanning_sets_axiom,
 )
 from .exception import MatroidAxiomError
 from .types import MatroidAxiom
@@ -27,6 +28,7 @@ def validate_matroid_axiom(func):
             axiom is MatroidAxiom.CLOSURE_FUNCTION and not satisfies_closure_axiom(maybe_matroid),
             axiom is MatroidAxiom.OPEN_SETS        and not satisfies_open_sets_axiom(maybe_matroid),
             axiom is MatroidAxiom.HYPERPLANES      and not satisfies_hyperplanes_axiom(maybe_matroid),
+            axiom is MatroidAxiom.SPANNING_SETS    and not satisfies_spanning_sets_axiom(maybe_matroid),
         ]):
             raise MatroidAxiomError(f"The given family doesn't satisfy {axiom.value}!")
 
@@ -118,6 +120,17 @@ def validate_hyperplanes(func):
     def __wrapper(*args, **kwargs):
         if not satisfies_hyperplanes_axiom(args[0]):
             raise MatroidAxiomError("The given family doesn't satisfy the axiom of Hyperplanes!")
+        return func(*args, **kwargs)
+    
+    return __wrapper
+
+
+def validate_spanning_sets(func):
+
+    @wraps(func)
+    def __wrapper(*args, **kwargs):
+        if not satisfies_spanning_sets_axiom(args[0]):
+            raise MatroidAxiomError("The given family doesn't satisfy the axiom of Spanning Sets!")
         return func(*args, **kwargs)
     
     return __wrapper

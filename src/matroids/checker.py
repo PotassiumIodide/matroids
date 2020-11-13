@@ -367,3 +367,45 @@ def satisfies_hyperplanes_axiom( maybe_matroid: tuple[set[T], list[set[T]]]
                     return False
     return True
 
+
+def satisfies_spanning_sets_axiom( maybe_matroid: tuple[set[T], list[set[T]]]
+                                 , clearly_has_ground_set     : bool=False
+                                 , clearly_opposite_hereditary: bool=False
+                                 , clearly_exists_decrement   : bool=False) -> bool:
+    """Judge whether the given pair of a ground set and a collection of subsets is a matroid.
+    This is done due to the axiom of spanning sets.
+
+    Args:
+        maybe_matroid (tuple[set[T], list[set[T]]]): A tuple (E, Ss), where E is a ground set and Ss is a family of subsets of E.
+        clearly_has_ground_set (bool, optional)     : If this is True, the check of (S1) will be skipped. Defaults to False.
+        clearly_opposite_hereditary (bool, optional): If this is True, the check of (S2) will be skipped. Defaults to False.
+        clearly_exists_decrement (bool, optional)   : If this is True, the check of (S3) will be skipped. Defaults to False.
+
+    Returns:
+        bool: True if the given family satisfies the axiom of hyperplanes, False otherwise.
+    """
+    E, Ss = maybe_matroid
+    # [Prerequisits] S ∈ Ss => S ⊆ Ss
+    if any(map(lambda S: not S <= E, Ss)):
+        return False
+    
+    # (S1) E ∈ Ss
+    if (not clearly_has_ground_set) and (E not in Ss):
+        return False
+    
+    # (S2) S1 ∈ Ss and S1 ⊆ S2 => S2 ∈ Ss
+    if not clearly_opposite_hereditary:
+        for S1 in Ss:
+            if any(map(lambda S2: (S1 <= S2) and (S2 not in Ss), powset(E))):
+                return False
+    
+    # (S3) S1, S2 ∈ Ss and |S1| < |S2| => ∃s∈S2-S1 s.t. S2\{s} ∈ Ss.
+    if not clearly_exists_decrement:
+        for S1, S2 in combinations(Ss, 2):
+            if len(S1) == len(S2):
+                continue
+            smaller, larger = (S1, S2) if len(S1) < len(S2) else (S2, S1)
+            if not any(map(lambda s: S2 - {s} in Ss, larger - smaller)):
+                return False
+    
+    return True
