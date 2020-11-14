@@ -498,6 +498,20 @@ def open_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[s
     return [E - F for F in Fs]
 
 
+def hyperplanes_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct hyperplanes from a matroid defined by flats.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by flats.
+
+    Returns:
+        list[set[T]]: The hyperplanes of a given matroid.
+    """
+    E, Fs = matroid
+    # Hs = { H ∈ Fs\{E} : H ⊈ F, ∀F ∈ Fs\{E} }
+    return [H for H in Fs if ((H != E) and all(map(lambda F: (not H < F) or (F ==E), Fs)))]
+
+
 def spanning_sets_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
     """Construct spanning sets from a matroid defined by a rank function.
 
