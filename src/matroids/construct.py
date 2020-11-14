@@ -769,6 +769,19 @@ def flats_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T
     return flats_from_closure_matroid((E, closure_function_from_bases_matroid(matroid)))
 
 
+def flats_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct flats from a matroid defined by circuits.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by circuits.
+
+    Returns:
+        list[set[T]]: The flats of a given matroid.
+    """
+    E, _ = matroid
+    return flats_from_closure_matroid((E, closure_function_from_circuits_matroid(matroid)))
+
+
 def flats_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
     """Construct flats from a matroid defined by a rank function.
 

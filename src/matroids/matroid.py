@@ -180,6 +180,8 @@ class Matroid(Generic[T]):
             return construct.flats_from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
             return construct.flats_from_bases_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.CIRCUITS:
+            return construct.flats_from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
             return construct.flats_from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:

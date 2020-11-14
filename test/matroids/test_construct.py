@@ -60,6 +60,7 @@ from src.matroids.construct import (
     flats_from_independent_matroid,
     flats_from_dependent_matroid,
     flats_from_bases_matroid,
+    flats_from_circuits_matroid,
     flats_from_rank_matroid,
     flats_from_closure_matroid,
     flats_from_open_sets_matroid,
@@ -999,6 +1000,22 @@ def test_flats_from_dependent_matroid(dependent_matroid, expected):
 ])
 def test_flats_from_bases_matroid(bases_matroid, expected):
     Fs1 = flats_from_bases_matroid(bases_matroid)
+    Fs2 = expected
+    assert all(map(lambda F1: F1 in Fs2, Fs1)) and all(map(lambda F2: F2 in Fs1, Fs2))
+
+
+@pytest.mark.parametrize('circuits_matroid, expected', [
+    (( {1,2,3}, [{1},{2},{3}] )      , [{1,2,3}]                                     ),
+    (( {1,2,3}, [{2},{3}] )          , [{2,3},{1,2,3}]                               ),
+    (( {1,2,3}, [{3},{1,2}] )        , [{3},{1,2,3}]                                 ),
+    (( {1,2,3}, [{1,2},{1,3},{2,3}] ), [set(),{1,2,3}]                               ),
+    (( {1,2,3}, [{3}] )              , [{3},{1,3},{2,3},{1,2,3}]                     ),
+    (( {1,2,3}, [{2,3}] )            , [set(),{1},{2,3},{1,2,3}]                     ),
+    (( {1,2,3}, [{1,2,3}] )          , [set(),{1},{2},{3},{1,2,3}]                   ),
+    (( {1,2,3}, [] )                 , [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
+])
+def test_flats_from_circuits_matroid(circuits_matroid, expected):
+    Fs1 = flats_from_circuits_matroid(circuits_matroid)
     Fs2 = expected
     assert all(map(lambda F1: F1 in Fs2, Fs1)) and all(map(lambda F2: F2 in Fs1, Fs2))
 
