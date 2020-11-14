@@ -172,6 +172,8 @@ class Matroid(Generic[T]):
     
     @property
     def flats(self) -> list[set[T]]:
+        if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
+            return construct.flats_from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
             return construct.flats_from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:

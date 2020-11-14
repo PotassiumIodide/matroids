@@ -57,6 +57,7 @@ from src.matroids.construct import (
     closure_function_from_open_sets_matroid,
     closure_function_from_hyperplanes_matroid,
     closure_function_from_spanning_sets_matroid,
+    flats_from_independent_matroid,
     flats_from_rank_matroid,
     flats_from_closure_matroid,
     flats_from_open_sets_matroid,
@@ -950,6 +951,22 @@ def test_closure_function_from_spanning_sets_matroid(spanning_sets_matroid, expe
     cl1 = closure_function_from_spanning_sets_matroid(spanning_sets_matroid)
     cl2 = expected
     assert all(cl1(X) == cl2(X) for X in powset(E))
+
+
+@pytest.mark.parametrize('independent_matroid, expected', [
+    (( {1,2,3}, [set()] )                                      , [{1,2,3}]                                     ),
+    (( {1,2,3}, [set(),{1}] )                                  , [{2,3},{1,2,3}]                               ),
+    (( {1,2,3}, [set(),{1},{2}] )                              , [{3},{1,2,3}]                                 ),
+    (( {1,2,3}, [set(),{1},{2},{3}] )                          , [set(),{1,2,3}]                               ),
+    (( {1,2,3}, [set(),{1},{2},{1,2}] )                        , [{3},{1,3},{2,3},{1,2,3}]                     ),
+    (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3}] )              , [set(),{1},{2,3},{1,2,3}]                     ),
+    (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3}] )        , [set(),{1},{2},{3},{1,2,3}]                   ),
+    (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
+])
+def test_flats_from_independent_matroid(independent_matroid, expected):
+    Fs1 = flats_from_independent_matroid(independent_matroid)
+    Fs2 = expected
+    assert all(map(lambda F1: F1 in Fs2, Fs1)) and all(map(lambda F2: F2 in Fs1, Fs2))
 
 
 @pytest.mark.parametrize('rank_matroid, expected', [
