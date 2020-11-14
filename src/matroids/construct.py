@@ -8,7 +8,7 @@ from utils.set_operator import powset
 T = TypeVar('T')
 
 
-def indeps_from_deps_matroid(matroid: tuple[set[T], list[set]]) -> list[set[T]]:
+def independent_sets_from_dependent_matroid(matroid: tuple[set[T], list[set]]) -> list[set[T]]:
     """Construct independent sets from a matroid defined by dependent sets
 
     Args:
@@ -21,7 +21,7 @@ def indeps_from_deps_matroid(matroid: tuple[set[T], list[set]]) -> list[set[T]]:
     return [I for I in powset(E) if I not in Ds]
 
 
-def indeps_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def independent_sets_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct independent sets from a matroid defined by bases.
 
     Args:
@@ -34,7 +34,7 @@ def indeps_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[
     return [I for I in powset(E) if any(map(lambda B: I <= B, Bs))]
 
 
-def indeps_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def independent_sets_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct independent sets from a matroid defined by circuits.
 
     Args:
@@ -48,7 +48,7 @@ def indeps_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[s
     return [I for I in powset(E) if all(map(lambda C: not (C <= I), Cs))]
 
 
-def indeps_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
+def independent_sets_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
     """Construct independent sets from a matroid defined by a rank function.
 
     Args:
@@ -62,7 +62,7 @@ def indeps_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) ->
     return [I for I in powset(E) if r(I) == len(I)]
 
 
-def indeps_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> list[set[T]]:
+def independent_sets_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> list[set[T]]:
     """Construct independent sets from a matroid defined by a closure function.
 
     Args:
@@ -76,7 +76,7 @@ def indeps_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]
     return [I for I in powset(E) if all(map(lambda i: i not in cl(I - {i}), I))]
 
 
-def deps_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def dependent_sets_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct dependent sets from a matroid defined by dependent sets.
 
     Args:
@@ -90,7 +90,7 @@ def deps_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T
     return [D for D in powset(E) if D not in Is]
 
 
-def deps_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def dependent_sets_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct dependent sets from a matroid defined by bases.
 
     Args:
@@ -100,10 +100,10 @@ def deps_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]
         list[set[T]]: The dependent sets of a given matroid.
     """
     E, _ = matroid
-    return deps_from_indeps_matroid((E, indeps_from_bases_matroid(matroid)))
+    return dependent_sets_from_independent_matroid((E, independent_sets_from_bases_matroid(matroid)))
 
 
-def deps_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def dependent_sets_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct dependent sets from a matroid defined by circuits.
 
     Args:
@@ -116,7 +116,7 @@ def deps_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set
     return [D for D in powset(E) if any(map(lambda C: C <= D, Cs))]
 
 
-def deps_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
+def dependent_sets_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
     """Construnct dependent sets from a matroid defined by a rank function.
 
     Args:
@@ -126,10 +126,10 @@ def deps_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> l
         list[set[T]]: The dependent sets of a matroid.
     """
     E, _ = matroid
-    return deps_from_indeps_matroid((E, indeps_from_rank_matroid(matroid)))
+    return dependent_sets_from_independent_matroid((E, independent_sets_from_rank_matroid(matroid)))
 
 
-def deps_from_closure_matroid(matroid: tuple[set[T],Callable[[set[T]], set[T]]]) -> list[set[T]]:
+def dependent_sets_from_closure_matroid(matroid: tuple[set[T],Callable[[set[T]], set[T]]]) -> list[set[T]]:
     """COnstruct dependent sets from a matroid defined by a closure function.
 
     Args:
@@ -139,10 +139,10 @@ def deps_from_closure_matroid(matroid: tuple[set[T],Callable[[set[T]], set[T]]])
         list[set[T]]: The dependent sets of a matroid.
     """
     E, _ = matroid
-    return deps_from_circuits_matroid((E, circuits_from_closure_matroid(matroid)))
+    return dependent_sets_from_circuits_matroid((E, circuits_from_closure_matroid(matroid)))
 
 
-def bases_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def bases_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct bases from a matroid defined by independent sets.
 
     Args:
@@ -156,7 +156,7 @@ def bases_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[
     return [B for B in Is if all(map(lambda I: not B < I, Is))]
 
 
-def bases_from_deps_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def bases_from_dependent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct bases from a matroid defined by dependent sets.
 
     Args:
@@ -166,7 +166,7 @@ def bases_from_deps_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]
         list[set[T]]: The bases of a given matroid.
     """
     E, _ = matroid
-    return bases_from_indeps_matroid((E, indeps_from_deps_matroid(matroid)))
+    return bases_from_independent_matroid((E, independent_sets_from_dependent_matroid(matroid)))
 
 
 def bases_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
@@ -179,7 +179,7 @@ def bases_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[se
         list[set[T]]: The bases of a given matroid.
     """
     E, _ = matroid
-    return bases_from_indeps_matroid((E, indeps_from_circuits_matroid(matroid)))
+    return bases_from_independent_matroid((E, independent_sets_from_circuits_matroid(matroid)))
 
 
 def bases_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
@@ -206,7 +206,7 @@ def bases_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]
         list[set[T]]: The bases of a given matroid.
     """
     E, _ = matroid
-    return bases_from_indeps_matroid((E, indeps_from_closure_matroid(matroid)))
+    return bases_from_independent_matroid((E, independent_sets_from_closure_matroid(matroid)))
 
 
 def bases_from_spanning_sets_matroid(matroid: tuple[set[T],list[set[T]]]) -> list[set[T]]:
@@ -223,7 +223,7 @@ def bases_from_spanning_sets_matroid(matroid: tuple[set[T],list[set[T]]]) -> lis
     return [B for B in Ss if all(map(lambda S: not S < B, Ss))]
 
 
-def circuits_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def circuits_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct circuits from a matroid defined by independent sets.
 
     Args:
@@ -239,7 +239,7 @@ def circuits_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[s
     return [C for C in Ds if all(map(lambda D: not D < C, Ds))]
 
 
-def circuits_from_deps_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def circuits_from_dependent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct circuits from a matroid defined by dependent sets.
 
     Args:
@@ -263,7 +263,7 @@ def circuits_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[se
         list[set[T]]: The circuits of a given matroid.
     """
     E, _ = matroid
-    return circuits_from_deps_matroid((E, deps_from_bases_matroid(matroid)))
+    return circuits_from_dependent_matroid((E, dependent_sets_from_bases_matroid(matroid)))
 
 
 def circuits_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
@@ -296,7 +296,7 @@ def circuits_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[
     return [C for C in Ds_ if all(map(lambda D_: not D_ < C, Ds_))]
 
 
-def rank_function_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
+def rank_function_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
     """Construct a rank function from a matroid defined by independent sets.
 
     Args:
@@ -310,7 +310,7 @@ def rank_function_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -> C
     return lambda X: max(map(len, (I for I in Is if I <= X)))
 
 
-def rank_function_from_deps_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
+def rank_function_from_dependent_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
     """Construct a rank function from a matroid defined by dependent sets.
 
     Args:
@@ -320,7 +320,7 @@ def rank_function_from_deps_matroid(matroid: tuple[set[T], list[set[T]]]) -> Cal
         Callable[[set[T]], int]: The rank function of a given matroid.
     """
     E, _ = matroid
-    return rank_function_from_indeps_matroid((E, indeps_from_deps_matroid(matroid)))
+    return rank_function_from_independent_matroid((E, independent_sets_from_dependent_matroid(matroid)))
 
 
 def rank_function_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
@@ -333,7 +333,7 @@ def rank_function_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> Ca
         Callable[[set[T]], int]: A rank function of a given matroid.
     """
     E, _ = matroid
-    return rank_function_from_indeps_matroid((E, indeps_from_bases_matroid(matroid)))
+    return rank_function_from_independent_matroid((E, independent_sets_from_bases_matroid(matroid)))
 
 
 def rank_function_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
@@ -346,7 +346,7 @@ def rank_function_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) ->
         Callable[[set[T]], int]: The rank function of a given matroid.
     """
     E, _ = matroid
-    return rank_function_from_indeps_matroid((E, indeps_from_circuits_matroid(matroid)))
+    return rank_function_from_independent_matroid((E, independent_sets_from_circuits_matroid(matroid)))
 
 
 def rank_function_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> Callable[[set[T]], int]:
@@ -362,7 +362,7 @@ def rank_function_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]],
     return rank_function_from_circuits_matroid((E, circuits_from_closure_matroid(matroid)))
 
 
-def closure_function_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
+def closure_function_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
     """Construct a closure function from a matroid defined by independent sets.
 
     Args:
@@ -372,10 +372,10 @@ def closure_function_from_indeps_matroid(matroid: tuple[set[T], list[set[T]]]) -
         Callable[[set[T]], set[T]]: The gained closure function of a given matroid.
     """
     E, _ = matroid
-    return closure_function_from_rank_matroid((E, rank_function_from_indeps_matroid(matroid)))
+    return closure_function_from_rank_matroid((E, rank_function_from_independent_matroid(matroid)))
 
 
-def closure_function_from_deps_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
+def closure_function_from_dependent_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
     """Construct a closure function from a matroid defined by dependent sets.
 
     Args:
@@ -385,7 +385,7 @@ def closure_function_from_deps_matroid(matroid: tuple[set[T], list[set[T]]]) -> 
         Callable[[set[T]], set[T]]: A closure function of a given matroid.
     """
     E, _ = matroid
-    return closure_function_from_indeps_matroid((E, indeps_from_deps_matroid(matroid)))
+    return closure_function_from_independent_matroid((E, independent_sets_from_dependent_matroid(matroid)))
 
 
 def closure_function_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
@@ -551,6 +551,7 @@ def hyperplanes_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list
     E, Fs = matroid
     # Hs = { H ∈ Fs\{E} : H ⊈ F, ∀F ∈ Fs\{E} }
     return [H for H in Fs if ((H != E) and all(map(lambda F: (not H < F) or (F == E), Fs)))]
+
 
 def hyperplanes_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct hyperplanes from a matroid defined by spanning sets.

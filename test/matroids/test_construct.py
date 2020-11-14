@@ -3,34 +3,34 @@ import pytest
 from src.utils.set_operator import powset
 
 from src.matroids.construct import (
-    indeps_from_deps_matroid,
-    indeps_from_bases_matroid,
-    indeps_from_circuits_matroid,
-    indeps_from_rank_matroid,
-    indeps_from_closure_matroid,
-    deps_from_indeps_matroid,
-    deps_from_bases_matroid,
-    deps_from_circuits_matroid,
-    deps_from_rank_matroid,
-    deps_from_closure_matroid,
-    bases_from_indeps_matroid,
-    bases_from_deps_matroid,
+    independent_sets_from_dependent_matroid,
+    independent_sets_from_bases_matroid,
+    independent_sets_from_circuits_matroid,
+    independent_sets_from_rank_matroid,
+    independent_sets_from_closure_matroid,
+    dependent_sets_from_independent_matroid,
+    dependent_sets_from_bases_matroid,
+    dependent_sets_from_circuits_matroid,
+    dependent_sets_from_rank_matroid,
+    dependent_sets_from_closure_matroid,
+    bases_from_independent_matroid,
+    bases_from_dependent_matroid,
     bases_from_circuits_matroid,
     bases_from_rank_matroid,
     bases_from_closure_matroid,
     bases_from_spanning_sets_matroid,
-    circuits_from_indeps_matroid,
-    circuits_from_deps_matroid,
+    circuits_from_independent_matroid,
+    circuits_from_dependent_matroid,
     circuits_from_bases_matroid,
     circuits_from_rank_matroid,
     circuits_from_closure_matroid,
-    rank_function_from_indeps_matroid,
-    rank_function_from_deps_matroid,
+    rank_function_from_independent_matroid,
+    rank_function_from_dependent_matroid,
     rank_function_from_bases_matroid,
     rank_function_from_circuits_matroid,
     rank_function_from_closure_matroid,
-    closure_function_from_indeps_matroid,
-    closure_function_from_deps_matroid,
+    closure_function_from_independent_matroid,
+    closure_function_from_dependent_matroid,
     closure_function_from_bases_matroid,
     closure_function_from_circuits_matroid,
     closure_function_from_rank_matroid,
@@ -48,7 +48,7 @@ from src.matroids.construct import (
 
 
 # TODO: Make a test case when a given pair is not a matroid.
-@pytest.mark.parametrize('deps_matroid, expected', [
+@pytest.mark.parametrize('dependent_matroid, expected', [
     (( {1,2,3}, [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), [set()]                                       ),
     (( {1,2,3}, [{2},{3},{1,2},{1,3},{2,3},{1,2,3}] )    , [set(), {1}]                                  ),
     (( {1,2,3}, [{3},{1,2},{1,3},{2,3},{1,2,3}] )        , [set(), {1},{2}]                              ),
@@ -58,8 +58,8 @@ from src.matroids.construct import (
     (( {1,2,3}, [{1,2,3}] )                              , [set(),{1},{2},{3},{1,2},{1,3},{2,3}]         ),
     (( {1,2,3}, [] )                                     , [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
 ])
-def test_indeps_from_deps_matroid(deps_matroid, expected):
-    Is1 = indeps_from_deps_matroid(deps_matroid)
+def test_independent_sets_from_dependent_matroid(dependent_matroid, expected):
+    Is1 = independent_sets_from_dependent_matroid(dependent_matroid)
     Is2 = expected
     assert all(map(lambda I1: I1 in Is2, Is1)) and all(map(lambda I2: I2 in Is1, Is2))
 
@@ -74,8 +74,8 @@ def test_indeps_from_deps_matroid(deps_matroid, expected):
     (( {1,2,3}, [{1,2},{1,3},{2,3}] ), [set(),{1},{2},{3},{1,2},{1,3},{2,3}]         ),
     (( {1,2,3}, [{1,2,3}] )          , [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
 ])
-def test_indeps_from_bases_matroid(bases_matroid, expected):
-    Is1 = indeps_from_bases_matroid(bases_matroid)
+def test_independent_sets_from_bases_matroid(bases_matroid, expected):
+    Is1 = independent_sets_from_bases_matroid(bases_matroid)
     Is2 = expected
     assert all(map(lambda I1: I1 in Is2, Is1)) and all(map(lambda I2: I2 in Is1, Is2))
 
@@ -90,8 +90,8 @@ def test_indeps_from_bases_matroid(bases_matroid, expected):
     (( {1,2,3}, [{1,2,3}] )          , [set(),{1},{2},{3},{1,2},{1,3},{2,3}]         ),
     (( {1,2,3}, [] )                 , [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
 ])
-def test_indeps_from_circuits_matroid(circuits_matroid, expected):
-    Is1 = indeps_from_circuits_matroid(circuits_matroid)
+def test_independent_sets_from_circuits_matroid(circuits_matroid, expected):
+    Is1 = independent_sets_from_circuits_matroid(circuits_matroid)
     Is2 = expected
     assert all(map(lambda I1: I1 in Is2, Is1)) and all(map(lambda I2: I2 in Is1, Is2))
 
@@ -106,8 +106,8 @@ def test_indeps_from_circuits_matroid(circuits_matroid, expected):
     (( {1,2,3}, lambda X: 2 if X == {1,2,3} else len(X) )       , [set(),{1},{2},{3},{1,2},{1,3},{2,3}]         ),
     (( {1,2,3}, len )                                           , [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
 ])
-def test_indeps_from_rank_matroid(rank_matroid, expected):
-    Is1 = indeps_from_rank_matroid(rank_matroid)
+def test_independent_sets_from_rank_matroid(rank_matroid, expected):
+    Is1 = independent_sets_from_rank_matroid(rank_matroid)
     Is2 = expected
     assert all(map(lambda I1: I1 in Is2, Is1)) and all(map(lambda I2: I2 in Is1, Is2))
 
@@ -122,13 +122,13 @@ def test_indeps_from_rank_matroid(rank_matroid, expected):
     (( {1,2,3}, lambda X: X if len(X) <= 1 else {1,2,3} ), [set(),{1},{2},{3},{1,2},{1,3},{2,3}]         ),
     (( {1,2,3}, lambda X: X )                            , [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
 ])
-def test_indeps_from_closure_matroid(closure_matroid, expected):
-    Is1 = indeps_from_closure_matroid(closure_matroid)
+def test_independent_sets_from_closure_matroid(closure_matroid, expected):
+    Is1 = independent_sets_from_closure_matroid(closure_matroid)
     Is2 = expected
     assert all(map(lambda I1: I1 in Is2, Is1)) and all(map(lambda I2: I2 in Is1, Is2))
 
 
-@pytest.mark.parametrize('indeps_matroid, expected', [
+@pytest.mark.parametrize('independent_matroid, expected', [
     (( {1,2,3}, [set()] )                                      , [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
     (( {1,2,3}, [set(),{1}] )                                  , [{2},{3},{1,2},{1,3},{2,3},{1,2,3}]     ),
     (( {1,2,3}, [set(),{1},{2}] )                              , [{3},{1,2},{1,3},{2,3},{1,2,3}]         ),
@@ -138,8 +138,8 @@ def test_indeps_from_closure_matroid(closure_matroid, expected):
     (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3}] )        , [{1,2,3}]                               ),
     (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), []                                      ),
 ])
-def test_deps_from_indeps_matroid(indeps_matroid, expected):
-    Ds1 = deps_from_indeps_matroid(indeps_matroid)
+def test_dependent_sets_from_independent_matroid(independent_matroid, expected):
+    Ds1 = dependent_sets_from_independent_matroid(independent_matroid)
     Ds2 = expected
     assert all(map(lambda D1: D1 in Ds2, Ds1)) and all(map(lambda D2: D2 in Ds1, Ds2))
 
@@ -154,8 +154,8 @@ def test_deps_from_indeps_matroid(indeps_matroid, expected):
     (( {1,2,3}, [{1,2},{1,3},{2,3}] ), [{1,2,3}]                               ),
     (( {1,2,3}, [{1,2,3}] )          , []                                      ),
 ])
-def test_deps_from_bases_matroid(bases_matroid, expected):
-    Ds1 = deps_from_bases_matroid(bases_matroid)
+def test_dependent_sets_from_bases_matroid(bases_matroid, expected):
+    Ds1 = dependent_sets_from_bases_matroid(bases_matroid)
     Ds2 = expected
     assert all(map(lambda D1: D1 in Ds2, Ds1)) and all(map(lambda D2: D2 in Ds1, Ds2))
 
@@ -170,8 +170,8 @@ def test_deps_from_bases_matroid(bases_matroid, expected):
     (( {1,2,3}, [{1,2,3}] )          , [{1,2,3}]                               ),
     (( {1,2,3}, [] )                 , []                                      ),
 ])
-def test_deps_from_circuits_matroid(circuits_matroid, expected):
-    Ds1 = deps_from_circuits_matroid(circuits_matroid)
+def test_dependent_sets_from_circuits_matroid(circuits_matroid, expected):
+    Ds1 = dependent_sets_from_circuits_matroid(circuits_matroid)
     Ds2 = expected
     assert all(map(lambda D1: D1 in Ds2, Ds1)) and all(map(lambda D2: D2 in Ds1, Ds2))
 
@@ -186,8 +186,8 @@ def test_deps_from_circuits_matroid(circuits_matroid, expected):
     (( {1,2,3}, lambda X: 2 if X == {1,2,3} else len(X) )       , [{1,2,3}]                               ),
     (( {1,2,3}, len )                                           , []                                      ),
 ])
-def test_deps_from_rank_matroid(rank_matroid, expected):
-    Ds1 = deps_from_rank_matroid(rank_matroid)
+def test_dependent_sets_from_rank_matroid(rank_matroid, expected):
+    Ds1 = dependent_sets_from_rank_matroid(rank_matroid)
     Ds2 = expected
     assert all(map(lambda D1: D1 in Ds2, Ds1)) and all(map(lambda D2: D2 in Ds1, Ds2))
 
@@ -202,13 +202,13 @@ def test_deps_from_rank_matroid(rank_matroid, expected):
     (( {1,2,3}, lambda X: X if len(X) <= 1 else {1,2,3} ), [{1,2,3}]                                     ),
     (( {1,2,3}, lambda X: X )                            , []                                            ),
 ])
-def test_deps_from_closure_matroid(closure_matroid, expected):
-    Ds1 = deps_from_closure_matroid(closure_matroid)
+def test_dependent_sets_from_closure_matroid(closure_matroid, expected):
+    Ds1 = dependent_sets_from_closure_matroid(closure_matroid)
     Ds2 = expected
     assert all(map(lambda D1: D1 in Ds2, Ds1)) and all(map(lambda D2: D2 in Ds1, Ds2))
 
 
-@pytest.mark.parametrize('indeps_matroid, expected', [
+@pytest.mark.parametrize('independent_matroid, expected', [
     (( {1,2,3}, [set()] )                                      , [set()]             ),
     (( {1,2,3}, [set(),{1}] )                                  , [{1}]               ),
     (( {1,2,3}, [set(),{1},{2}] )                              , [{1},{2}]           ),
@@ -218,13 +218,13 @@ def test_deps_from_closure_matroid(closure_matroid, expected):
     (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3}] )        , [{1,2},{1,3},{2,3}] ),
     (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), [{1,2,3}]           ),
 ])
-def test_bases_from_indeps_matroid(indeps_matroid, expected):
-    Bs1 = bases_from_indeps_matroid(indeps_matroid)
+def test_bases_from_independent_matroid(independent_matroid, expected):
+    Bs1 = bases_from_independent_matroid(independent_matroid)
     Bs2 = expected
     assert all(map(lambda B1: B1 in Bs2, Bs1)) and all(map(lambda B2: B2 in Bs1, Bs2))
 
 
-@pytest.mark.parametrize('deps_matroid, expected', [
+@pytest.mark.parametrize('dependent_matroid, expected', [
     (( {1,2,3}, [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), [set()]             ),
     (( {1,2,3}, [{2},{3},{1,2},{1,3},{2,3},{1,2,3}] )    , [{1}]               ),
     (( {1,2,3}, [{3},{1,2},{1,3},{2,3},{1,2,3}] )        , [{1},{2}]           ),
@@ -234,8 +234,8 @@ def test_bases_from_indeps_matroid(indeps_matroid, expected):
     (( {1,2,3}, [{1,2,3}] )                              , [{1,2},{1,3},{2,3}] ),
     (( {1,2,3}, [] )                                     , [{1,2,3}]           ),
 ])
-def test_bases_from_deps_matroid(deps_matroid, expected):
-    Bs1 = bases_from_deps_matroid(deps_matroid)
+def test_bases_from_dependent_matroid(dependent_matroid, expected):
+    Bs1 = bases_from_dependent_matroid(dependent_matroid)
     Bs2 = expected
     assert all(map(lambda B1: B1 in Bs2, Bs1)) and all(map(lambda B2: B2 in Bs1, Bs2))
 
@@ -305,7 +305,7 @@ def test_bases_from_spanning_sets_matroid(spanning_sets_matroid, expected):
     assert all(map(lambda B1: B1 in Bs2, Bs1)) and all(map(lambda B2: B2 in Bs1, Bs2))
 
 
-@pytest.mark.parametrize('indeps_matroid, expected', [
+@pytest.mark.parametrize('independent_matroid, expected', [
     (( {1,2,3}, [set()] )                                      , [{1},{2},{3}]       ),
     (( {1,2,3}, [set(),{1}] )                                  , [{2},{3}]           ),
     (( {1,2,3}, [set(),{1},{2}] )                              , [{1,2},{3}]         ),
@@ -315,13 +315,13 @@ def test_bases_from_spanning_sets_matroid(spanning_sets_matroid, expected):
     (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3}] )        , [{1,2,3}]           ),
     (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), []                  ),
 ])
-def test_circuits_from_indeps_matroid(indeps_matroid, expected):
-    Cs1 = circuits_from_indeps_matroid(indeps_matroid)
+def test_circuits_from_independent_matroid(independent_matroid, expected):
+    Cs1 = circuits_from_independent_matroid(independent_matroid)
     Cs2 = expected
     assert all(map(lambda C1: C1 in Cs2, Cs1)) and all(map(lambda C2: C2 in Cs1, Cs2))
 
 
-@pytest.mark.parametrize('deps_matroid, expected', [
+@pytest.mark.parametrize('dependent_matroid, expected', [
     (( {1,2,3}, [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), [{1},{2},{3}]       ),
     (( {1,2,3}, [{2},{3},{1,2},{1,3},{2,3},{1,2,3}] )    , [{2},{3}]           ),
     (( {1,2,3}, [{3},{1,2},{1,3},{2,3},{1,2,3}] )        , [{1,2},{3}]         ),
@@ -331,8 +331,8 @@ def test_circuits_from_indeps_matroid(indeps_matroid, expected):
     (( {1,2,3}, [{1,2,3}] )                              , [{1,2,3}]           ),
     (( {1,2,3}, [] )                                     , []                  ),
 ])
-def test_circuits_from_deps_matroid(deps_matroid, expected):
-    Cs1 = circuits_from_deps_matroid(deps_matroid)
+def test_circuits_from_dependent_matroid(dependent_matroid, expected):
+    Cs1 = circuits_from_dependent_matroid(dependent_matroid)
     Cs2 = expected
     assert all(map(lambda C1: C1 in Cs2, Cs1)) and all(map(lambda C2: C2 in Cs1, Cs2))
 
@@ -385,7 +385,7 @@ def test_circuits_from_closure_matroid(closure_matroid, expected):
     assert all(map(lambda C1: C1 in Cs2, Cs1)) and all(map(lambda C2: C2 in Cs1, Cs2))
 
 
-@pytest.mark.parametrize('indeps_matroid, expected', [
+@pytest.mark.parametrize('independent_matroid, expected', [
     (( {1,2,3}, [set()] )                                      , lambda X: 0                                    ),
     (( {1,2,3}, [set(),{1}] )                                  , lambda X: 1 if 1 in X else 0                   ),
     (( {1,2,3}, [set(),{1},{2}] )                              , lambda X: 0 if X <= {3} else 1                 ),
@@ -395,14 +395,14 @@ def test_circuits_from_closure_matroid(closure_matroid, expected):
     (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3}] )        , lambda X: 2 if X == {1,2,3} else len(X)        ),
     (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), len                                            ),
 ])
-def test_rank_function_from_indeps_matroid(indeps_matroid, expected):
-    E, _ = indeps_matroid
-    r1 = rank_function_from_indeps_matroid(indeps_matroid)
+def test_rank_function_from_independent_matroid(independent_matroid, expected):
+    E, _ = independent_matroid
+    r1 = rank_function_from_independent_matroid(independent_matroid)
     r2 = expected
     assert all(r1(X) == r2(X) for X in powset(E))
 
 
-@pytest.mark.parametrize('deps_matroid, expected', [
+@pytest.mark.parametrize('dependent_matroid, expected', [
     (( {1,2,3}, [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), lambda X: 0                                    ),
     (( {1,2,3}, [{2},{3},{1,2},{1,3},{2,3},{1,2,3}] )    , lambda X: 1 if 1 in X else 0                   ),
     (( {1,2,3}, [{3},{1,2},{1,3},{2,3},{1,2,3}] )        , lambda X: 0 if X <= {3} else 1                 ),
@@ -412,9 +412,9 @@ def test_rank_function_from_indeps_matroid(indeps_matroid, expected):
     (( {1,2,3}, [{1,2,3}] )                              , lambda X: 2 if X == {1,2,3} else len(X)        ),
     (( {1,2,3}, [] )                                     , len                                            ),
 ])
-def test_rank_function_from_deps_matroid(deps_matroid, expected):
-    E, _ = deps_matroid
-    r1 = rank_function_from_deps_matroid(deps_matroid)
+def test_rank_function_from_dependent_matroid(dependent_matroid, expected):
+    E, _ = dependent_matroid
+    r1 = rank_function_from_dependent_matroid(dependent_matroid)
     r2 = expected
     assert all(r1(X) == r2(X) for X in powset(E))
 
@@ -470,7 +470,7 @@ def test_rank_function_from_closure_matroid(closure_matroid, expected):
     assert all(r1(X) == r2(X) for X in powset(E))
 
 
-@pytest.mark.parametrize('indeps_matroid, expected', [
+@pytest.mark.parametrize('independent_matroid, expected', [
     (( {1,2,3}, [set()] )                                      , lambda X: {1,2,3}                              ),
     (( {1,2,3}, [set(),{1}] )                                  , lambda X: {1,2,3} if 1 in X else {2,3}         ),
     (( {1,2,3}, [set(),{1},{2}] )                              , lambda X: {3} if X <= {3} else {1,2,3}         ),
@@ -480,14 +480,14 @@ def test_rank_function_from_closure_matroid(closure_matroid, expected):
     (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3}] )        , lambda X: X if len(X) <= 1 else {1,2,3}        ),
     (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), lambda X: X                                    ),
 ])
-def test_closure_function_from_indeps_matroid(indeps_matroid, expected):
-    E, _ = indeps_matroid
-    cl1 = closure_function_from_indeps_matroid(indeps_matroid)
+def test_closure_function_from_independent_matroid(independent_matroid, expected):
+    E, _ = independent_matroid
+    cl1 = closure_function_from_independent_matroid(independent_matroid)
     cl2 = expected
     assert all(cl1(X) == cl2(X) for X in powset(E))
 
 
-@pytest.mark.parametrize('deps_matroid, expected', [
+@pytest.mark.parametrize('dependent_matroid, expected', [
     (( {1,2,3}, [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), lambda X: {1,2,3}                              ),
     (( {1,2,3}, [{2},{3},{1,2},{1,3},{2,3},{1,2,3}] )    , lambda X: {1,2,3} if 1 in X else {2,3}         ),
     (( {1,2,3}, [{3},{1,2},{1,3},{2,3},{1,2,3}] )        , lambda X: {3} if X <= {3} else {1,2,3}         ),
@@ -497,9 +497,9 @@ def test_closure_function_from_indeps_matroid(indeps_matroid, expected):
     (( {1,2,3}, [{1,2,3}] )                              , lambda X: X if len(X) <= 1 else {1,2,3}        ),
     (( {1,2,3}, [] )                                     , lambda X: X                                    ),
 ])
-def test_closure_function_from_deps_matroid(deps_matroid, expected):
-    E, _ = deps_matroid
-    cl1 = closure_function_from_deps_matroid(deps_matroid)
+def test_closure_function_from_dependent_matroid(dependent_matroid, expected):
+    E, _ = dependent_matroid
+    cl1 = closure_function_from_dependent_matroid(dependent_matroid)
     cl2 = expected
     assert all(cl1(X) == cl2(X) for X in powset(E))
 

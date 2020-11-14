@@ -24,15 +24,15 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
             return self.__second
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.indeps_from_deps_matroid((self.__first, self.__second))
+            return construct.independent_sets_from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
-            return construct.indeps_from_bases_matroid((self.__first, self.__second))
+            return construct.independent_sets_from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
-            return construct.indeps_from_circuits_matroid((self.__first, self.__second))
+            return construct.independent_sets_from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
-            return construct.indeps_from_rank_matroid((self.__first, self.__second))
+            return construct.independent_sets_from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
-            return construct.indeps_from_closure_matroid((self.__first, self.__second))
+            return construct.independent_sets_from_closure_matroid((self.__first, self.__second))
         # TODO: Implement the other constructions from other axioms
         else:
             raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
@@ -42,15 +42,15 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.deps_from_indeps_matroid((self.__first, self.__second))
+            return construct.dependent_sets_from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
-            return construct.deps_from_bases_matroid((self.__first, self.__second))
+            return construct.dependent_sets_from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
-            return construct.deps_from_circuits_matroid((self.__first, self.__second))
+            return construct.dependent_sets_from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
-            return construct.deps_from_rank_matroid((self.__first, self.__second))
+            return construct.dependent_sets_from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
-            return construct.deps_from_closure_matroid((self.__first, self.__second))
+            return construct.dependent_sets_from_closure_matroid((self.__first, self.__second))
         # TODO: Implement the other constructions from other axioms
         else:
             raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
@@ -60,9 +60,9 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.BASES:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.bases_from_indeps_matroid((self.__first, self.__second))
+            return construct.bases_from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.bases_from_deps_matroid((self.__first, self.__second))
+            return construct.bases_from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
             return construct.bases_from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
@@ -81,9 +81,9 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.circuits_from_indeps_matroid((self.__first, self.__second))
+            return construct.circuits_from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.circuits_from_deps_matroid((self.__first, self.__second))
+            return construct.circuits_from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
             return construct.circuits_from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
@@ -100,9 +100,9 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.rank_function_from_indeps_matroid((self.__first, self.__second))
+            return construct.rank_function_from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.rank_function_from_deps_matroid((self.__first, self.__second))
+            return construct.rank_function_from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
             return construct.rank_function_from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
@@ -120,9 +120,9 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.closure_function_from_indeps_matroid((self.__first, self.__second))
+            return construct.closure_function_from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.closure_function_from_deps_matroid((self.__first, self.__second))
+            return construct.closure_function_from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
             return construct.closure_function_from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
