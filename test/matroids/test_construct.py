@@ -55,6 +55,7 @@ from src.matroids.construct import (
     closure_function_from_rank_matroid,
     closure_function_from_flats_matroid,
     closure_function_from_open_sets_matroid,
+    closure_function_from_hyperplanes_matroid,
     flats_from_rank_matroid,
     flats_from_closure_matroid,
     flats_from_open_sets_matroid,
@@ -912,6 +913,23 @@ def test_closure_function_from_flats_matroid(flats_matroid, expected):
 def test_closure_function_from_open_sets_matroid(open_sets_matroid, expected):
     E, _ = open_sets_matroid
     cl1 = closure_function_from_open_sets_matroid(open_sets_matroid)
+    cl2 = expected
+    assert all(cl1(X) == cl2(X) for X in powset(E))
+
+
+@pytest.mark.parametrize('hyperplanes_matroid, expected', [
+    (( {1,2,3}, [] )                 , lambda X: {1,2,3}                              ),
+    (( {1,2,3}, [{2,3}] )            , lambda X: {1,2,3} if 1 in X else {2,3}         ),
+    (( {1,2,3}, [{3}] )              , lambda X: {3} if X <= {3} else {1,2,3}         ),
+    (( {1,2,3}, [set()] )            , lambda X: {1,2,3} if X else X                  ),
+    (( {1,2,3}, [{1,3},{2,3}] )      , lambda X: X | {3}                              ),
+    (( {1,2,3}, [{1},{2,3}] )        , lambda X: X if X <= {1} else X | {2,3}         ),
+    (( {1,2,3}, [{1},{2},{3}] )      , lambda X: X if len(X) <= 1 else {1,2,3}        ),
+    (( {1,2,3}, [{1,2},{1,3},{2,3}] ), lambda X: X                                    ),
+])
+def test_closure_function_from_hyperplanes_matroid(hyperplanes_matroid, expected):
+    E, _ = hyperplanes_matroid
+    cl1 = closure_function_from_hyperplanes_matroid(hyperplanes_matroid)
     cl2 = expected
     assert all(cl1(X) == cl2(X) for X in powset(E))
 
