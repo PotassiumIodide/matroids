@@ -848,6 +848,19 @@ def flats_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> list
         tmp = next_tmp
 
 
+def flats_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct flats from a matroid defined by spanning sets.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by spanning sets.
+
+    Returns:
+        list[set[T]]: The flats of a given matroid.
+    """
+    E, _ = matroid
+    return flats_from_closure_matroid((E, closure_function_from_spanning_sets_matroid(matroid)))
+
+
 def open_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct open sets from a matroid defined by flats
 
