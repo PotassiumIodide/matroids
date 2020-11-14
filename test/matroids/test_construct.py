@@ -28,6 +28,7 @@ from src.matroids.construct import (
     bases_from_closure_matroid,
     bases_from_flats_matroid,
     bases_from_open_sets_matroid,
+    bases_from_hyperplanes_matroid,
     bases_from_spanning_sets_matroid,
     circuits_from_independent_matroid,
     circuits_from_dependent_matroid,
@@ -454,6 +455,22 @@ def test_bases_from_flats_matroid(flats_matroid, expected):
 ])
 def test_bases_from_open_sets_matroid(open_sets_matroid, expected):
     Bs1 = bases_from_open_sets_matroid(open_sets_matroid)
+    Bs2 = expected
+    assert all(map(lambda B1: B1 in Bs2, Bs1)) and all(map(lambda B2: B2 in Bs1, Bs2))
+
+
+@pytest.mark.parametrize('hyperplanes_matroid, expected', [
+    (( {1,2,3}, [] )                 , [set()]             ),
+    (( {1,2,3}, [{2,3}] )            , [{1}]               ),
+    (( {1,2,3}, [{3}] )              , [{1},{2}]           ),
+    (( {1,2,3}, [set()] )            , [{1},{2},{3}]       ),
+    (( {1,2,3}, [{1,3},{2,3}] )      , [{1,2}]             ),
+    (( {1,2,3}, [{1},{2,3}] )        , [{1,2},{1,3}]       ),
+    (( {1,2,3}, [{1},{2},{3}] )      , [{1,2},{1,3},{2,3}] ),
+    (( {1,2,3}, [{1,2},{1,3},{2,3}] ), [{1,2,3}]           ),
+])
+def test_bases_from_hyperplanes_matroid(hyperplanes_matroid, expected):
+    Bs1 = bases_from_hyperplanes_matroid(hyperplanes_matroid)
     Bs2 = expected
     assert all(map(lambda B1: B1 in Bs2, Bs1)) and all(map(lambda B2: B2 in Bs1, Bs2))
 
