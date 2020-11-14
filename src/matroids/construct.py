@@ -430,13 +430,26 @@ def circuits_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[
         matroid (tuple[set[T], Callable[[set[T]], set[T]]]): A matroid defined by a closure function.
 
     Returns:
-        list[set[T]]: [description]
+        list[set[T]]: The circuits of a given matroid.
     """
     E, cl = matroid
     # Ds' = { D ⊆ E : D ≠ ∅ and d ∈ cl(D\{d}), ∀d ∈ D }
     # Cs: The minimal set of Ds' (Note that all the members in Ds are dependent but Ds' does NOT include all of the dependent sets.)
     Ds_ = [D_ for D_ in powset(E) if D_ and all(map(lambda d_: d_ in cl(D_ - {d_}), D_))]
     return [C for C in Ds_ if all(map(lambda D_: not D_ < C, Ds_))]
+
+
+def circuits_from_flats_matroid(matroid: tuple[set[T],list[set[T]]]) -> list[set[T]]:
+    """Construct circuits from a matroid defined by flats.
+
+    Args:
+        matroid (tuple[set[T],list[set[T]]]): A matroid defined by flats.
+
+    Returns:
+        list[set[T]]: The circuits of a given matroid.
+    """
+    E, _ = matroid
+    return circuits_from_dependent_matroid((E, dependent_sets_from_flats_matroid(matroid)))
 
 
 def rank_function_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
