@@ -153,6 +153,8 @@ class Matroid(Generic[T]):
     
     @property
     def hyperplanes(self) -> list[set[T]]:
+        if self.__base_axiom is MatroidAxiom.BASES:
+            return construct.hyperplanes_from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
             return construct.hyperplanes_from_flats_matroid((self.__first, self.__second))
         

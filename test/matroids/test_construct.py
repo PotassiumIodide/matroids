@@ -40,6 +40,7 @@ from src.matroids.construct import (
     flats_from_open_sets_matroid,
     flats_from_hyperplanes_matroid,
     open_sets_from_flats_matroid,
+    hyperplanes_from_bases_matroid,
     hyperplanes_from_flats_matroid,
     spanning_sets_from_rank_matroid,
 )
@@ -648,6 +649,22 @@ def test_open_sets_from_flats_matroid(flats_matroid, expected):
     Os1 = open_sets_from_flats_matroid(flats_matroid)
     Os2 = expected
     assert all(map(lambda O1: O1 in Os2, Os1)) and all(map(lambda O2: O2 in Os1, Os2))
+
+
+@pytest.mark.parametrize('bases_matroid, expected', [
+    (( {1,2,3}, [set()] )            , []                  ),
+    (( {1,2,3}, [{1}] )              , [{2,3}]             ),
+    (( {1,2,3}, [{1},{2}] )          , [{3}]               ),
+    (( {1,2,3}, [{1},{2},{3}] )      , [set()]             ),
+    (( {1,2,3}, [{1,2}] )            , [{1,3},{2,3}]       ),
+    (( {1,2,3}, [{1,2},{1,3}] )      , [{1},{2,3}]         ),
+    (( {1,2,3}, [{1,2},{1,3},{2,3}] ), [{1},{2},{3}]       ),
+    (( {1,2,3}, [{1,2,3}] )          , [{1,2},{1,3},{2,3}] ),
+])
+def test_hyperplanes_from_bases_matroid(bases_matroid, expected):
+    Hs1 = hyperplanes_from_bases_matroid(bases_matroid)
+    Hs2 = expected
+    assert all(map(lambda H1: H1 in Hs2, Hs1)) and all(map(lambda H2: H2 in Hs1, Hs2))
 
 
 @pytest.mark.parametrize('flats_matroid, expected', [
