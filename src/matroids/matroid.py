@@ -133,6 +133,8 @@ class Matroid(Generic[T]):
             return construct.rank_function_from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
             return construct.rank_function_from_closure_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.FLATS:
+            return construct.rank_function_from_flats_matroid((self.__first, self.__second))
         
         # TODO: Implement the other constructions from other axioms
         else:
