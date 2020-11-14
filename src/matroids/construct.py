@@ -690,6 +690,19 @@ def closure_function_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) ->
     return lambda X: reduce(and_, (F for F in Fs if X <= F), E)
 
 
+def closure_function_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
+    """Construct a closure function from a matroid defined by open sets.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by open sets.
+
+    Returns:
+        Callable[[set[T]], set[T]]: The closure function of a given matroid.
+    """
+    E, _ = matroid
+    return closure_function_from_rank_matroid((E, rank_function_from_open_sets_matroid(matroid)))
+
+
 def flats_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
     """Construct flats from a matroid defined by a rank function.
 

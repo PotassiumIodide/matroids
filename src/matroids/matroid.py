@@ -161,6 +161,8 @@ class Matroid(Generic[T]):
             return construct.closure_function_from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
             return construct.closure_function_from_flats_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.OPEN_SETS:
+            return construct.closure_function_from_open_sets_matroid((self.__first, self.__second))
         
         # TODO: Implement the other constructions from other axioms
         else:
