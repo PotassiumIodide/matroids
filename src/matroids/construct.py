@@ -72,7 +72,7 @@ def indeps_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]
         list[set[T]]: The independent sets of a given matroid.
     """
     E, cl = matroid
-    # Is = { I ⊆ E : i ∈ cl(I\{i}), ∀i ∈ I }
+    # Is = { I ⊆ E : i ∉ cl(I\{i}), ∀i ∈ I }
     return [I for I in powset(E) if all(map(lambda i: i not in cl(I - {i}), I))]
 
 
@@ -551,6 +551,21 @@ def hyperplanes_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list
     E, Fs = matroid
     # Hs = { H ∈ Fs\{E} : H ⊈ F, ∀F ∈ Fs\{E} }
     return [H for H in Fs if ((H != E) and all(map(lambda F: (not H < F) or (F == E), Fs)))]
+
+def hyperplanes_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct hyperplanes from a matroid defined by spanning sets.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by spanning sets.
+
+    Returns:
+        list[set[T]]: The hyperplanes of a given matroid.
+    """
+    E, Ss = matroid
+    # Hs is the maximal set of the non-spanning sets { N ⊆ E : N ∉ Ss }
+    non_spannings = [N for N in powset(E) if N not in Ss]
+    # Maximalization
+    return [H for H in non_spannings if all(map(lambda X: not (H < X), non_spannings))]
 
 
 def spanning_sets_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
