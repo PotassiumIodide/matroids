@@ -138,8 +138,14 @@ class Matroid(Generic[T]):
     
     @property
     def flats(self) -> list[set[T]]:
+        if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
+            return construct.flats_from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
             return construct.flats_from_closure_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.OPEN_SETS:
+            return construct.flats_from_open_sets_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.HYPERPLANES:
+            return construct.flats_from_hyperplanes_matroid((self.__first, self.__second))
         
         # TODO: Implement the other constructions from other axioms
         else:
