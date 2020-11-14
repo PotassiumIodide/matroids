@@ -172,10 +172,14 @@ class Matroid(Generic[T]):
     
     @property
     def flats(self) -> list[set[T]]:
+        if self.__base_axiom is MatroidAxiom.FLATS:
+            return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
             return construct.flats_from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
             return construct.flats_from_dependent_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.BASES:
+            return construct.flats_from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
             return construct.flats_from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
@@ -191,6 +195,8 @@ class Matroid(Generic[T]):
     
     @property
     def hyperplanes(self) -> list[set[T]]:
+        if self.__base_axiom is MatroidAxiom.HYPERPLANES:
+            return self.__second
         if self.__base_axiom is MatroidAxiom.BASES:
             return construct.hyperplanes_from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
@@ -204,6 +210,8 @@ class Matroid(Generic[T]):
     
     @property
     def spanning_sets(self) -> list[set[T]]:
+        if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
+            return self.__second
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
             return construct.spanning_sets_from_rank_matroid((self.__first, self.__second))
         
