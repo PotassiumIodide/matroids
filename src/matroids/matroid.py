@@ -113,6 +113,7 @@ class Matroid(Generic[T]):
         # TODO: Implement the other constructions from other axioms
         else:
             raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
+    
 
     @property
     def closure_function(self) -> Callable[[set[T]], set[T]]:
@@ -161,3 +162,17 @@ class Matroid(Generic[T]):
         # TODO: Implement the other constructions from other axioms
         else:
             raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
+
+
+    def rank(self, subset: Union[set[T], None]=None) -> int:
+        """Calcurate the rank of a given subset. If no subset is given, returns the rank of the matroid.
+
+        Args:
+            subset (Union[set[T], None], optional): A subset of the ground set of the matroid. Defaults to the ground set.
+
+        Returns:
+            int: The rank of a given subset in the matroid.
+        """
+        X = subset if subset is not None else self.ground_set
+        r = self.rank_function
+        return r(X)

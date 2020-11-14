@@ -509,7 +509,7 @@ def hyperplanes_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list
     """
     E, Fs = matroid
     # Hs = { H ∈ Fs\{E} : H ⊈ F, ∀F ∈ Fs\{E} }
-    return [H for H in Fs if ((H != E) and all(map(lambda F: (not H < F) or (F ==E), Fs)))]
+    return [H for H in Fs if ((H != E) and all(map(lambda F: (not H < F) or (F == E), Fs)))]
 
 
 def spanning_sets_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
