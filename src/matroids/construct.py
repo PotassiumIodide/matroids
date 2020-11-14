@@ -730,16 +730,29 @@ def closure_function_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[
 
 
 def flats_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
-    """Construct flats from a matroid defined by indepent sets.
+    """Construct flats from a matroid defined by independent sets.
 
     Args:
-        matroid (tuple[set[T], list[set[T]]]): A matroid defined by independet sets.
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by independent sets.
 
     Returns:
         list[set[T]]: The flats of a given matroid.
     """
     E, _ = matroid
-    return flats_from_rank_matroid((E, rank_function_from_independent_matroid(matroid)))
+    return flats_from_closure_matroid((E, closure_function_from_independent_matroid(matroid)))
+
+
+def flats_from_dependent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct flats from a matroid defined by dependent sets.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by dependent sets.
+
+    Returns:
+        list[set[T]]: The flats of a given matroid.
+    """
+    E, _ = matroid
+    return flats_from_closure_matroid((E, closure_function_from_dependent_matroid(matroid)))
 
 
 def flats_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
