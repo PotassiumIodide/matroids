@@ -102,6 +102,19 @@ def independent_sets_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]
     return independent_sets_from_flats_matroid((E, flats_from_open_sets_matroid(matroid)))
 
 
+def independent_sets_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct independent sets from a matroid deifned by flats.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by flats.
+
+    Returns:
+        list[set[T]]: The independent sets of a given matroid.
+    """
+    E, _ = matroid
+    return independent_sets_from_flats_matroid((E, flats_from_hyperplanes_matroid(matroid)))
+
+
 def dependent_sets_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct dependent sets from a matroid defined by dependent sets.
 
