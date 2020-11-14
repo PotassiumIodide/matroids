@@ -38,6 +38,7 @@ from src.matroids.construct import (
     circuits_from_flats_matroid,
     circuits_from_open_sets_matroid,
     circuits_from_hyperplanes_matroid,
+    circuits_from_spanning_sets_matroid,
     rank_function_from_independent_matroid,
     rank_function_from_dependent_matroid,
     rank_function_from_bases_matroid,
@@ -607,17 +608,33 @@ def test_circuits_from_open_sets_matroid(open_sets_matroid, expected):
 
 
 @pytest.mark.parametrize('hyperplanes_matroid, expected', [
-    (( {1,2,3}, [] )                                    , [{1},{2},{3}]       ),
-    (( {1,2,3}, [{2,3}] )                              , [{2},{3}]           ),
-    (( {1,2,3}, [{3}] )                                , [{3},{1,2}]         ),
-    (( {1,2,3}, [set()] )                              , [{1,2},{1,3},{2,3}] ),
-    (( {1,2,3}, [{1,3},{2,3}] )                    , [{3}]               ),
-    (( {1,2,3}, [{1},{2,3}] )                    , [{2,3}]             ),
-    (( {1,2,3}, [{1},{2},{3}] )                  , [{1,2,3}]           ),
+    (( {1,2,3}, [] )                 , [{1},{2},{3}]       ),
+    (( {1,2,3}, [{2,3}] )            , [{2},{3}]           ),
+    (( {1,2,3}, [{3}] )              , [{3},{1,2}]         ),
+    (( {1,2,3}, [set()] )            , [{1,2},{1,3},{2,3}] ),
+    (( {1,2,3}, [{1,3},{2,3}] )      , [{3}]               ),
+    (( {1,2,3}, [{1},{2,3}] )        , [{2,3}]             ),
+    (( {1,2,3}, [{1},{2},{3}] )      , [{1,2,3}]           ),
     (( {1,2,3}, [{1,2},{1,3},{2,3}] ), []                  ),
 ])
 def test_circuits_from_hyperplanes_matroid(hyperplanes_matroid, expected):
     Cs1 = circuits_from_hyperplanes_matroid(hyperplanes_matroid)
+    Cs2 = expected
+    assert all(map(lambda C1: C1 in Cs2, Cs1)) and all(map(lambda C2: C2 in Cs1, Cs2))
+
+
+@pytest.mark.parametrize('spanning_sets_matroid, expected', [
+    (( {1,2,3}, [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ), [{1},{2},{3}]       ),
+    (( {1,2,3}, [{1},{1,2},{1,3},{1,2,3}] )                    , [{2},{3}]           ),
+    (( {1,2,3}, [{1},{2},{1,2},{1,3},{2,3},{1,2,3}] )          , [{3},{1,2}]         ),
+    (( {1,2,3}, [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] )      , [{1,2},{1,3},{2,3}] ),
+    (( {1,2,3}, [{1,2},{1,2,3}] )                              , [{3}]               ),
+    (( {1,2,3}, [{1,2},{1,3},{1,2,3}] )                        , [{2,3}]             ),
+    (( {1,2,3}, [{1,2},{1,3},{2,3},{1,2,3}] )                  , [{1,2,3}]           ),
+    (( {1,2,3}, [{1,2,3}] )                                    , []                  ),
+])
+def test_circuits_from_spanning_sets_matroid(spanning_sets_matroid, expected):
+    Cs1 = circuits_from_spanning_sets_matroid(spanning_sets_matroid)
     Cs2 = expected
     assert all(map(lambda C1: C1 in Cs2, Cs1)) and all(map(lambda C2: C2 in Cs1, Cs2))
 
