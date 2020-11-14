@@ -456,13 +456,26 @@ def circuits_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> lis
     """Construct circuits from a matroid defined by open sets.
 
     Args:
-        matroid (tuple[set[T], list[set[T]]]): A matroid defined by open sets
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by open sets.
 
     Returns:
         list[set[T]]: The circuits of a given matroid.
     """
     E, _ = matroid
     return circuits_from_dependent_matroid((E, dependent_sets_from_open_sets_matroid(matroid)))
+
+
+def circuits_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct circuits from a matroid defined by hyperplanes.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by hyperplanes.
+
+    Returns:
+        list[set[T]]: The circuits of a given matroid.
+    """
+    E, _ = matroid
+    return circuits_from_dependent_matroid((E, dependent_sets_from_hyperplanes_matroid(matroid)))
 
 
 def rank_function_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
