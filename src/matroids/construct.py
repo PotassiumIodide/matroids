@@ -1074,6 +1074,19 @@ def hyperplanes_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list
     return [H for H in Fs if ((H != E) and all(map(lambda F: (not H < F) or (F == E), Fs)))]
 
 
+def hyperplanes_from_open_sets_matroid(matroid: tuple[set[T], Callable[[set[T]],set[T]]]) -> list[set[T]]:
+    """Construct hyperplanes from a matroid defined by open sets.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], set[T]]]): A matroid defined by open sets.
+
+    Returns:
+        list[set[T]]: The hyperplanes of a given matroid.
+    """
+    E, _ = matroid
+    return hyperplanes_from_bases_matroid((E, bases_from_open_sets_matroid(matroid)))
+
+
 def hyperplanes_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct hyperplanes from a matroid defined by spanning sets.
 
