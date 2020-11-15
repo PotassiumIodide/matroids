@@ -265,10 +265,10 @@ class Matroid(Generic[T]):
             return construct.spanning_sets_from_flats_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.OPEN_SETS:
             return construct.spanning_sets_from_open_sets_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.HYPERPLANES:
+            return construct.spanning_sets_from_hyperplanes_matroid((self.__first, self.__second))
         
-        # TODO: Implement the other constructions from other axioms
-        else:
-            raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
+        raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
 
 
     def rank(self, subset: Union[set[T], None]=None) -> int:

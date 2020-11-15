@@ -1206,3 +1206,16 @@ def spanning_sets_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -
     """
     E, _ = matroid
     return spanning_sets_from_rank_matroid((E, rank_function_from_open_sets_matroid(matroid)))
+
+
+def spanning_sets_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct spanning sets from a matroid defined by hyperplanes.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by hyperplanes.
+
+    Returns:
+        list[set[T]]: The spanning set of a given matroid.
+    """
+    E, _ = matroid
+    return spanning_sets_from_rank_matroid((E, rank_function_from_hyperplanes_matroid(matroid)))
