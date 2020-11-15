@@ -913,6 +913,19 @@ def open_sets_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> lis
     return open_sets_from_flats_matroid((E, flats_from_circuits_matroid(matroid)))
 
 
+def open_sets_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
+    """Construct open sets from a matroid defined by a rank function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], int]]): A matroid defined by a rank function.
+
+    Returns:
+        list[set[T]]: The open sets of a given matroid.
+    """
+    E, _ = matroid
+    return open_sets_from_flats_matroid((E, flats_from_rank_matroid(matroid)))
+
+
 def open_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct open sets from a matroid defined by flats.
 
