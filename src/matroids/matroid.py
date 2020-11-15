@@ -209,6 +209,8 @@ class Matroid(Generic[T]):
             return construct.open_sets_from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
             return construct.open_sets_from_rank_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
+            return construct.open_sets_from_closure_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
             return construct.open_sets_from_flats_matroid((self.__first, self.__second))
         
