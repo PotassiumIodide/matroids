@@ -1167,3 +1167,16 @@ def spanning_sets_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], in
     E, r = matroid
     # Ss = { S ⊆ E : r(S) = r(E) }
     return [S for S in powset(E) if r(S) == r(E)]
+
+
+def spanning_sets_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> list[set[T]]:
+    """Construct spanning sets from a matroid defined by a closure function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], set[T]]]): A matroid defined by a closure function
+
+    Returns:
+        list[set[T]]: The spanning set of a given matroid.
+    """
+    E, _ = matroid
+    return spanning_sets_from_rank_matroid((E, rank_function_from_closure_matroid(matroid)))

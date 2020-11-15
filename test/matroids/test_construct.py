@@ -89,6 +89,7 @@ from src.matroids.construct import (
     spanning_sets_from_bases_matroid,
     spanning_sets_from_circuits_matroid,
     spanning_sets_from_rank_matroid,
+    spanning_sets_from_closure_matroid,
 )
 
 
@@ -1483,5 +1484,21 @@ def test_spanning_sets_from_circuits_matroid(circuits_matroid, expected):
 ])
 def test_spanning_sets_from_rank_matroid(rank_matroid, expected):
     Ss1 = spanning_sets_from_rank_matroid(rank_matroid)
+    Ss2 = expected
+    assert all(map(lambda S1: S1 in Ss2, Ss1)) and all(map(lambda S2: S2 in Ss1, Ss2))
+
+
+@pytest.mark.parametrize('closure_matroid, expected', [
+    (( {1,2,3}, lambda X: {1,2,3} )                      , [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
+    (( {1,2,3}, lambda X: {1,2,3} if 1 in X else {2,3} ) , [{1},{1,2},{1,3},{1,2,3}]                     ),
+    (( {1,2,3}, lambda X: {3} if X <= {3} else {1,2,3} ) , [{1},{2},{1,2},{1,3},{2,3},{1,2,3}]           ),
+    (( {1,2,3}, lambda X: {1,2,3} if X else X )          , [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}]       ),
+    (( {1,2,3}, lambda X: X | {3} )                      , [{1,2},{1,2,3}]                               ),
+    (( {1,2,3}, lambda X: X if X <= {1} else X | {2,3} ) , [{1,2},{1,3},{1,2,3}]                         ),
+    (( {1,2,3}, lambda X: X if len(X) <= 1 else {1,2,3} ), [{1,2},{1,3},{2,3},{1,2,3}]                   ),
+    (( {1,2,3}, lambda X: X )                            , [{1,2,3}]                                     ),
+])
+def test_spanning_sets_from_closure_matroid(closure_matroid, expected):
+    Ss1 = spanning_sets_from_closure_matroid(closure_matroid)
     Ss2 = expected
     assert all(map(lambda S1: S1 in Ss2, Ss1)) and all(map(lambda S2: S2 in Ss1, Ss2))
