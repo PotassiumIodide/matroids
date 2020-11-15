@@ -1021,6 +1021,19 @@ def hyperplanes_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list
     return [H for H in set_containing_no_bases if all(map(lambda X: not (H < X), set_containing_no_bases))]
 
 
+def hyperplanes_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct hyperplanes from a matroid defined by circuits.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by circuits.
+
+    Returns:
+        list[set[T]]: The hyperplanes of a given matroid.
+    """
+    E, _ = matroid
+    return hyperplanes_from_bases_matroid((E, bases_from_circuits_matroid(matroid)))
+
+
 def hyperplanes_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct hyperplanes from a matroid defined by flats.
 
