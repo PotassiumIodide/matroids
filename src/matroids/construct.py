@@ -861,11 +861,24 @@ def flats_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> li
     return flats_from_closure_matroid((E, closure_function_from_spanning_sets_matroid(matroid)))
 
 
-def open_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
-    """Construct open sets from a matroid defined by flats
+def open_sets_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct open sets from a matroid defined by independent sets.
 
     Args:
-        matroid (tuple[set[T], list[set[T]]]): A matroid defined by flats
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by independent sets.
+
+    Returns:
+        list[set[T]]: The open sets of a given matroid.
+    """
+    E, _ = matroid
+    return open_sets_from_flats_matroid((E, flats_from_independent_matroid(matroid)))
+
+
+def open_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct open sets from a matroid defined by flats.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by flats.
 
     Returns:
         list[set[T]]: The open sets of a given matroid.
