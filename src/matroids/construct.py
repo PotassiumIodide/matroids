@@ -992,6 +992,19 @@ def hyperplanes_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -
     return hyperplanes_from_bases_matroid((E, bases_from_independent_matroid(matroid)))
 
 
+def hyperplanes_from_dependent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct hyperplanes from a matroid defined by dependent sets.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by dependent sets.
+
+    Returns:
+        list[set[T]]: The hyperplanes of a given matroid.
+    """
+    E, _ = matroid
+    return hyperplanes_from_bases_matroid((E, bases_from_dependent_matroid(matroid)))
+
+
 def hyperplanes_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct hyperplanes from a matroid defined by bases.
 
