@@ -215,6 +215,8 @@ class Matroid(Generic[T]):
             return construct.open_sets_from_flats_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.HYPERPLANES:
             return construct.open_sets_from_hyperplanes_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
+            return construct.open_sets_from_spanning_sets_matroid((self.__first, self.__second))
         
         raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
     
