@@ -249,6 +249,8 @@ class Matroid(Generic[T]):
     def spanning_sets(self) -> list[set[T]]:
         if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
             return self.__second
+        if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
+            return construct.spanning_sets_from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
             return construct.spanning_sets_from_rank_matroid((self.__first, self.__second))
         

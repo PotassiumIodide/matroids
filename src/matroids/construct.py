@@ -1103,6 +1103,19 @@ def hyperplanes_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]])
     return [H for H in non_spannings if all(map(lambda X: not (H < X), non_spannings))]
 
 
+def spanning_sets_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct spanning sets from a matroid defined by independent sets.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by independent sets.
+
+    Returns:
+        list[set[T]]: The spanning set of a given matroid.
+    """
+    E, _ = matroid
+    return spanning_sets_from_rank_matroid((E, rank_function_from_independent_matroid(matroid)))
+
+
 def spanning_sets_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
     """Construct spanning sets from a matroid defined by a rank function.
 
