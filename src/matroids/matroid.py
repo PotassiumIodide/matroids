@@ -232,6 +232,10 @@ class Matroid(Generic[T]):
             return construct.hyperplanes_from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
             return construct.hyperplanes_from_circuits_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
+            return construct.hyperplanes_from_rank_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
+            return construct.hyperplanes_from_closure_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
             return construct.hyperplanes_from_flats_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.SPANNING_SETS:

@@ -1034,6 +1034,32 @@ def hyperplanes_from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> l
     return hyperplanes_from_bases_matroid((E, bases_from_circuits_matroid(matroid)))
 
 
+def hyperplanes_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]],int]]) -> list[set[T]]:
+    """Construct hyperplanes from a matroid defined by a rank function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], int]]): A matroid defined by a rank function.
+
+    Returns:
+        list[set[T]]: The hyperplanes of a given matroid.
+    """
+    E, _ = matroid
+    return hyperplanes_from_bases_matroid((E, bases_from_rank_matroid(matroid)))
+
+
+def hyperplanes_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]],set[T]]]) -> list[set[T]]:
+    """Construct hyperplanes from a matroid defined by a closure function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], set[T]]]): A matroid defined by a closure function.
+
+    Returns:
+        list[set[T]]: The hyperplanes of a given matroid.
+    """
+    E, _ = matroid
+    return hyperplanes_from_bases_matroid((E, bases_from_closure_matroid(matroid)))
+
+
 def hyperplanes_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct hyperplanes from a matroid defined by flats.
 
