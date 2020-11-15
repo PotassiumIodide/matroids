@@ -979,6 +979,19 @@ def open_sets_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -
     return open_sets_from_flats_matroid((E, flats_from_spanning_sets_matroid(matroid)))
 
 
+def hyperplanes_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct hyperplanes from a matroid defined by independent sets.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by independent sets.
+
+    Returns:
+        list[set[T]]: The hyperplanes of a given matroid.
+    """
+    E, _ = matroid
+    return hyperplanes_from_bases_matroid((E, bases_from_independent_matroid(matroid)))
+
+
 def hyperplanes_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct hyperplanes from a matroid defined by bases.
 
