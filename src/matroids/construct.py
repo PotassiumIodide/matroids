@@ -89,7 +89,7 @@ def independent_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) ->
     return independent_sets_from_closure_matroid((E, closure_function_from_flats_matroid(matroid)))
 
 
-def independent_sets_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def independent_sets_from_open_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct independent sets from a matroid defined by open sets.
 
     Args:
@@ -99,7 +99,7 @@ def independent_sets_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]
         list[set[T]]: The independent sets of a given matroid.
     """
     E, _ = matroid
-    return independent_sets_from_flats_matroid((E, flats_from_open_sets_matroid(matroid)))
+    return independent_sets_from_flats_matroid((E, flats_from_open_matroid(matroid)))
 
 
 def independent_sets_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
@@ -115,7 +115,7 @@ def independent_sets_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]
     return independent_sets_from_flats_matroid((E, flats_from_hyperplanes_matroid(matroid)))
 
 
-def independent_sets_from_spanning_sets_matroid(matroid: tuple[set[T],list[set[T]]]) -> list[set[T]]:
+def independent_sets_from_spanning_matroid(matroid: tuple[set[T],list[set[T]]]) -> list[set[T]]:
     """Construct independent sets from a matroid defined by spanning sets.
 
     Args:
@@ -125,7 +125,7 @@ def independent_sets_from_spanning_sets_matroid(matroid: tuple[set[T],list[set[T
         list[set[T]]: The independent sets of a given matroid.
     """
     E, _ = matroid
-    return independent_sets_from_bases_matroid((E, bases_from_spanning_sets_matroid(matroid)))
+    return independent_sets_from_bases_matroid((E, bases_from_spanning_matroid(matroid)))
 
 
 def dependent_sets_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
@@ -207,7 +207,7 @@ def dependent_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> l
     return dependent_sets_from_independent_matroid((E, independent_sets_from_flats_matroid(matroid)))
 
 
-def dependent_sets_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def dependent_sets_from_open_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct dependent sets from a matroid defined by open sets.
 
     Args:
@@ -217,7 +217,7 @@ def dependent_sets_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) 
         list[set[T]]: The dependent sets of a matroid.
     """
     E, _ = matroid
-    return dependent_sets_from_independent_matroid((E, independent_sets_from_open_sets_matroid(matroid)))
+    return dependent_sets_from_independent_matroid((E, independent_sets_from_open_matroid(matroid)))
 
 
 def dependent_sets_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
@@ -233,7 +233,7 @@ def dependent_sets_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]
     return dependent_sets_from_independent_matroid((E, independent_sets_from_hyperplanes_matroid(matroid)))
 
 
-def dependent_sets_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def dependent_sets_from_spanning_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct dependent sets from a matroid defined by spanning sets.
 
     Args:
@@ -243,7 +243,7 @@ def dependent_sets_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]
         list[set[T]]: The dependent sets of a matroid.
     """
     E, _ = matroid
-    return dependent_sets_from_independent_matroid((E, independent_sets_from_spanning_sets_matroid(matroid)))
+    return dependent_sets_from_independent_matroid((E, independent_sets_from_spanning_matroid(matroid)))
 
 
 def bases_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
@@ -326,7 +326,7 @@ def bases_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T
     return bases_from_independent_matroid((E, independent_sets_from_flats_matroid(matroid)))
 
 
-def bases_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def bases_from_open_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct bases from a matroid defined by open sets.
 
     Args:
@@ -336,7 +336,7 @@ def bases_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[s
         list[set[T]]: The bases of a given matroid.
     """
     E, _ = matroid
-    return bases_from_independent_matroid((E, independent_sets_from_open_sets_matroid(matroid)))
+    return bases_from_independent_matroid((E, independent_sets_from_open_matroid(matroid)))
 
 
 def bases_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
@@ -352,7 +352,7 @@ def bases_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> list
     return bases_from_independent_matroid((E, independent_sets_from_hyperplanes_matroid(matroid)))
 
 
-def bases_from_spanning_sets_matroid(matroid: tuple[set[T],list[set[T]]]) -> list[set[T]]:
+def bases_from_spanning_matroid(matroid: tuple[set[T],list[set[T]]]) -> list[set[T]]:
     """Construct bases from a matroid defined by spanning sets.
 
     Args:
@@ -452,7 +452,7 @@ def circuits_from_flats_matroid(matroid: tuple[set[T],list[set[T]]]) -> list[set
     return circuits_from_dependent_matroid((E, dependent_sets_from_flats_matroid(matroid)))
 
 
-def circuits_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def circuits_from_open_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct circuits from a matroid defined by open sets.
 
     Args:
@@ -462,7 +462,7 @@ def circuits_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> lis
         list[set[T]]: The circuits of a given matroid.
     """
     E, _ = matroid
-    return circuits_from_dependent_matroid((E, dependent_sets_from_open_sets_matroid(matroid)))
+    return circuits_from_dependent_matroid((E, dependent_sets_from_open_matroid(matroid)))
 
 
 def circuits_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
@@ -478,7 +478,7 @@ def circuits_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> l
     return circuits_from_dependent_matroid((E, dependent_sets_from_hyperplanes_matroid(matroid)))
 
 
-def circuits_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def circuits_from_spanning_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct circuits from a matroid defined by spanning sets.
 
     Args:
@@ -488,7 +488,7 @@ def circuits_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) ->
         list[set[T]]: The circuits of a given matroid.
     """
     E, _ = matroid
-    return circuits_from_dependent_matroid((E, dependent_sets_from_spanning_sets_matroid(matroid)))
+    return circuits_from_dependent_matroid((E, dependent_sets_from_spanning_matroid(matroid)))
 
 
 def rank_function_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
@@ -570,7 +570,7 @@ def rank_function_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> Ca
     return rank_function_from_independent_matroid((E, independent_sets_from_flats_matroid(matroid)))
 
 
-def rank_function_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
+def rank_function_from_open_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
     """Construct a rank function from a matroid defined by open sets.
 
     Args:
@@ -580,7 +580,7 @@ def rank_function_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -
         Callable[[set[T]], int]: The rank function of a given matroid.
     """
     E, _ = matroid
-    return rank_function_from_independent_matroid((E, independent_sets_from_open_sets_matroid(matroid)))
+    return rank_function_from_independent_matroid((E, independent_sets_from_open_matroid(matroid)))
 
 
 def rank_function_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
@@ -596,7 +596,7 @@ def rank_function_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]])
     return rank_function_from_independent_matroid((E, independent_sets_from_hyperplanes_matroid(matroid)))
 
 
-def rank_function_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
+def rank_function_from_spanning_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
     """Construct a rank function from a matroid defined by spanning sets.
 
     Args:
@@ -606,7 +606,7 @@ def rank_function_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]
         Callable[[set[T]], int]: The rank function of a given matroid.
     """
     E, _ = matroid
-    return rank_function_from_independent_matroid((E, independent_sets_from_spanning_sets_matroid(matroid)))
+    return rank_function_from_independent_matroid((E, independent_sets_from_spanning_matroid(matroid)))
 
 
 def closure_function_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
@@ -690,7 +690,7 @@ def closure_function_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) ->
     return lambda X: reduce(and_, (F for F in Fs if X <= F), E)
 
 
-def closure_function_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
+def closure_function_from_open_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
     """Construct a closure function from a matroid defined by open sets.
 
     Args:
@@ -700,7 +700,7 @@ def closure_function_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]
         Callable[[set[T]], set[T]]: The closure function of a given matroid.
     """
     E, _ = matroid
-    return closure_function_from_rank_matroid((E, rank_function_from_open_sets_matroid(matroid)))
+    return closure_function_from_rank_matroid((E, rank_function_from_open_matroid(matroid)))
 
 
 def closure_function_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
@@ -716,7 +716,7 @@ def closure_function_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]
     return closure_function_from_rank_matroid((E, rank_function_from_hyperplanes_matroid(matroid)))
 
 
-def closure_function_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
+def closure_function_from_spanning_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:
     """Construct a closure function from a matroid defined by spanning sets.
 
     Args:
@@ -726,7 +726,7 @@ def closure_function_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[
         Callable[[set[T]], set[T]]: The closure function of a given matroid.
     """
     E, _ = matroid
-    return closure_function_from_rank_matroid((E, rank_function_from_spanning_sets_matroid(matroid)))
+    return closure_function_from_rank_matroid((E, rank_function_from_spanning_matroid(matroid)))
 
 
 def flats_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
@@ -810,7 +810,7 @@ def flats_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]
     return [F for F in powset(E) if cl(F) == F]
 
 
-def flats_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def flats_from_open_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct flats from a matroid defined by open sets.
 
     Args:
@@ -848,7 +848,7 @@ def flats_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> list
         tmp = next_tmp
 
 
-def flats_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def flats_from_spanning_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct flats from a matroid defined by spanning sets.
 
     Args:
@@ -858,7 +858,7 @@ def flats_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> li
         list[set[T]]: The flats of a given matroid.
     """
     E, _ = matroid
-    return flats_from_closure_matroid((E, closure_function_from_spanning_sets_matroid(matroid)))
+    return flats_from_closure_matroid((E, closure_function_from_spanning_matroid(matroid)))
 
 
 def open_sets_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
@@ -966,7 +966,7 @@ def open_sets_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> 
     return open_sets_from_flats_matroid((E, flats_from_hyperplanes_matroid(matroid)))
 
 
-def open_sets_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def open_sets_from_spanning_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct open sets from a matroid defined by spanning sets.
 
     Args:
@@ -976,7 +976,7 @@ def open_sets_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -
         list[set[T]]: The open sets of a given matroid.
     """
     E, _ = matroid
-    return open_sets_from_flats_matroid((E, flats_from_spanning_sets_matroid(matroid)))
+    return open_sets_from_flats_matroid((E, flats_from_spanning_matroid(matroid)))
 
 
 def hyperplanes_from_independent_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
@@ -1074,7 +1074,7 @@ def hyperplanes_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list
     return [H for H in Fs if ((H != E) and all(map(lambda F: (not H < F) or (F == E), Fs)))]
 
 
-def hyperplanes_from_open_sets_matroid(matroid: tuple[set[T], Callable[[set[T]],set[T]]]) -> list[set[T]]:
+def hyperplanes_from_open_matroid(matroid: tuple[set[T], Callable[[set[T]],set[T]]]) -> list[set[T]]:
     """Construct hyperplanes from a matroid defined by open sets.
 
     Args:
@@ -1084,10 +1084,10 @@ def hyperplanes_from_open_sets_matroid(matroid: tuple[set[T], Callable[[set[T]],
         list[set[T]]: The hyperplanes of a given matroid.
     """
     E, _ = matroid
-    return hyperplanes_from_bases_matroid((E, bases_from_open_sets_matroid(matroid)))
+    return hyperplanes_from_bases_matroid((E, bases_from_open_matroid(matroid)))
 
 
-def hyperplanes_from_spanning_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def hyperplanes_from_spanning_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct hyperplanes from a matroid defined by spanning sets.
 
     Args:
@@ -1195,7 +1195,7 @@ def spanning_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> li
     return spanning_sets_from_rank_matroid((E, rank_function_from_flats_matroid(matroid)))
 
 
-def spanning_sets_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+def spanning_sets_from_open_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct spanning sets from a matroid defined by open sets.
 
     Args:
@@ -1205,7 +1205,7 @@ def spanning_sets_from_open_sets_matroid(matroid: tuple[set[T], list[set[T]]]) -
         list[set[T]]: The spanning set of a given matroid.
     """
     E, _ = matroid
-    return spanning_sets_from_rank_matroid((E, rank_function_from_open_sets_matroid(matroid)))
+    return spanning_sets_from_rank_matroid((E, rank_function_from_open_matroid(matroid)))
 
 
 def spanning_sets_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
