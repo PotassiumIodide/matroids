@@ -251,6 +251,10 @@ class Matroid(Generic[T]):
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
             return construct.spanning_sets_from_independent_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
+            return construct.spanning_sets_from_dependent_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.BASES:
+            return construct.spanning_sets_from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
             return construct.spanning_sets_from_rank_matroid((self.__first, self.__second))
         
