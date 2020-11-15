@@ -887,6 +887,19 @@ def open_sets_from_dependent_matroid(matroid: tuple[set[T], list[set[T]]]) -> li
     return open_sets_from_flats_matroid((E, flats_from_dependent_matroid(matroid)))
 
 
+def open_sets_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct open sets from a matroid defined by bases.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by bases.
+
+    Returns:
+        list[set[T]]: The open sets of a given matroid.
+    """
+    E, _ = matroid
+    return open_sets_from_flats_matroid((E, flats_from_bases_matroid(matroid)))
+
+
 def open_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct open sets from a matroid defined by flats.
 
