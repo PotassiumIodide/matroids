@@ -1180,3 +1180,16 @@ def spanning_sets_from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]],
     """
     E, _ = matroid
     return spanning_sets_from_rank_matroid((E, rank_function_from_closure_matroid(matroid)))
+
+
+def spanning_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct spanning sets from a matroid defined by flats.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by flats.
+
+    Returns:
+        list[set[T]]: The spanning set of a given matroid.
+    """
+    E, _ = matroid
+    return spanning_sets_from_rank_matroid((E, rank_function_from_flats_matroid(matroid)))
