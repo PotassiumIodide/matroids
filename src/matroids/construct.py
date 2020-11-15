@@ -953,6 +953,19 @@ def open_sets_from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[s
     return [E - F for F in Fs]
 
 
+def open_sets_from_hyperplanes_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct open sets from a matroid defined by hyperplanes.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by hyperplanes.
+
+    Returns:
+        list[set[T]]: The open sets of a given matroid.
+    """
+    E, _ = matroid
+    return open_sets_from_flats_matroid((E, flats_from_hyperplanes_matroid(matroid)))
+
+
 def hyperplanes_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     """Construct hyperplanes from a matroid defined by bases.
 
