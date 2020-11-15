@@ -1,6 +1,18 @@
+import math
 from typing import Callable, Generic, TypeVar, Union
 
-import matroids.construct as construct
+from matroids.construct import (
+    independent_sets,
+    dependent_sets,
+    bases,
+    circuits,
+    rank_function,
+    closure_function,
+    flats,
+    open_sets,
+    hyperplanes,
+    spanning_sets,
+)
 from .types import MatroidAxiom
 from .validator import validate_matroid_axiom
 
@@ -24,23 +36,23 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
             return self.__second
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.independent_sets_from_dependent_matroid((self.__first, self.__second))
+            return independent_sets.from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
-            return construct.independent_sets_from_bases_matroid((self.__first, self.__second))
+            return independent_sets.from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
-            return construct.independent_sets_from_circuits_matroid((self.__first, self.__second))
+            return independent_sets.from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
-            return construct.independent_sets_from_rank_matroid((self.__first, self.__second))
+            return independent_sets.from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
-            return construct.independent_sets_from_closure_matroid((self.__first, self.__second))
+            return independent_sets.from_closure_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
-            return construct.independent_sets_from_flats_matroid((self.__first, self.__second))
+            return independent_sets.from_flats_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.OPEN_SETS:
-            return construct.independent_sets_from_open_matroid((self.__first, self.__second))
+            return independent_sets.from_open_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.HYPERPLANES:
-            return construct.independent_sets_from_hyperplanes_matroid((self.__first, self.__second))
+            return independent_sets.from_hyperplanes_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
-            return construct.independent_sets_from_spanning_matroid((self.__first, self.__second))
+            return independent_sets.from_spanning_matroid((self.__first, self.__second))
         
         raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
     
@@ -49,23 +61,23 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.dependent_sets_from_independent_matroid((self.__first, self.__second))
+            return dependent_sets.from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
-            return construct.dependent_sets_from_bases_matroid((self.__first, self.__second))
+            return dependent_sets.from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
-            return construct.dependent_sets_from_circuits_matroid((self.__first, self.__second))
+            return dependent_sets.from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
-            return construct.dependent_sets_from_rank_matroid((self.__first, self.__second))
+            return dependent_sets.from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
-            return construct.dependent_sets_from_closure_matroid((self.__first, self.__second))
+            return dependent_sets.fromclosure_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
-            return construct.dependent_sets_from_flats_matroid((self.__first, self.__second))
+            return dependent_sets.fromflats_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.OPEN_SETS:
-            return construct.dependent_sets_from_open_matroid((self.__first, self.__second))
+            return dependent_sets.fromopen_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.HYPERPLANES:
-            return construct.dependent_sets_from_hyperplanes_matroid((self.__first, self.__second))
+            return dependent_sets.fromhyperplanes_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
-            return construct.dependent_sets_from_spanning_matroid((self.__first, self.__second))
+            return dependent_sets.fromspanning_matroid((self.__first, self.__second))
 
         raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
     
@@ -74,23 +86,23 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.BASES:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.bases_from_independent_matroid((self.__first, self.__second))
+            return bases.from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.bases_from_dependent_matroid((self.__first, self.__second))
+            return bases.from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
-            return construct.bases_from_circuits_matroid((self.__first, self.__second))
+            return bases.from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
-            return construct.bases_from_rank_matroid((self.__first, self.__second))
+            return bases.from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
-            return construct.bases_from_closure_matroid((self.__first, self.__second))
+            return bases.from_closure_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
-            return construct.bases_from_flats_matroid((self.__first, self.__second))
+            return bases.from_flats_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.OPEN_SETS:
-            return construct.bases_from_open_matroid((self.__first, self.__second))
+            return bases.from_open_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.HYPERPLANES:
-            return construct.bases_from_hyperplanes_matroid((self.__first, self.__second))
+            return bases.from_hyperplanes_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
-            return construct.bases_from_spanning_matroid((self.__first, self.__second))
+            return bases.from_spanning_matroid((self.__first, self.__second))
 
         raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
     
@@ -99,23 +111,23 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.circuits_from_independent_matroid((self.__first, self.__second))
+            return circuits.from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.circuits_from_dependent_matroid((self.__first, self.__second))
+            return circuits.from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
-            return construct.circuits_from_bases_matroid((self.__first, self.__second))
+            return circuits.from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
-            return construct.circuits_from_rank_matroid((self.__first, self.__second))
+            return circuits.from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
-            return construct.circuits_from_closure_matroid((self.__first, self.__second))
+            return circuits.from_closure_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
-            return construct.circuits_from_flats_matroid((self.__first, self.__second))
+            return circuits.from_flats_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.OPEN_SETS:
-            return construct.circuits_from_open_matroid((self.__first, self.__second))
+            return circuits.from_open_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.HYPERPLANES:
-            return construct.circuits_from_hyperplanes_matroid((self.__first, self.__second))
+            return circuits.from_hyperplanes_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
-            return construct.circuits_from_spanning_matroid((self.__first, self.__second))
+            return circuits.from_spanning_matroid((self.__first, self.__second))
         
         raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
 
@@ -124,23 +136,23 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.rank_function_from_independent_matroid((self.__first, self.__second))
+            return rank_function.from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.rank_function_from_dependent_matroid((self.__first, self.__second))
+            return rank_function.from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
-            return construct.rank_function_from_bases_matroid((self.__first, self.__second))
+            return rank_function.from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
-            return construct.rank_function_from_circuits_matroid((self.__first, self.__second))
+            return rank_function.from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
-            return construct.rank_function_from_closure_matroid((self.__first, self.__second))
+            return rank_function.from_closure_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
-            return construct.rank_function_from_flats_matroid((self.__first, self.__second))
+            return rank_function.from_flats_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.OPEN_SETS:
-            return construct.rank_function_from_open_matroid((self.__first, self.__second))
+            return rank_function.from_open_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.HYPERPLANES:
-            return construct.rank_function_from_hyperplanes_matroid((self.__first, self.__second))
+            return rank_function.from_hyperplanes_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
-            return construct.rank_function_from_spanning_matroid((self.__first, self.__second))
+            return rank_function.from_spanning_matroid((self.__first, self.__second))
         
         raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
     
@@ -150,23 +162,23 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.closure_function_from_independent_matroid((self.__first, self.__second))
+            return closure_function.from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.closure_function_from_dependent_matroid((self.__first, self.__second))
+            return closure_function.from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
-            return construct.closure_function_from_bases_matroid((self.__first, self.__second))
+            return closure_function.from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
-            return construct.closure_function_from_circuits_matroid((self.__first, self.__second))
+            return closure_function.from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
-            return construct.closure_function_from_rank_matroid((self.__first, self.__second))
+            return closure_function.from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
-            return construct.closure_function_from_flats_matroid((self.__first, self.__second))
+            return closure_function.from_flats_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.OPEN_SETS:
-            return construct.closure_function_from_open_matroid((self.__first, self.__second))
+            return closure_function.from_open_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.HYPERPLANES:
-            return construct.closure_function_from_hyperplanes_matroid((self.__first, self.__second))
+            return closure_function.from_hyperplanes_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
-            return construct.closure_function_from_spanning_matroid((self.__first, self.__second))
+            return closure_function.from_spanning_matroid((self.__first, self.__second))
         
         raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
     
@@ -175,23 +187,23 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.FLATS:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.flats_from_independent_matroid((self.__first, self.__second))
+            return flats.from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.flats_from_dependent_matroid((self.__first, self.__second))
+            return flats.from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
-            return construct.flats_from_bases_matroid((self.__first, self.__second))
+            return flats.from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
-            return construct.flats_from_circuits_matroid((self.__first, self.__second))
+            return flats.from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
-            return construct.flats_from_rank_matroid((self.__first, self.__second))
+            return flats.from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
-            return construct.flats_from_closure_matroid((self.__first, self.__second))
+            return flats.from_closure_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.OPEN_SETS:
-            return construct.flats_from_open_matroid((self.__first, self.__second))
+            return flats.from_open_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.HYPERPLANES:
-            return construct.flats_from_hyperplanes_matroid((self.__first, self.__second))
+            return flats.from_hyperplanes_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
-            return construct.flats_from_spanning_matroid((self.__first, self.__second))
+            return flats.from_spanning_matroid((self.__first, self.__second))
         
         raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
 
@@ -200,23 +212,23 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.OPEN_SETS:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.open_sets_from_independent_matroid((self.__first, self.__second))
+            return open_sets.from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.open_sets_from_dependent_matroid((self.__first, self.__second))
+            return open_sets.from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
-            return construct.open_sets_from_bases_matroid((self.__first, self.__second))
+            return open_sets.from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
-            return construct.open_sets_from_circuits_matroid((self.__first, self.__second))
+            return open_sets.from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
-            return construct.open_sets_from_rank_matroid((self.__first, self.__second))
+            return open_sets.from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
-            return construct.open_sets_from_closure_matroid((self.__first, self.__second))
+            return open_sets.from_closure_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
-            return construct.open_sets_from_flats_matroid((self.__first, self.__second))
+            return open_sets.from_flats_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.HYPERPLANES:
-            return construct.open_sets_from_hyperplanes_matroid((self.__first, self.__second))
+            return open_sets.from_hyperplanes_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
-            return construct.open_sets_from_spanning_matroid((self.__first, self.__second))
+            return open_sets.from_spanning_matroid((self.__first, self.__second))
         
         raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
     
@@ -225,23 +237,23 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.HYPERPLANES:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.hyperplanes_from_independent_matroid((self.__first, self.__second))
+            return hyperplanes.from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.hyperplanes_from_dependent_matroid((self.__first, self.__second))
+            return hyperplanes.from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
-            return construct.hyperplanes_from_bases_matroid((self.__first, self.__second))
+            return hyperplanes.from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
-            return construct.hyperplanes_from_circuits_matroid((self.__first, self.__second))
+            return hyperplanes.from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
-            return construct.hyperplanes_from_rank_matroid((self.__first, self.__second))
+            return hyperplanes.from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
-            return construct.hyperplanes_from_closure_matroid((self.__first, self.__second))
+            return hyperplanes.from_closure_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
-            return construct.hyperplanes_from_flats_matroid((self.__first, self.__second))
+            return hyperplanes.from_flats_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.OPEN_SETS:
-            return construct.hyperplanes_from_open_matroid((self.__first, self.__second))
+            return hyperplanes.from_open_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
-            return construct.hyperplanes_from_spanning_matroid((self.__first, self.__second))
+            return hyperplanes.from_spanning_matroid((self.__first, self.__second))
         
         raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
     
@@ -250,23 +262,23 @@ class Matroid(Generic[T]):
         if self.__base_axiom is MatroidAxiom.SPANNING_SETS:
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
-            return construct.spanning_sets_from_independent_matroid((self.__first, self.__second))
+            return spanning_sets.from_independent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
-            return construct.spanning_sets_from_dependent_matroid((self.__first, self.__second))
+            return spanning_sets.from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.BASES:
-            return construct.spanning_sets_from_bases_matroid((self.__first, self.__second))
+            return spanning_sets.from_bases_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CIRCUITS:
-            return construct.spanning_sets_from_circuits_matroid((self.__first, self.__second))
+            return spanning_sets.from_circuits_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.RANK_FUNCTION:
-            return construct.spanning_sets_from_rank_matroid((self.__first, self.__second))
+            return spanning_sets.from_rank_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.CLOSURE_FUNCTION:
-            return construct.spanning_sets_from_closure_matroid((self.__first, self.__second))
+            return spanning_sets.from_closure_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
-            return construct.spanning_sets_from_flats_matroid((self.__first, self.__second))
+            return spanning_sets.from_flats_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.OPEN_SETS:
-            return construct.spanning_sets_from_open_matroid((self.__first, self.__second))
+            return spanning_sets.from_open_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.HYPERPLANES:
-            return construct.spanning_sets_from_hyperplanes_matroid((self.__first, self.__second))
+            return spanning_sets.from_hyperplanes_matroid((self.__first, self.__second))
         
         raise NotImplementedError(f"Implementation for {self.__base_axiom} has not defined yet!")
 
@@ -275,7 +287,7 @@ class Matroid(Generic[T]):
         """Calcurate the rank of a given subset. If no subset is given, returns the rank of the matroid.
 
         Args:
-            subset (Union[set[T], None], optional): A subset of the ground set of the matroid. Defaults to the ground set.
+            subset (Union[set[T], None], optional): A subset of the ground set of the matroid. Defaults to self.ground_set.
 
         Returns:
             int: The rank of a given subset in the matroid.
@@ -283,3 +295,15 @@ class Matroid(Generic[T]):
         X = subset if subset is not None else self.ground_set
         r = self.rank_function
         return r(X)
+    
+    def girth(self, subset: set[T]) -> Union[int, float]:
+        """Calcurate the girth of a given subset.
+
+        Args:
+            subset (set[T]): A subset of the ground set of the matroid.
+
+        Returns:
+            int: The girth (the minimum cardinality of circuits) of a given subset in the matroid.
+        """
+        g = min(map(len, self.circuits))
+        return g if g else math.inf
