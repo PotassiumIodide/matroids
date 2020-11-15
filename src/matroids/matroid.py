@@ -201,6 +201,8 @@ class Matroid(Generic[T]):
             return self.__second
         if self.__base_axiom is MatroidAxiom.INDEPENDENT_SETS:
             return construct.open_sets_from_independent_matroid((self.__first, self.__second))
+        if self.__base_axiom is MatroidAxiom.DEPENDENT_SETS:
+            return construct.open_sets_from_dependent_matroid((self.__first, self.__second))
         if self.__base_axiom is MatroidAxiom.FLATS:
             return construct.open_sets_from_flats_matroid((self.__first, self.__second))
         
