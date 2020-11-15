@@ -85,6 +85,7 @@ from src.matroids.construct import (
     hyperplanes_from_open_sets_matroid,
     hyperplanes_from_spanning_sets_matroid,
     spanning_sets_from_independent_matroid,
+    spanning_sets_from_bases_matroid,
     spanning_sets_from_rank_matroid,
 )
 
@@ -1416,6 +1417,22 @@ def test_hyperplanes_from_spanning_sets_matroid(spanning_sets_matroid, expected)
 ])
 def test_spanning_sets_from_independent_matroid(independent_matroid, expected):
     Ss1 = spanning_sets_from_independent_matroid(independent_matroid)
+    Ss2 = expected
+    assert all(map(lambda S1: S1 in Ss2, Ss1)) and all(map(lambda S2: S2 in Ss1, Ss2))
+
+
+@pytest.mark.parametrize('bases_matroid, expected', [
+    (( {1,2,3}, [set()] )            , [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
+    (( {1,2,3}, [{1}] )              , [{1},{1,2},{1,3},{1,2,3}]                     ),
+    (( {1,2,3}, [{1},{2}] )          , [{1},{2},{1,2},{1,3},{2,3},{1,2,3}]           ),
+    (( {1,2,3}, [{1},{2},{3}] )      , [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}]       ),
+    (( {1,2,3}, [{1,2}] )            , [{1,2},{1,2,3}]                               ),
+    (( {1,2,3}, [{1,2},{1,3}] )      , [{1,2},{1,3},{1,2,3}]                         ),
+    (( {1,2,3}, [{1,2},{1,3},{2,3}] ), [{1,2},{1,3},{2,3},{1,2,3}]                   ),
+    (( {1,2,3}, [{1,2,3}] )          , [{1,2,3}]                                     ),
+])
+def test_spanning_sets_from_bases_matroid(bases_matroid, expected):
+    Ss1 = spanning_sets_from_bases_matroid(bases_matroid)
     Ss2 = expected
     assert all(map(lambda S1: S1 in Ss2, Ss1)) and all(map(lambda S2: S2 in Ss1, Ss2))
 

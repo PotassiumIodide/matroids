@@ -1116,6 +1116,19 @@ def spanning_sets_from_independent_matroid(matroid: tuple[set[T], list[set[T]]])
     return spanning_sets_from_rank_matroid((E, rank_function_from_independent_matroid(matroid)))
 
 
+def spanning_sets_from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
+    """Construct spanning sets from a matroid defined by bases.
+
+    Args:
+        matroid (tuple[set[T], list[set[T]]]): A matroid defined by bases.
+
+    Returns:
+        list[set[T]]: The spanning set of a given matroid.
+    """
+    E, _ = matroid
+    return spanning_sets_from_rank_matroid((E, rank_function_from_bases_matroid(matroid)))
+
+
 def spanning_sets_from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
     """Construct spanning sets from a matroid defined by a rank function.
 
