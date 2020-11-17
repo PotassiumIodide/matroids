@@ -1,2 +1,10 @@
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
+from matroids.Matroid import Matroid
+from matroids.IndependentMatroid import IndependentMatroid
+from matroids.DependentMatroid import DependentMatroid
+from matroids.BasesMatroid import BasesMatroid
+from matroids.CircuitsMatroid import CircuitsMatroid
+from matroids.RankMatroid import RankMatroid
+from matroids.ClosureMatroid import ClosureMatroid
+from matroids.OpenMatroid import OpenMatroid
+from matroids.HyperplanesMatroid import HyperplanesMatroid
+from matroids.SpanningMatroid import SpanningMatroid

@@ -1,5 +1,7 @@
 from typing import Callable, TypeVar
 
+from .Matroid import Matroid
+
 from matroids.construct import (
     independent_sets,
     dependent_sets,
@@ -14,7 +16,6 @@ from matroids.construct import (
 
 from .core.checker import satisfies_circuits_axiom
 from .core.exception import MatroidAxiomError
-from .Matroid import Matroid
 from .core.types import MatroidAxiom
 
 T = TypeVar("T")
