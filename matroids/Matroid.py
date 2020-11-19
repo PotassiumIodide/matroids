@@ -40,7 +40,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         self.__bases = matroid[1]
 
     @property
-    def ground_set(self):
+    def ground_set(self) -> set[T]:
         return self.__ground_set
     
     @property
@@ -62,7 +62,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
     # ----------------------------------------------------------------------------------------- #
     @property
     @abstractmethod
-    def independent_sets(self):
+    def independent_sets(self) -> list[set[T]]:
         return independent_sets.from_bases_matroid((self.ground_set, self.bases))
 
     @property
