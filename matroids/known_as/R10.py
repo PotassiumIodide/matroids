@@ -163,3 +163,9 @@ class R10(Matroid):
             {2,3,4,6,8,10},{2,4,6,7,9,10},{2,5,7,8,9,10},{3,4,5,6,7,9},
             {3,5,6,7,8,10}
         ]
+    
+    def is_binary(self) -> bool:
+        return True
+
+    def is_ternary(self) -> bool:
+        return True 

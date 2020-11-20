@@ -80,3 +80,9 @@ class NonVamosMatroid(Matroid):
             {1,4,6,7,8},{2,3,4,5,7},{2,3,4,5,8},{2,3,4,6,7},{2,3,4,6,8},{2,3,5,6,7},
             {2,3,5,6,8},{2,3,5,7,8},{2,3,6,7,8},{2,4,5,6,7},{2,4,5,6,8},{2,4,5,7,8},{2,4,6,7,8}
         ]
+    
+    def is_binary(self) -> bool:
+        return False
+
+    def is_ternary(self) -> bool:
+        return False

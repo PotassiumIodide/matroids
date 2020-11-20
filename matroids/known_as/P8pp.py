@@ -79,3 +79,9 @@ class P8pp(Matroid):
             {1,5,6,7,8},{2,3,4,5,8},{2,3,4,6,7},{2,3,5,6,7},{2,3,5,7,8},{2,5,6,7,8},{3,4,5,6,8},
             {3,4,6,7,8},{3,5,6,7,8},{4,5,6,7,8}
         ]
+    
+    def is_binary(self) -> bool:
+        return False
+
+    def is_ternary(self) -> bool:
+        return False

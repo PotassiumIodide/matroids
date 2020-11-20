@@ -44,3 +44,9 @@ class Q6(Matroid):
     @property
     def cocircuits(self) -> list[set[int]]:
         return [{1,4,6},{3,5,6},{1,2,3,4},{1,2,3,5},{1,2,3,6},{1,2,4,5},{1,2,5,6},{1,3,4,5},{2,3,4,5},{2,3,4,6},{2,4,5,6}]
+    
+    def is_binary(self) -> bool:
+        return False
+    
+    def is_ternary(self) -> bool:
+        return False

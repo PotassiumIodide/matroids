@@ -67,3 +67,9 @@ class J(Matroid):
             {1,2,3,6,8},{1,2,3,7,8},{1,2,4,5,7},{1,2,4,6,7},{1,2,4,7,8},{1,2,5,7,8},{1,3,4,5,6},
             {1,3,4,6,7},{1,3,4,6,8},{1,3,5,6,8},{1,4,5,6,7}
         ]
+    
+    def is_binary(self) -> bool:
+        return False
+
+    def is_ternary(self) -> bool:
+        return True

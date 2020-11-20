@@ -45,3 +45,9 @@ class FanoMatroid(Matroid):
     @property
     def cocircuits(self) -> list[set[int]]:
         return [{1,2,3,7},{1,2,4,5},{1,3,4,6},{1,5,6,7},{2,3,5,6},{2,4,6,7},{3,4,5,7}]
+
+    def is_binary(self) -> bool:
+        return True
+
+    def is_ternary(self) -> bool:
+        return False

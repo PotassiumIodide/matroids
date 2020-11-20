@@ -544,3 +544,9 @@ class T12(Matroid):
             {2,5,6,7,8,10},{2,5,8,10,11,12},{3,4,5,6,8,12},{3,4,5,7,8,11},{3,5,8,9,10,11},
             {3,6,8,9,11,12},{4,5,6,7,9,12},{4,6,9,10,11,12}
         ]
+    
+    def is_binary(self) -> bool:
+        return True
+
+    def is_ternary(self) -> bool:
+        return False

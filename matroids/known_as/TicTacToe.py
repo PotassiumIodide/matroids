@@ -145,3 +145,9 @@ class TicTacToe(Matroid):
             {3,4,5,7,9},{3,4,5,8,9},{3,4,6,7,8},{3,4,6,8,9},{3,4,7,8,9},{3,5,6,7,8},
             {3,5,6,7,9},{3,5,7,8,9},{3,6,7,8,9}
         ]
+    
+    def is_binary(self) -> bool:
+        return False
+
+    def is_ternary(self) -> bool:
+        return False

@@ -121,3 +121,9 @@ class R9A(Matroid):
             {2,3,4,6},{8,9,2,4},{9,2,5,7},{8,9,3,5},{9,4,5,6},
             {8,9,6,7}
         ]
+    
+    def is_binary(self) -> bool:
+        return False
+    
+    def is_ternary(self) -> bool:
+        return False
