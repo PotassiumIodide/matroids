@@ -514,6 +514,3 @@ class Matroid(object, metaclass=MatroidMetaClass):
         E = {*range(1,size+1)}
         Bs = [ set(X) for X, symbol in zip(combinations(E, rank), encoded_matroid) if symbol == basis_symbol ]
         return Matroid((E, Bs))
-
-M = Matroid(({1,2,3}, [{1,2},{1,3},{2,3}]))
-print((M - {2,3}).bases)
