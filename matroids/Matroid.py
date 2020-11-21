@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
+from itertools import combinations
 from math import inf
 from typing import Callable, TypeVar, Union
 
@@ -261,3 +262,33 @@ class Matroid(object, metaclass=MatroidMetaClass):
             bool: True when the matroid is emtpy, False otherwise
         """
         return not self.ground_set
+    
+    # ----------------------------------------------------------------------------------------------- #
+    #                                          Utilities                                              #
+    # ----------------------------------------------------------------------------------------------- #
+
+    def encode_matroid(self, basis_symbol: str='*', not_basis_symbol='0', show_with_order: bool=False) -> str:
+        """To encode matroids, we use RevLex-Index, which is used in Homepage of 
+        Oriented Matroids by Lukas Finschi and Komei Fukuda.
+        For a given rank r and a given size n of the ground set of a matroid,
+        the RevLex-Index uniquely identifies isomorphism classes of matroids.
+        The index is based on the representation of matroids by the sets of bases.
+        The set of bases can be specified by describing whether each r-subset of the ground set is a basis or not.
+        '*' means a basis and '0' (you can change these symbols by option). Each r-subset is ordered in reverse lexicographic orer.
+
+        Args:
+            basis_symbol (str, optional): A symbol for a bases. Defaults to '*'.
+            not_basis_symbol (str, optional): A symbol for non-bases. Defaults to '0'.
+            show_with_order (bool, optional): Show the order of enumerated r-subsets if this is True.
+
+        Returns:
+            str: Encoded matroid with respect to bases.
+        """
+        encoded = "".join(basis_symbol if set(X) in self.bases else not_basis_symbol for X in combinations(self.ground_set, self.rank()))
+        if not show_with_order:
+            return encoded
+        
+        return "\n".join(
+            "".join(str(X[i]) for X in combinations(self.ground_set, self.rank()))
+                      for i in range(self.rank())
+            ) + f"\n{encoded}"
