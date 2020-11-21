@@ -8,6 +8,7 @@ from typing import Callable, TypeVar, Union
 from matroids.MatroidMetaClass import MatroidMetaClass
 from matroids.core.checker import satisfies_bases_axiom
 from matroids.core.exception import MatroidAxiomError
+from matroids.core.set_operator import powset
 
 from matroids.construct import (
     independent_sets,
@@ -119,6 +120,68 @@ class Matroid(object, metaclass=MatroidMetaClass):
         X = subset if subset is not None else self.ground_set
         r = self.rank_function
         return r(X)
+    
+    def fundamental_circuit(self, e: T, B: set[T]) -> set[T]:
+        """Find the fundamental circuit C(e, B) of e with respect to B.
+        Let B be a basis of a matroid M. If e ∈ E - B, then B ∪ {e} contains a unique circuit, C(e,B).
+        Moreover, e ∈ C(e, B).
+
+        Args:
+            e (T): An element in E - B
+            B (set[T]): A basis in the matroid.
+
+        Raises:
+            ValueError: if the given e is not in E - B. 
+            ValueError: if the given B is not a basis.
+
+        Returns:
+            set[T]: The fundamental circuit of e with respect to B.
+        """
+        if e not in (self.E - B):
+            raise ValueError("The element e needs to be in E - B!!")
+        if B not in self.bases:
+            raise ValueError("The set B needs to be a basis!!")
+        C_ = [C for C in self.circuits if C <= B | {e} ]
+        return C_[0]
+    
+    def fundamental_circuits_with_respect_to(self, B: set[T]) -> list[set[T]]:
+        """Find the fundamental circuits with respect to B.
+        They consist of the fundamental circuits of every element e in E - B with respect to B.
+
+        Args:
+            B (set[T]): A basis in the matroid.
+
+        Raises:
+            ValueError: if the given B is not a basis.
+
+        Returns:
+            list[set[T]]: The fundamental circuits with respect to B.
+        """
+        Cs_ = [self.fundamental_circuit(e, B) for e in (self.ground_set - B)]
+        return [C for C in self.circuits if C in Cs_]
+    
+    def is_loop(self, e: T) -> bool:
+        """Check whether a given element e is a loop or not.
+
+        Args:
+            e (T): An element in the ground set of the matroid.
+
+        Returns:
+            bool: True if a given element e is a loop, False otherwise.
+        """
+        return {e} in self.circuits
+    
+    def are_parallel(self, f: T, g: T) -> bool:
+        """Check whether given elements f and g are parallel or not.
+
+        Args:
+            f (T): An element in the ground set of the matroid.
+            g (T): An element in the ground set of the matroid.
+
+        Returns:
+            bool: True if given elements f and g are parallel, False otherwise.
+        """
+        return {f, g} in self.circuits
     
     # ----------------------------------------------------------------------------------------------- #
     #                                           Duality                                               #
@@ -240,6 +303,67 @@ class Matroid(object, metaclass=MatroidMetaClass):
         X = subset if subset is not None else self.ground_set
         # r*(X) = r(E - X) + |X| - r(M)
         return self.rank(self.ground_set - X) + len(X) - self.rank()
+    
+    def fundamental_cocircuit(self, e: T, B: set[T]) -> set[T]:
+        """Find the fundamental cocircuit C(e, B) of e with respect to B.
+        Let B be a basis of the matroid. If e ∈ B, denote C_{M*}(e, E - B) by C*(e,B).
+        C*(e, B) is called the fundamental cocircuit of e with respect to B.
+
+        Args:
+            e (T): An element in B.
+            B (set[T]): A basis in the matroid.
+
+        Raises:
+            ValueError: if the given e is not in B. 
+            ValueError: if the given B is not a basis.
+
+        Returns:
+            set[T]: The fundamental circuit of e with respect to B.
+        """
+        if e not in B:
+            raise ValueError("The element e needs to be in B!!")
+        if B not in self.bases:
+            raise ValueError("The set B needs to be a basis!!")
+        return self.dual.fundamental_circuit(e, self.ground_set - B)
+    
+    def fundamental_cocircuits_with_respect_to(self, B: set[T]) -> list[set[T]]:
+        """Find the fundamental cocircuits with respect to B.
+        They consist of the fundamental cocircuits of every element e in B with respect to B.
+
+        Args:
+            B (set[T]): A basis in the matroid.
+
+        Raises:
+            ValueError: if the given B is not a basis.
+
+        Returns:
+            list[set[T]]: The fundamental circuits with respect to B.
+        """
+        Cs_ = [self.fundamental_cocircuit(e, B) for e in B]
+        return [C for C in self.cocircuits if C in Cs_]
+    
+    def is_coloop(self, e: T) -> bool:
+        """Check whether a given element e is a coloop or not.
+
+        Args:
+            e (T): An element in the ground set of the matroid.
+
+        Returns:
+            bool: True if a given element e is a coloop, False otherwise.
+        """
+        return {e} in self.cocircuits
+    
+    def are_coparallel(self, f: T, g: T) -> bool:
+        """Check whether given elements f and g are coparallel or not.
+
+        Args:
+            f (T): An element in the ground set of the matroid.
+            g (T): An element in the ground set of the matroid.
+
+        Returns:
+            bool: True if given elements f and g are coparallel, False otherwise.
+        """
+        return {f, g} in self.cocircuits
 
     # ----------------------------------------------------------------------------------------------- #
     #                                      Other Properties                                           #
@@ -314,3 +438,4 @@ class Matroid(object, metaclass=MatroidMetaClass):
         E = {*range(1,size+1)}
         Bs = [ set(X) for X, symbol in zip(combinations(E, rank), encoded_matroid) if symbol == basis_symbol ]
         return Matroid((E, Bs))
+    
