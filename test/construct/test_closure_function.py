@@ -8,6 +8,7 @@ from matroids.construct.closure_function import (
     from_bases_matroid,
     from_circuits_matroid,
     from_rank_matroid,
+    from_nulity_matroid,
     from_flats_matroid,
     from_open_matroid,
     from_hyperplanes_matroid,
@@ -97,6 +98,25 @@ def test_from_rank_matroid(rank_matroid, expected):
     E, _ = rank_matroid
     cl1 = from_rank_matroid(rank_matroid)
     cl2 = expected
+    assert all(cl1(X) == cl2(X) for X in powset(E))
+
+
+@pytest.mark.parametrize('nulity_matroid, expected', [
+    (( {1,2,3}, len )                                         , lambda X: {1,2,3}                              ),
+    (( {1,2,3}, lambda X: len(X) - 1 if 1 in X else len(X) )  , lambda X: {1,2,3} if 1 in X else {2,3}         ),
+    (( {1,2,3}, lambda X: len(X) if X <= {3} else len(X) - 1 ), lambda X: {3} if X <= {3} else {1,2,3}         ),
+    (( {1,2,3}, lambda X: len(X) - 1 if X else len(X) )       , lambda X: {1,2,3} if X else X                  ),
+    (( {1,2,3}, lambda X: 1 if 3 in X else 0 )                , lambda X: X | {3}                              ),
+    (( {1,2,3}, lambda X: 1 if {2,3} <= X else 0 )            , lambda X: X if X <= {1} else X | {2,3}         ),
+    (( {1,2,3}, lambda X: len(X) - 2 if X == {1,2,3} else 0 ) , lambda X: X if len(X) <= 1 else {1,2,3}        ),
+    (( {1,2,3}, lambda X: 0 )                                 , lambda X: X                                    ),
+])
+def test_from_nulity_matroid(nulity_matroid, expected):
+    E, _ = nulity_matroid
+    cl1 = from_nulity_matroid(nulity_matroid)
+    cl2 = expected
+    for X in powset(E):
+        print(cl1(X), cl2(X))
     assert all(cl1(X) == cl2(X) for X in powset(E))
 
 

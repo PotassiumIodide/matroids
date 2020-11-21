@@ -75,6 +75,20 @@ def from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[s
     return [ F for F in powset(E) if all(map(lambda e: r(F | {e}) == r(F) + 1, E - F))]
 
 
+def from_nulity_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
+    """Construct flats from a matroid defined by a nulity function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], int]]): A matroid defined by a nulity function.
+
+    Returns:
+        list[set[T]]: The flats of a given matroid.
+    """
+    E, n = matroid
+    # Fs = { F ⊆ E : n(F ∪ {e}) - n(F) = |F ∪ {e}| - |F| + 1, ∀e ∈ E\F }
+    return [ F for F in powset(E) if all(map(lambda e: n(F | {e}) - n(F) == len(F | {e}) - len(F) - 1, E - F))]
+
+
 def from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> list[set[T]]:
     """Construct flats from a matroid defined by a closure function.
 

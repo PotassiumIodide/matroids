@@ -5,6 +5,7 @@ from matroids.construct.circuits import (
     from_dependent_matroid,
     from_bases_matroid,
     from_rank_matroid,
+    from_nulity_matroid,
     from_closure_matroid,
     from_flats_matroid,
     from_open_matroid,
@@ -73,6 +74,22 @@ def test_from_bases_matroid(bases_matroid, expected):
 ])
 def test_from_rank_matroid(rank_matroid, expected):
     Cs1 = from_rank_matroid(rank_matroid)
+    Cs2 = expected
+    assert all(map(lambda C1: C1 in Cs2, Cs1)) and all(map(lambda C2: C2 in Cs1, Cs2))
+
+
+@pytest.mark.parametrize('nulity_matroid, expected', [
+    (( {1,2,3}, len )                                         , [{1},{2},{3}]       ),
+    (( {1,2,3}, lambda X: len(X) - 1 if 1 in X else len(X) )  , [{2},{3}]           ),
+    (( {1,2,3}, lambda X: len(X) if X <= {3} else len(X) - 1 ), [{1,2},{3}]         ),
+    (( {1,2,3}, lambda X: len(X) - 1 if X else len(X) )       , [{1,2},{1,3},{2,3}] ),
+    (( {1,2,3}, lambda X: 1 if 3 in X else 0 )                , [{3}]               ),
+    (( {1,2,3}, lambda X: 1 if {2,3} <= X else 0 )            , [{2,3}]             ),
+    (( {1,2,3}, lambda X: len(X) - 2 if X == {1,2,3} else 0 ) , [{1,2,3}]           ),
+    (( {1,2,3}, lambda X: 0 )                                 , []                  ),
+])
+def test_from_rank_matroid(nulity_matroid, expected):
+    Cs1 = from_nulity_matroid(nulity_matroid)
     Cs2 = expected
     assert all(map(lambda C1: C1 in Cs2, Cs1)) and all(map(lambda C2: C2 in Cs1, Cs2))
 

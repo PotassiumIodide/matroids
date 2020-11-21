@@ -75,6 +75,19 @@ def from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]],int]]) -> list[se
     return from_bases_matroid((E, bases.from_rank_matroid(matroid)))
 
 
+def from_nulity_matroid(matroid: tuple[set[T], Callable[[set[T]],int]]) -> list[set[T]]:
+    """Construct hyperplanes from a matroid defined by a nulity function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], int]]): A matroid defined by a nulity function.
+
+    Returns:
+        list[set[T]]: The hyperplanes of a given matroid.
+    """
+    E, _ = matroid
+    return from_bases_matroid((E, bases.from_nulity_matroid(matroid)))
+
+
 def from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]],set[T]]]) -> list[set[T]]:
     """Construct hyperplanes from a matroid defined by a closure function.
 

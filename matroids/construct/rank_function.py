@@ -61,8 +61,22 @@ def from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set
     return from_independent_matroid((E, independent_sets.from_circuits_matroid(matroid)))
 
 
+def from_nulity_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> Callable[[set[T]], int]:
+    """Construct a rank function from a matroid defined by a nulity function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], set[T]]]): A matroid defined by a nulity function.
+
+    Returns:
+        Callable[[set[T]], int]: The rank function of a given matroid.
+    """
+    E, n = matroid
+    # r(X) = |X| - n(X), ∀X ⊆ E.
+    return lambda X: len(X) - n(X)
+
+
 def from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> Callable[[set[T]], int]:
-    """Construct a rank function from a matroid defined by circuits.
+    """Construct a rank function from a matroid defined by a closure function.
 
     Args:
         matroid (tuple[set[T], Callable[[set[T]], set[T]]]): A matroid defined by a closure function.
@@ -71,7 +85,7 @@ def from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> 
         Callable[[set[T]], int]: The rank function of a given matroid.
     """
     E, cl = matroid
-    # r(X) = min{ |I| : X ⊆ cl(I) }.
+    # r(X) = min{ |I| : X ⊆ cl(I) }, ∀X ⊆ E.
     return lambda X: min(len(I) for I in powset(E) if X <= cl(I))
 
 

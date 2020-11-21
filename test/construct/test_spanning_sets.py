@@ -6,6 +6,7 @@ from matroids.construct.spanning_sets import (
     from_bases_matroid,
     from_circuits_matroid,
     from_rank_matroid,
+    from_nulity_matroid,
     from_closure_matroid,
     from_flats_matroid,
     from_open_matroid,
@@ -89,6 +90,22 @@ def test_from_circuits_matroid(circuits_matroid, expected):
 ])
 def test_from_rank_matroid(rank_matroid, expected):
     Ss1 = from_rank_matroid(rank_matroid)
+    Ss2 = expected
+    assert all(map(lambda S1: S1 in Ss2, Ss1)) and all(map(lambda S2: S2 in Ss1, Ss2))
+
+
+@pytest.mark.parametrize('nulity_matroid, expected', [
+    (( {1,2,3}, len )                                           , [set(),{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}] ),
+    (( {1,2,3}, lambda X: len(X) - 1 if 1 in X else len(X) )    , [{1},{1,2},{1,3},{1,2,3}]                     ),
+    (( {1,2,3}, lambda X: len(X) if X <= {0,3} else len(X) - 1 ), [{1},{2},{1,2},{1,3},{2,3},{1,2,3}]           ),
+    (( {1,2,3}, lambda X: len(X) - 1 if X else len(X) )         , [{1},{2},{3},{1,2},{1,3},{2,3},{1,2,3}]       ),
+    (( {1,2,3}, lambda X: 1 if 3 in X else 0 )                  , [{1,2},{1,2,3}]                               ),
+    (( {1,2,3}, lambda X: 1 if {2,3} <= X else 0 )              , [{1,2},{1,3},{1,2,3}]                         ),
+    (( {1,2,3}, lambda X: len(X) - 2 if X == {1,2,3} else 0 )   , [{1,2},{1,3},{2,3},{1,2,3}]                   ),
+    (( {1,2,3}, lambda X: 0 )                                   , [{1,2,3}]                                     ),
+])
+def test_from_nulity_matroid(nulity_matroid, expected):
+    Ss1 = from_nulity_matroid(nulity_matroid)
     Ss2 = expected
     assert all(map(lambda S1: S1 in Ss2, Ss1)) and all(map(lambda S2: S2 in Ss1, Ss2))
 

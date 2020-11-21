@@ -71,8 +71,22 @@ def from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> Callab
         Callable[[set[T]], set[T]]: The closure function of a given matroid.
     """
     E, r = matroid
-    # cl(X) = {e ∈ E | r(X) = r(X ∪ {e})}, ∀X ⊆ E
+    # cl(X) = { e ∈ E | r(X) = r(X ∪ {e}) }, ∀X ⊆ E
     return lambda X: {e for e in E if r(X) == r(X | {e})}
+
+
+def from_nulity_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> Callable[[set[T]], set[T]]:
+    """Construct a closure function from a matroid defined by a nulity function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], int]]): A matroid defined by a nulity function.
+
+    Returns:
+        Callable[[set[T]], set[T]]: The closure function of a given matroid.
+    """
+    E, n = matroid
+    # cl(X) = { e ∈ E | n(X ∪ {e}) - n(X) = |X ∪ {e}| - |X| }, ∀X ⊆ E
+    return lambda X: { e for e in E if n(X | {e}) - n(X) == len(X | {e}) - len(X) }
 
 
 def from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], set[T]]:

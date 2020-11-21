@@ -61,6 +61,20 @@ def from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[s
     return [B for B in powset(E) if (len(B) == r(B)) and (len(B) == r(E)) ]
 
 
+def from_nulity_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
+    """Construct bases from a matroid defined by a nulity function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]]], int]): A matroid defined by a nulity function.
+
+    Returns:
+        list[set[T]]: The bases of a given matroid.
+    """
+    E, n = matroid
+    # Bs = { B ⊆ E : n(B) = 0 and n(E) = |E| - |B| }
+    return [B for B in powset(E) if (n(B) == 0) and (n(E) == len(E) - len(B)) ]
+
+
 def from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> list[set[T]]:
     """Construct bases from a matroid defined by a closure function.
 

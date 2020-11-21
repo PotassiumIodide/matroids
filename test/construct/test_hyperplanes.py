@@ -6,6 +6,7 @@ from matroids.construct.hyperplanes import (
     from_bases_matroid,
     from_circuits_matroid,
     from_rank_matroid,
+    from_nulity_matroid,
     from_closure_matroid,
     from_flats_matroid,
     from_open_matroid,
@@ -89,6 +90,22 @@ def test_from_circuits_matroid(circuits_matroid, expected):
 ])
 def test_from_rank_matroid(rank_matroid, expected):
     Hs1 = from_rank_matroid(rank_matroid)
+    Hs2 = expected
+    assert all(map(lambda H1: H1 in Hs2, Hs1)) and all(map(lambda H2: H2 in Hs1, Hs2))
+
+
+@pytest.mark.parametrize('nulity_matroid, expected', [
+    (( {1,2,3}, len )                                         , []                  ),
+    (( {1,2,3}, lambda X: len(X) - 1 if 1 in X else len(X) )  , [{2,3}]             ),
+    (( {1,2,3}, lambda X: len(X) if X <= {3} else len(X) - 1 ), [{3}]               ),
+    (( {1,2,3}, lambda X: len(X) - 1 if X else len(X) )       , [set()]             ),
+    (( {1,2,3}, lambda X: 1 if 3 in X else 0 )                , [{1,3},{2,3}]       ),
+    (( {1,2,3}, lambda X: 1 if {2,3} <= X else 0 )            , [{1},{2,3}]         ),
+    (( {1,2,3}, lambda X: len(X) - 2 if X == {1,2,3} else 0 ) , [{1},{2},{3}]       ),
+    (( {1,2,3}, lambda X: 0 )                                 , [{1,2},{1,3},{2,3}] ),
+])
+def test_from_nulity_matroid(nulity_matroid, expected):
+    Hs1 = from_nulity_matroid(nulity_matroid)
     Hs2 = expected
     assert all(map(lambda H1: H1 in Hs2, Hs1)) and all(map(lambda H2: H2 in Hs1, Hs2))
 

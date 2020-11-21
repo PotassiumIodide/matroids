@@ -73,6 +73,20 @@ def from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[s
     return [S for S in powset(E) if r(S) == r(E)]
 
 
+def from_nulity_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
+    """Construct spanning sets from a matroid defined by a nulity function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], int]]): A matroid defined by a nulity function
+
+    Returns:
+        list[set[T]]: The spanning set of a given matroid.
+    """
+    E, n = matroid
+    # Ss = { S ⊆ E : n(E) - n(S) = |E| - |S| }
+    return [S for S in powset(E) if n(E) - n(S) == len(E) - len(S)]
+
+
 def from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> list[set[T]]:
     """Construct spanning sets from a matroid defined by a closure function.
 

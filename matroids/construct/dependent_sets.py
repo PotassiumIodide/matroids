@@ -57,8 +57,23 @@ def from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[s
     Returns:
         list[set[T]]: The dependent sets of a matroid.
     """
-    E, _ = matroid
-    return from_independent_matroid((E, independent_sets.from_rank_matroid(matroid)))
+    E, r = matroid
+    # Cs = {C ⊆ E : r(C) ≠ |C|}
+    return [C for C in powset(E) if r(C) != len(C)]
+
+
+def from_nulity_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
+    """Construnct dependent sets from a matroid defined by a nulity function.
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], int]]): A matroid defined by a rank function.
+
+    Returns:
+        list[set[T]]: The dependent sets of a matroid.
+    """
+    E, n = matroid
+    # Cs = { C ⊆ E : n(C) ≠ 0 }
+    return [C for C in powset(E) if n(C) != 0]
 
 
 def from_closure_matroid(matroid: tuple[set[T],Callable[[set[T]], set[T]]]) -> list[set[T]]:

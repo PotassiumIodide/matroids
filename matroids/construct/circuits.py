@@ -64,6 +64,20 @@ def from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[s
     return [C for C in powset(E) if (C != set()) and all(map(lambda c: (r(C - {c}) == len(C) - 1) and (len(C) - 1 == r(C)), C))]
 
 
+def from_nulity_matroid(matroid: tuple[set[T], Callable[[set[T]], int]]) -> list[set[T]]:
+    """Construct circuits from a matroid defined by a nulity function
+
+    Args:
+        matroid (tuple[set[T], Callable[[set[T]], int]]): A matroid defined by a nulity function.
+
+    Returns:
+        list[set[T]]: The circuits of a given matroid.
+    """
+    E, n = matroid
+    # Cs = { C ⊆ E : C ≠ ∅ and n(C\{c}) = 0 and n(C) = 1, ∀c ∈ C }
+    return [C for C in powset(E) if (C != set()) and all(map(lambda c: (n(C - {c}) == 0) and (n(C) == 1), C))]
+
+
 def from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> list[set[T]]:
     """Construct circuits from a matroid defined by a closure function
 
