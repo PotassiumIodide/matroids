@@ -1,5 +1,7 @@
 from typing    import Callable, TypeVar
 
+from matroids.core.set_operator import powset
+
 import matroids.construct.independent_sets as independent_sets
 import matroids.construct.circuits as circuits
 
@@ -68,8 +70,9 @@ def from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]], set[T]]]) -> 
     Returns:
         Callable[[set[T]], int]: The rank function of a given matroid.
     """
-    E, _ = matroid
-    return from_circuits_matroid((E, circuits.from_closure_matroid(matroid)))
+    E, cl = matroid
+    # r(X) = min{ |I| : X ⊆ cl(I) }.
+    return lambda X: min(len(I) for I in powset(E) if X <= cl(I))
 
 
 def from_flats_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
