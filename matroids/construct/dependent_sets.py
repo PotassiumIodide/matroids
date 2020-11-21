@@ -31,8 +31,9 @@ def from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
     Returns:
         list[set[T]]: The dependent sets of a given matroid.
     """
-    E, _ = matroid
-    return from_independent_matroid((E, independent_sets.from_bases_matroid(matroid)))
+    E, Bs = matroid
+    # Ds = { D ⊆ E : D - B ≠ ∅,∀B ∈ Bs}
+    return [D for D in powset(E) if all(map(lambda B: D - B, Bs)) ]
 
 
 def from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> list[set[T]]:
