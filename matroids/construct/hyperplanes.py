@@ -71,8 +71,10 @@ def from_rank_matroid(matroid: tuple[set[T], Callable[[set[T]],int]]) -> list[se
     Returns:
         list[set[T]]: The hyperplanes of a given matroid.
     """
-    E, _ = matroid
-    return from_bases_matroid((E, bases.from_rank_matroid(matroid)))
+    E, r = matroid
+    # Hs: maximal set of { H ⊆ E : r(H) = r(E) - 1 }
+    Hs_ = [ H for H in powset(E) if r(H) == r(E) - 1 ]
+    return [H for H in Hs_ if all(map(lambda H_: not H < H_, Hs_))]
 
 
 def from_nulity_matroid(matroid: tuple[set[T], Callable[[set[T]],int]]) -> list[set[T]]:
