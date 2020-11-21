@@ -267,7 +267,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
     #                                          Utilities                                              #
     # ----------------------------------------------------------------------------------------------- #
 
-    def encode_matroid(self, basis_symbol: str='*', not_basis_symbol='0', show_with_order: bool=False) -> str:
+    def encode(self, basis_symbol: str='*', not_basis_symbol='0', show_with_order: bool=False) -> str:
         """To encode matroids, we use RevLex-Index, which is used in Homepage of 
         Oriented Matroids by Lukas Finschi and Komei Fukuda.
         For a given rank r and a given size n of the ground set of a matroid,
