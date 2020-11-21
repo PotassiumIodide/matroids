@@ -43,12 +43,12 @@ class Matroid(object, metaclass=MatroidMetaClass):
         self.__ground_set = matroid[0]
         self.__bases = matroid[1]
     
-    def __or__(self, X: set[T]) -> Matroid:
+    def __or__(self, X: Union[set[T], T]) -> Matroid:
         """Restrict the matroid to X.
         For faster calculation and saving memory, the circuits are used in this operation.
 
         Args:
-            X (set[T]): A subset of the ground set of the matroid.
+            X (Union[set[T], T]): A subset or an element of the ground set of the matroid.
         
         Raises:
             ValueError: if the given set X is not included in the ground set.
@@ -56,19 +56,14 @@ class Matroid(object, metaclass=MatroidMetaClass):
         Returns:
             Matroid: The restriction of the matroid to X
         """
-        E = self.ground_set
-        if not X <= E:
-            raise ValueError("The set for the restriction must be a subset of the ground set!")
-        # Cs|X = { C ⊆ X : C ∈ Cs }
-        CsX = [C for C in self.circuits if C <= X]
-        return Matroid((X, bases.from_circuits_matroid((X, CsX))))
+        return self.restrict_to(X)
     
-    def __sub__(self, X: set[T]) -> Matroid:
+    def __sub__(self, X: Union[set[T], T]) -> Matroid:
         """Delete a given set X from the matroid.
         For faster calculation and saving memory, the circuits are used in this operation.
 
         Args:
-            X (set[T]): A subset of the ground set of the matroid.
+            X (set[T]): A subset or an element of the ground set of the matroid.
 
         Raises:
             ValueError: if the given set X is not included in the ground set.
@@ -76,7 +71,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         Returns:
             Matroid: The deletion of X from the matroid
         """
-        return self | (self.ground_set - X)
+        return self.delete(X)
 
     @property
     def ground_set(self) -> set[T]:
@@ -400,6 +395,51 @@ class Matroid(object, metaclass=MatroidMetaClass):
             bool: True if given elements f and g are coparallel, False otherwise.
         """
         return {f, g} in self.cocircuits
+    
+    # ----------------------------------------------------------------------------------------------- #
+    #                                    Matroid Construction                                         #
+    # ----------------------------------------------------------------------------------------------- #
+
+    def restrict_to(self, X: Union[set[T], T]) -> Matroid:
+        """Restrict the matroid to X.
+        For faster calculation and saving memory, the circuits are used in this operation.
+
+        Args:
+            X (set[T]): A subset of the ground set of the matroid.
+        
+        Raises:
+            ValueError: if the given set X is not included in the ground set.
+
+        Returns:
+            Matroid: The restriction of the matroid to X
+        """
+        E = self.ground_set
+        if isinstance(X, set):
+            if not X <= E:
+                raise ValueError("The set for the restriction must be a subset of the ground set!")
+            # Cs|X = { C ⊆ X : C ∈ Cs }
+            CsX = [C for C in self.circuits if C <= X]
+            return Matroid((X, bases.from_circuits_matroid((X, CsX))))
+        
+        return self.restrict_to({X})
+
+    def delete(self, X: Union[set[T], T]) -> Matroid:
+        """Delete a given set X from the matroid.
+        For faster calculation and saving memory, the circuits are used in this operation.
+
+        Args:
+            X (set[T]): A subset of the ground set of the matroid.
+
+        Raises:
+            ValueError: if the given set X is not included in the ground set.
+
+        Returns:
+            Matroid: The deletion of X from the matroid
+        """
+        if isinstance(X, set):
+            return self | (self.ground_set - X)
+
+        return self | (self.ground_set - {X})
 
     # ----------------------------------------------------------------------------------------------- #
     #                                      Other Properties                                           #
@@ -474,3 +514,6 @@ class Matroid(object, metaclass=MatroidMetaClass):
         E = {*range(1,size+1)}
         Bs = [ set(X) for X, symbol in zip(combinations(E, rank), encoded_matroid) if symbol == basis_symbol ]
         return Matroid((E, Bs))
+
+M = Matroid(({1,2,3}, [{1,2},{1,3},{2,3}]))
+print((M - {2,3}).bases)
