@@ -7,6 +7,7 @@ from matroids.construct import (
     dependent_sets,
     bases,
     circuits,
+    nulity_function,
     closure_function,
     flats,
     open_sets,
@@ -57,6 +58,10 @@ class RankMatroid(Matroid):
     @property
     def rank_function(self) -> Callable[[set[T]], int]:
         return self.__rank_function
+    
+    @property
+    def nulity_function(self) -> Callable[[set[T]], set[T]]:
+        return nulity_function.from_rank_matroid((self.ground_set, self.rank_function))
     
     @property
     def closure_function(self) -> Callable[[set[T]], set[T]]:

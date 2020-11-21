@@ -8,6 +8,7 @@ from matroids.construct import (
     bases,
     circuits,
     rank_function,
+    nulity_function,
     closure_function,
     flats,
     hyperplanes,
@@ -57,6 +58,10 @@ class OpenMatroid(Matroid):
     @property
     def rank_function(self) -> Callable[[set[T]], int]:
         return rank_function.from_open_matroid((self.ground_set, self.open_sets))
+    
+    @property
+    def nulity_function(self) -> Callable[[set[T]], int]:
+        return nulity_function.from_open_matroid((self.ground_set, self.open_sets))
     
     @property
     def closure_function(self) -> Callable[[set[T]], set[T]]:

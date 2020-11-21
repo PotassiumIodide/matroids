@@ -6,6 +6,7 @@ class MatroidAxiom(Enum):
     BASES            = "The axiom for Bases"
     CIRCUITS         = "The axiom for Circuits"
     RANK_FUNCTION    = "The axiom for Rank Function"
+    NULITY_FUNCTION  = "The axiom for Nulity Function"
     CLOSURE_FUNCTION = "The axiom for Closure Function"
     FLATS            = "The axiom for Flats"
     OPEN_SETS        = "The axiom for Open Sets"

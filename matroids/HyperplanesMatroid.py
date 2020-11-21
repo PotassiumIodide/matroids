@@ -9,6 +9,7 @@ from matroids.construct import (
     bases,
     circuits,
     rank_function,
+    nulity_function,
     closure_function,
     flats,
     open_sets,
@@ -58,6 +59,10 @@ class HyperplanesMatroid(Matroid):
     @property
     def rank_function(self) -> Callable[[set[T]], int]:
         return rank_function.from_hyperplanes_matroid((self.ground_set, self.hyperplanes))
+    
+    @property
+    def nulity_function(self) -> Callable[[set[T]], int]:
+        return nulity_function.from_hyperplanes_matroid((self.ground_set, self.hyperplanes))
     
     @property
     def closure_function(self) -> Callable[[set[T]], set[T]]:

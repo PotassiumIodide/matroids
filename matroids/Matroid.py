@@ -13,6 +13,7 @@ from matroids.construct import (
     dependent_sets,
     circuits,
     rank_function,
+    nulity_function,
     closure_function,
     flats,
     open_sets,
@@ -80,6 +81,10 @@ class Matroid(object, metaclass=MatroidMetaClass):
     @property
     def rank_function(self) -> Callable[[set[T]], int]:
         return rank_function.from_bases_matroid((self.ground_set, self.independent_sets))
+    
+    @property
+    def nulity_function(self) -> Callable[[set[T]], int]:
+        return nulity_function.from_bases_matroid((self.ground_set, self.independent_sets))
     
     @property
     def closure_function(self) -> Callable[[set[T]], set[T]]:

@@ -199,10 +199,49 @@ def satisfies_rank_function_axiom( maybe_matroid                        : tuple[
                 if r(X) > r(Y):
                     return False
 
-    # (R3) ∀X, Y ⊆ E, r(X) + r(Y) ≧ r(X ∪ Y) + r(X ∩ Y)
+    # (R3) ∀X, Y ⊆ E, r(X) + r(Y) ≧ r(X ∪ Y) + r(X ∩ Y) (Submodularity)
     if not clearly_submodular:
         for X, Y in combinations(powset(E), 2):
             if r(X) + r(Y) < r(X | Y) + r (X & Y):
+                return False
+
+    return True
+
+
+def satisfies_nulity_function_axiom( maybe_matroid                      : tuple[set[T], Callable[[set[T]], int]]
+                                   , clearly_bounded_above_by_cardinality : bool=False
+                                   , clearly_inequal_with_distribution    : bool=False
+                                   , clearly_supermodular                 : bool=False) -> bool:
+    """Judge whether the given pair of a ground set and a function from set to non-negative integers is a matroid.
+    This is done due to the axiom of a nulity function.
+
+    Args:
+        maybe_matroid (tuple[set[T], Callable[[set[T]], int]): A tuple (E, n), where E is a ground set and n is a function.
+        clearly_bounded_above_by_cardinality (bool, optional): If this is True, the check of (N1) will be skipped. Defaults to False.
+        clearly_inequal_with_distribution    (bool, optional): If this is True, the check of (N2) will be skipped. Defaults to False.
+        clearly_supermodular                 (bool, optional): If this is True, the check of (N3) will be skipped. Defaults to False.
+
+    Returns:
+        bool: True if the given family satisfies the axiom of a nulity function, otherwise False.
+    """
+    E, n = maybe_matroid
+    # (N1) ∀X ⊆ E, 0 ≦ n(X) ≦ |X|
+    if not clearly_bounded_above_by_cardinality:
+        for X in powset(E):
+            if not (0 <= n(X) <= len(X)):
+                return False
+    
+    # (N2) X ⊆ Y ⊆ E => n(Y) - n(X) ≦ |Y - X|
+    if not clearly_inequal_with_distribution:
+        for Y in powset(E):
+            for X in powset(Y):
+                if n(Y) - n(X) > len(Y - X):
+                    return False
+
+    # (R3) ∀X, Y ⊆ E, n(X) + n(Y) ≦ n(X ∪ Y) + n(X ∩ Y) (Supermodularity)
+    if not clearly_supermodular:
+        for X, Y in combinations(powset(E), 2):
+            if n(X) + n(Y) > n(X | Y) + n(X & Y):
                 return False
 
     return True

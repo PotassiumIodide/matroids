@@ -6,6 +6,7 @@ from matroids.core.checker import (
     satisfies_bases_axiom,
     satisfies_circuits_axiom,
     satisfies_rank_function_axiom,
+    satisfies_nulity_function_axiom,
     satisfies_closure_axiom,
     satisfies_open_sets_axiom,
     satisfies_hyperplanes_axiom,
@@ -113,6 +114,25 @@ def f(x: set) -> int:
 ])
 def test_satisfies_rank_function_axiom(maybe_matroid, expected):
     assert satisfies_rank_function_axiom(maybe_matroid) == expected
+
+
+@pytest.mark.parametrize('maybe_matroid, expected', [
+    (( {1,2,3}, len )                                                      ,  True),
+    (( {1,2,3}, lambda X: len(X) - 1 if 1 in X else len(X) )               ,  True),
+    (( {1,2,3}, lambda X: len(X) if X <= {3} else len(X) - 1 )             ,  True),
+    (( {1,2,3}, lambda X: len(X) - 1 if X else len(X) )                    ,  True),
+    (( {1,2,3}, lambda X: 1 if 3 in X else 0 )                             ,  True),
+    (( {1,2,3}, lambda X: 1 if {2,3} <= X else 0 )                         ,  True),
+    (( {1,2,3}, lambda X: len(X) - 2 if X == {1,2,3} else 0 )              ,  True),
+    (( {1,2,3}, lambda X: 0 )                                              ,  True),
+    (( {1,2,3}, lambda X: 0 if X else len(X) - 1 )                         , False),
+    (( {1,2,3}, lambda X: len(X) if X == {1,2,3} or not X else len(X) - 1 ), False),
+    (( {1,2,3}, lambda X: 2 * len(X))                                      , False),
+    (( {1,2,3}, lambda X: len(X) - f(X) )                                  , False),
+    (( set()  , lambda X: len(X) - 1 )                                     , False),
+])
+def test_satisfies_nulity_function_axiom(maybe_matroid, expected):
+    assert satisfies_nulity_function_axiom(maybe_matroid) == expected
 
 
 # functions for checking the closure axiom.
