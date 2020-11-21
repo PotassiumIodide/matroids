@@ -6,6 +6,7 @@ from .checker import (
     satisfies_bases_axiom,
     satisfies_circuits_axiom,
     satisfies_rank_function_axiom,
+    satisfies_nulity_function_axiom,
     satisfies_closure_axiom,
     satisfies_open_sets_axiom,
     satisfies_hyperplanes_axiom,
@@ -25,6 +26,7 @@ def validate_matroid_axiom(func):
             axiom is MatroidAxiom.BASES            and not satisfies_bases_axiom(maybe_matroid),
             axiom is MatroidAxiom.CIRCUITS         and not satisfies_circuits_axiom(maybe_matroid),
             axiom is MatroidAxiom.RANK_FUNCTION    and not satisfies_rank_function_axiom(maybe_matroid),
+            axiom is MatroidAxiom.NULITY_FUNCTION  and not satisfies_nulity_function_axiom(maybe_matroid),
             axiom is MatroidAxiom.CLOSURE_FUNCTION and not satisfies_closure_axiom(maybe_matroid),
             axiom is MatroidAxiom.OPEN_SETS        and not satisfies_open_sets_axiom(maybe_matroid),
             axiom is MatroidAxiom.HYPERPLANES      and not satisfies_hyperplanes_axiom(maybe_matroid),
@@ -87,6 +89,17 @@ def validate_rank_function(func):
     def __wrapper(*args, **kwargs):
         if not satisfies_rank_function_axiom(args[0]):
             raise MatroidAxiomError("The given family doesn't satisfy the axiom of Rank Function!")
+        return func(*args, **kwargs)
+    
+    return __wrapper
+
+
+def validate_nulity_function(func):
+
+    @wraps(func)
+    def __wrapper(*args, **kwargs):
+        if not satisfies_nulity_function_axiom(args[0]):
+            raise MatroidAxiomError("The given family doesn't satisfy the axiom of Nulity Function!")
         return func(*args, **kwargs)
     
     return __wrapper
