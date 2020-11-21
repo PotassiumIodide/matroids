@@ -63,7 +63,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         For faster calculation and saving memory, the circuits are used in this operation.
 
         Args:
-            X (set[T]): A subset or an element of the ground set of the matroid.
+            X (Union[set[T], T]): A subset or an element of the ground set of the matroid.
 
         Raises:
             ValueError: if the given set X is not included in the ground set.
@@ -72,6 +72,21 @@ class Matroid(object, metaclass=MatroidMetaClass):
             Matroid: The deletion of X from the matroid
         """
         return self.delete(X)
+
+    def __truediv__(self, X: Union[set[T], T]) -> Matroid:
+        """Contract a given set X from the matroid.
+        For faster calculation and saving memory, the circuits are used in this operation.
+
+        Args:
+            X (Union[set[T], T]): A subset or an element of the ground set of the matroid.
+
+        Raises:
+            ValueError: if the given set X is not included in the ground set.
+
+        Returns:
+            Matroid: The contraction of X from the matroid
+        """
+        return self.contract(X)
 
     @property
     def ground_set(self) -> set[T]:
@@ -405,7 +420,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         For faster calculation and saving memory, the circuits are used in this operation.
 
         Args:
-            X (set[T]): A subset of the ground set of the matroid.
+            X (Union[set[T], T]): A subset of the ground set of the matroid.
         
         Raises:
             ValueError: if the given set X is not included in the ground set.
@@ -428,7 +443,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         For faster calculation and saving memory, the circuits are used in this operation.
 
         Args:
-            X (set[T]): A subset of the ground set of the matroid.
+            X (Union[set[T], T]): A subset of the ground set of the matroid.
 
         Raises:
             ValueError: if the given set X is not included in the ground set.
@@ -440,6 +455,24 @@ class Matroid(object, metaclass=MatroidMetaClass):
             return self | (self.ground_set - X)
 
         return self | (self.ground_set - {X})
+    
+    def contract(self, X: Union[set[T], T]) -> Matroid:
+        """Contract a given set X from the matroid.
+        For faster calculation and saving memory, the circuits are used in this operation.
+
+        Args:
+            X (Union[set[T], T]): A subset of the ground set of the matroid.
+
+        Raises:
+            ValueError: if the given set X is not included in the ground set.
+
+        Returns:
+            Matroid: The contraction of X from the matroid
+        """
+        if isinstance(X, set):
+            return (self.dual - X).dual
+
+        return (self.dual - {X}).dual
 
     # ----------------------------------------------------------------------------------------------- #
     #                                      Other Properties                                           #
