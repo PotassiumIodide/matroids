@@ -86,8 +86,10 @@ def from_nulity_matroid(matroid: tuple[set[T], Callable[[set[T]],int]]) -> list[
     Returns:
         list[set[T]]: The hyperplanes of a given matroid.
     """
-    E, _ = matroid
-    return from_bases_matroid((E, bases.from_nulity_matroid(matroid)))
+    E, n = matroid
+    # Hs: maximal set of { H ⊆ E : n(E) - n(H) = |E| - |H| - 1 }
+    Hs_ = [ H for H in powset(E) if n(E) - n(H) == len(E) - len(H) - 1 ]
+    return [H for H in Hs_ if all(map(lambda H_: not H < H_, Hs_))]
 
 
 def from_closure_matroid(matroid: tuple[set[T], Callable[[set[T]],set[T]]]) -> list[set[T]]:
