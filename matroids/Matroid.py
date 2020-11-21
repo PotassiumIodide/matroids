@@ -13,6 +13,7 @@ from matroids.core.set_operator import powset
 from matroids.construct import (
     independent_sets,
     dependent_sets,
+    bases,
     circuits,
     rank_function,
     nulity_function,
@@ -38,9 +39,44 @@ class Matroid(object, metaclass=MatroidMetaClass):
             MatroidAxiomError: If the given pair is not a matroid under the axiom of bases.
         """
         if not satisfies_bases_axiom(matroid):
-            raise MatroidAxiomError(f"The given family doesn't satisfy {self.axiom.value}!")
+            raise MatroidAxiomError(f"The given family doesn't satisfy the axiom of bases!")
         self.__ground_set = matroid[0]
         self.__bases = matroid[1]
+    
+    def __or__(self, X: set[T]) -> Matroid:
+        """Restrict the matroid to X.
+        For faster calculation and saving memory, the circuits are used in this operation.
+
+        Args:
+            X (set[T]): A subset of the ground set of the matroid.
+        
+        Raises:
+            ValueError: if the given set X is not included in the ground set.
+
+        Returns:
+            Matroid: The restriction of the matroid to X
+        """
+        E = self.ground_set
+        if not X <= E:
+            raise ValueError("The set for the restriction must be a subset of the ground set!")
+        # Cs|X = { C ⊆ X : C ∈ Cs }
+        CsX = [C for C in self.circuits if C <= X]
+        return Matroid((X, bases.from_circuits_matroid((X, CsX))))
+    
+    def __sub__(self, X: set[T]) -> Matroid:
+        """Delete a given set X from the matroid.
+        For faster calculation and saving memory, the circuits are used in this operation.
+
+        Args:
+            X (set[T]): A subset of the ground set of the matroid.
+
+        Raises:
+            ValueError: if the given set X is not included in the ground set.
+
+        Returns:
+            Matroid: The deletion of X from the matroid
+        """
+        return self | (self.ground_set - X)
 
     @property
     def ground_set(self) -> set[T]:
@@ -438,4 +474,3 @@ class Matroid(object, metaclass=MatroidMetaClass):
         E = {*range(1,size+1)}
         Bs = [ set(X) for X, symbol in zip(combinations(E, rank), encoded_matroid) if symbol == basis_symbol ]
         return Matroid((E, Bs))
-    
