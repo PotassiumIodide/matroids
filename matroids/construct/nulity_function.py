@@ -1,7 +1,6 @@
 from typing    import Callable, TypeVar
 
 from matroids.core.set_operator import powset
-
 from matroids.construct import independent_sets
 
 T = TypeVar('T')
@@ -33,7 +32,7 @@ def from_dependent_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[se
     return from_independent_matroid((E, independent_sets.from_dependent_matroid(matroid)))
 
 
-def from_bases(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
+def from_bases_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
     """Construct a nulity function from a matroid defined by bases.
 
     Args:
@@ -46,7 +45,7 @@ def from_bases(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
     return from_independent_matroid((E, independent_sets.from_bases_matroid(matroid)))
 
 
-def from_circuits(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
+def from_circuits_matroid(matroid: tuple[set[T], list[set[T]]]) -> Callable[[set[T]], int]:
     """Construct a nulity function from a matroid defined by circuits.
 
     Args:
