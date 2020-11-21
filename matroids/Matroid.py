@@ -267,7 +267,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
     #                                          Utilities                                              #
     # ----------------------------------------------------------------------------------------------- #
 
-    def encode(self, basis_symbol: str='*', not_basis_symbol='0', show_with_order: bool=False) -> str:
+    def encode(self, basis_symbol: str='*', non_basis_symbol='0', show_with_order: bool=False) -> str:
         """To encode matroids, we use RevLex-Index, which is used in Homepage of 
         Oriented Matroids by Lukas Finschi and Komei Fukuda.
         For a given rank r and a given size n of the ground set of a matroid,
@@ -278,13 +278,13 @@ class Matroid(object, metaclass=MatroidMetaClass):
 
         Args:
             basis_symbol (str, optional): A symbol for a bases. Defaults to '*'.
-            not_basis_symbol (str, optional): A symbol for non-bases. Defaults to '0'.
+            non_basis_symbol (str, optional): A symbol for non-bases. Defaults to '0'.
             show_with_order (bool, optional): Show the order of enumerated r-subsets if this is True.
 
         Returns:
             str: Encoded matroid with respect to bases.
         """
-        encoded = "".join(basis_symbol if set(X) in self.bases else not_basis_symbol for X in combinations(self.ground_set, self.rank()))
+        encoded = "".join(basis_symbol if set(X) in self.bases else non_basis_symbol for X in combinations(self.ground_set, self.rank()))
         if not show_with_order:
             return encoded
         
@@ -292,3 +292,25 @@ class Matroid(object, metaclass=MatroidMetaClass):
             "".join(str(X[i]) for X in combinations(self.ground_set, self.rank()))
                       for i in range(self.rank())
             ) + f"\n{encoded}"
+        
+    @staticmethod
+    def decode(encoded_matroid: str, size: int, rank: int, basis_symbol:str='*', non_basis_symbol:str='0') -> Matroid:
+        """Decode an encoded matroid.
+
+        Args:
+            encoded_matroid (str): An encoded matroid.
+            size (int): The size of a given matroid.
+            rank (int): The rank of a given matroid.
+            basis_symbol (str, optional): The symbol for bases. Defaults to '*'.
+            non_basis_symbol (str, optional): The symbol for non-bases. Defaults to '0'.
+
+        Returns:
+            Matroid: The decoded matroid.
+        """
+        if len([*combinations(range(size), rank)]) != len(encoded_matroid):
+            raise ValueError(f"The number of {rank}-subsets of E doesn't match that of the given encoded matroid!!")
+        if any(symbol not in (basis_symbol, non_basis_symbol) for symbol in encoded_matroid):
+            raise ValueError(f"A given matroid isn't encoded properly.")
+        E = {*range(1,size+1)}
+        Bs = [ set(X) for X, symbol in zip(combinations(E, rank), encoded_matroid) if symbol == basis_symbol ]
+        return Matroid((E, Bs))

@@ -6,11 +6,11 @@ class P6(Matroid):
 
     @property
     def ground_set(self) -> set[int]:
-        return {1,2,3,4,5,6,7}
+        return {1,2,3,4,5,6}
     
     @property
     def size(self) -> int:
-        return 7
+        return 6
     
     @property
     def independent_sets(self) -> list[set[int]]:
