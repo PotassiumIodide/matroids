@@ -635,6 +635,10 @@ class Matroid(object, metaclass=MatroidMetaClass):
             rank (int): The rank of a given matroid.
             basis_symbol (str, optional): The symbol for bases. Defaults to '*'.
             non_basis_symbol (str, optional): The symbol for non-bases. Defaults to '0'.
+        
+        Raises:
+            ValueError: when the length of the code doesn't match nCr, where n is the size, and r is the rank.
+            ValueError: when the given code includes any invalid symbol.
 
         Returns:
             Matroid: The decoded matroid.
