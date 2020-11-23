@@ -227,7 +227,43 @@ class Matroid(object, metaclass=MatroidMetaClass):
         Returns:
             bool: True if given elements f and g are parallel, False otherwise.
         """
-        return {f, g} in self.circuits
+        return ({f, g} in self.circuits) or (f == g)
+    
+    @property
+    def loops(self) -> set[T]:
+        """Return the set of all the loops in the matroid.
+
+        Returns:
+            list[set[T]]: The set of all the loops in the matroid.
+        """
+        return { e for e in self.ground_set if self.is_loop(e) }
+
+    @property    
+    def parallel_classes(self) -> list[set[T]]:
+        """Return all the parallel classes of the matroid.
+        A parallel class of a matroid is a maximal subset X of its ground set
+        such that any two distinct member of X are parallel and no member of X is a loop.
+
+        Returns:
+            list[set[T]]: The set of all the parallel classes of the matroid.
+        """
+        if set() in self.bases:
+            return []
+        E = self.ground_set
+        parallels = [{g for g in E if self.are_parallel(f,g) and (not self.is_loop(g))} for f in E if not self.is_loop(f)]
+        parallel_sets = [*map(set, list({*map(tuple, parallels)}))] # Remove redundants
+        max_size = max(map(len, parallel_sets))
+        return [parallel_class for parallel_class in parallel_sets if len(parallel_class) == max_size]
+    
+    @property
+    def parallel_classes_are_trivial(self) -> bool:
+        """Check whether the parallel classes are trivial or not.
+        A parallel class is trivial if it contains just one element.
+
+        Returns:
+            bool: True if the parallel classes are trivial, False otherwise.
+        """
+        return {*map(len, self.parallel_classes)} == {1}
     
     # ----------------------------------------------------------------------------------------------- #
     #                                           Duality                                               #
@@ -409,7 +445,43 @@ class Matroid(object, metaclass=MatroidMetaClass):
         Returns:
             bool: True if given elements f and g are coparallel, False otherwise.
         """
-        return {f, g} in self.cocircuits
+        return ({f, g} in self.cocircuits) or (f == g)
+    
+    @property
+    def coloops(self) -> set[T]:
+        """Return the set of all the coloops in the matroid.
+
+        Returns:
+            list[set[T]]: The set of all the coloops in the matroid.
+        """
+        return { e for e in self.ground_set if self.is_coloop(e) }
+
+    @property    
+    def coparallel_classes(self) -> list[set[T]]:
+        """Return all the coparallel classes of the matroid.
+        A coparallel class of a matroid is a maximal subset X of its ground set
+        such that any two distinct member of X are coparallel and no member of X is a coloop.
+
+        Returns:
+            list[set[T]]: The set of all the coparallel classes of the matroid.
+        """
+        if set() in self.cobases:
+            return []
+        E = self.ground_set
+        coparallels = [{g for g in E if self.are_parallel(f,g) and (not self.is_coloop(g))} for f in E if not self.is_coloop(f)]
+        coparallel_sets = [*map(set, list({*map(tuple, coparallels)}))] # Remove redundants
+        max_size = max(map(len, coparallel_sets))
+        return [coparallel_class for coparallel_class in coparallel_sets if len(coparallel_class) == max_size]
+    
+    @property
+    def coparallel_classes_are_trivial(self) -> bool:
+        """Check whether the coparallel classes are trivial or not.
+        A coparallel class is trivial if it contains just one element.
+
+        Returns:
+            bool: True if the coparallel classes are trivial, False otherwise.
+        """
+        return {*map(len, self.coparallel_classes)} == {1}
     
     # ----------------------------------------------------------------------------------------------- #
     #                                    Matroid Construction                                         #
@@ -483,18 +555,45 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """Check whether the matroid is free, that is, it has no dependent set.
 
         Returns:
-            bool: True when the matroid is free, False otherwise
+            bool: True when the matroid is free, False otherwise.
         """
         return not self.dependent_sets
+    
+    @property
+    def is_trivial(self) -> bool:
+        """Check whether the matroid is trivial, that is, it has only one basis, empty set.
+
+        Returns:
+            bool: True when the matroid is trivial, False otherwise.
+        """
+        return len(self.bases) == 1
     
     @property
     def is_empty(self) -> bool:
         """Check whether the matroid is empty, that is, it has no element in ground set.
 
         Returns:
-            bool: True when the matroid is emtpy, False otherwise
+            bool: True when the matroid is emtpy, False otherwise.
         """
         return not self.ground_set
+    
+    @property
+    def is_simple(self) -> bool:
+        """Check whether the matroid is simple, that is, it has no loops and no non-trivial parallel classes.
+
+        Returns:
+            bool: True when the matroid is simple, False otherwise
+        """
+        return (not self.loops) and self.parallel_classes_are_trivial
+    
+    @property
+    def is_cosimple(self) -> bool:
+        """Check whether the matroid is cosimple, that is, it has no coloops and no non-trivial coparallel classes.
+
+        Returns:
+            bool: True when the matroid is simple, False otherwise
+        """
+        return (not self.coloops) and self.coparallel_classes_are_trivial
     
     # ----------------------------------------------------------------------------------------------- #
     #                                          Utilities                                              #

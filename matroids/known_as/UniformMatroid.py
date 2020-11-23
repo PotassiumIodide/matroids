@@ -66,6 +66,12 @@ class FreeMatroid(UniformMatroid):
         super().__init__(n, n)
 
 
+class TrivialMatroid(UniformMatroid):
+    def __init__(self, n: int):
+        super().__init__(0, n)
+
+
 class EmptyMatroid(UniformMatroid):
     def __init__(self):
         super().__init__(0, 0)
+    
