@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="matroids",
-    version="2.2.0",
+    version="2.2.1",
     author="Potassium Iodide",
     author_email="potassium.iodide28@gmail.com",
     description="Matroid",
