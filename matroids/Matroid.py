@@ -43,6 +43,20 @@ class Matroid(object, metaclass=MatroidMetaClass):
         self.__ground_set = matroid[0]
         self.__bases = matroid[1]
     
+    def __add__(self, matroid: Matroid) -> Matroid:
+        """Calculate the direct sum or 1-sum of this and another matroids whose ground sets are disjoint.
+
+        Args:
+            matroid (Matroid): A matroid.
+        
+        Raises:
+            ValueError: When the ground sets are not disjoint.
+
+        Returns:
+            Matroid: The direct sum of this and the other matroids.
+        """
+        return self.direct_sum(matroid)
+    
     def __or__(self, X: Union[set[T], T]) -> Matroid:
         """Restrict the matroid to X.
         For faster calculation and saving memory, the circuits are used in this operation.
