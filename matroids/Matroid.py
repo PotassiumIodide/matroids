@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from itertools import combinations
+from itertools import combinations, product
 from math import inf
 from typing import Callable, TypeVar, Union
 
@@ -565,6 +565,35 @@ class Matroid(object, metaclass=MatroidMetaClass):
             return (self.dual - X).dual
 
         return (self.dual - {X}).dual
+    
+    def direct_sum(self, matroid: Matroid) -> Matroid:
+        """Calculate the direct sum or 1-sum of this and another matroids whose ground sets are disjoint.
+
+        Args:
+            matroid (Matroid): A matroid.
+        
+        Raises:
+            ValueError: When the ground sets are not disjoint.
+
+        Returns:
+            Matroid: The direct sum of this and the other matroids.
+        """
+        if not self.ground_set.isdisjoint(matroid.ground_set):
+            raise ValueError("The ground sets of two matroids must be disjoint!!")
+        
+        E1 = self.ground_set
+        E2 = matroid.ground_set
+        Bs1 = self.bases
+        Bs2 = matroid.bases
+
+        # E(M1 ⊕ M2) = E1 ∪ E2
+        E = E1 | E2
+        # Bs(M1 ⊕ M2) = { B1 ∪ B2 : B1 ∈ Bs1, B2 ∈ Bs2 }
+        Bs_ = [ B1 | B2 for B1, B2 in product(Bs1, Bs2) ]
+        # Remove redundant
+        Bs = [*map(set, list({*map(tuple, Bs_)}))]
+        return Matroid(E, Bs)
+
 
     # ----------------------------------------------------------------------------------------------- #
     #                                      Other Properties                                           #
