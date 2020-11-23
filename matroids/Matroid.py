@@ -265,6 +265,16 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return {*map(len, self.parallel_classes)} == {1}
     
+    @property
+    def triangles(self) -> list[set[T]]:
+        """Return the list of all triangles in the matroid.
+        A triangle is a 3-element circuit.
+
+        Returns:
+           list[set[T]]: The set of all triangles in the matroid.
+        """
+        return [C for C in self.circuits if len(C) == 3]
+    
     # ----------------------------------------------------------------------------------------------- #
     #                                           Duality                                               #
     # ----------------------------------------------------------------------------------------------- #
@@ -482,6 +492,16 @@ class Matroid(object, metaclass=MatroidMetaClass):
             bool: True if the coparallel classes are trivial, False otherwise.
         """
         return {*map(len, self.coparallel_classes)} == {1}
+    
+    @property
+    def triads(self) -> list[set[T]]:
+        """Return the list of all triads in the matroid.
+        A triangle is a 3-element cocircuit.
+
+        Returns:
+           list[set[T]]: The set of all triads in the matroid.
+        """
+        return [C_ast for C_ast in self.cocircuits if len(C_ast) == 3]
     
     # ----------------------------------------------------------------------------------------------- #
     #                                    Matroid Construction                                         #
