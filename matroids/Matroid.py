@@ -985,7 +985,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
     
     def is_independent(self, X: set[T]) -> bool:
         """Check whether a given subset X is independent or not.
-        It can be checked faster than X in self.independent_set.
+        It can be checked more efficiently than X in self.independent_sets.
 
         Args:
             X (set[T]): A subset of the ground set of the matroid.
@@ -997,7 +997,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
 
     def is_coindependent(self, X: set[T]) -> bool:
         """Check whether a given subset X is coindependent or not.
-        It can be checked faster than X in self.coindependent_set.
+        It can be checked more efficiently than X in self.coindependent_sets.
 
         Args:
             X (set[T]): A subset of the ground set of the matroid.
@@ -1007,9 +1007,33 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return len(X) == self.corank(X)
     
+    def is_dependent(self, X: set[T]) -> bool:
+        """Check whether a given subset X is dependent or not.
+        It can be checked more efficiently than X in self.dependent_sets
+
+        Args:
+            X (set[T]): A subset of the ground set of the matroid.
+
+        Returns:
+            bool: True if a given subset is dependent, False otherwise.
+        """
+        return len(X) != self.rank(X)
+
+    def is_codependent(self, X: set[T]) -> bool:
+        """Check whether a given subset X is codependent or not.
+        It can be checked more efficiently than X in self.codependent_sets
+
+        Args:
+            X (set[T]): A subset of the ground set of the matroid.
+
+        Returns:
+            bool: True if a given subset is codependent, False otherwise.
+        """
+        return len(X) != self.corank(X)
+    
     def is_basis(self, X: set[T]) -> bool:
         """Check whether a given subset X is a basis or not.
-        It can be checked faster than X in self.bases.
+        It can be checked more efficiently than X in self.bases.
 
         Args:
             X (set[T]): A subset of the ground set of the matroid.
@@ -1021,7 +1045,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
     
     def is_cobasis(self, X: set[T]) -> bool:
         """Check whether a given subset X is a cobasis or not.
-        It can be checked faster than X in self.cobases.
+        It can be checked more efficiently than X in self.cobases.
 
         Args:
             X (set[T]): A subset of the ground set of the matroid.
