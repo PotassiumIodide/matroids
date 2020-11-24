@@ -79,6 +79,17 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return f"Matroid of rank {self.rank()} on {self.size} elements"
     
+    def __eq__(self, matroid: Matroid) -> bool:
+        """Check whether the matroid and a given one are equal.
+
+        Args:
+            matroid (Matroid): A matroid
+
+        Returns:
+            bool: True if the two matroids are equal, False otherwise.
+        """
+        return self.is_equal_to(matroid)
+    
     def __add__(self, matroid: Matroid) -> Matroid:
         """Calculate the direct sum or 1-sum of this and another matroids whose ground sets are disjoint.
         It can be calculate by the operation `+`.
@@ -450,6 +461,24 @@ class Matroid(object, metaclass=MatroidMetaClass):
             if all(Nb in Nbs2 for Nb in transformed):
                 return morphism
         return None
+    
+    def is_equal_to(self, matroid: Matroid) -> bool:
+        """Check whether the matroid and a given one are equal.
+
+        Args:
+            matroid (Matroid): A matroid
+
+        Returns:
+            bool: True if the two matroids are equal, False otherwise.
+        """
+        if self.ground_set != matroid.ground_set:
+            return False
+        
+        Nbs1 = self.nonbases
+        Nbs2 = matroid.nonbases
+        if len(Nbs1) != len(Nbs2):
+            return False
+        return all(map(lambda Nb: Nb in Nbs2, Nbs1))
     
     # ----------------------------------------------------------------------------------------------- #
     #                                           Duality                                               #
