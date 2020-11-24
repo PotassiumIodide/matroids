@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from itertools import combinations
-from math import inf
-from typing import Callable, TypeVar, Union
+from itertools import combinations, permutations
+from typing import Any, Callable, TypeVar, Union
 
 from matroids.MatroidMetaClass import MatroidMetaClass
 from matroids.core.exception import MatroidAxiomError
@@ -71,6 +70,14 @@ class Matroid(object, metaclass=MatroidMetaClass):
         self.__first = matroid[0]
         self.__second = matroid[1]
         self.__axiom = axiom
+    
+    def __repr__(self) -> str:
+        """Return a string representation of the matroid.
+
+        Returns:
+            str: A string representation of the matroid.
+        """
+        return f"Matroid of rank {self.rank()} on {self.size} elements"
     
     def __add__(self, matroid: Matroid) -> Matroid:
         """Calculate the direct sum or 1-sum of this and another matroids whose ground sets are disjoint.
@@ -395,6 +402,54 @@ class Matroid(object, metaclass=MatroidMetaClass):
             list[set[T]]: The list of all non-bases.
         """
         return [NB for NB in map(set, combinations(self.ground_set, self.rank())) if self.rank(NB) < len(NB)]
+    
+    def is_isomorphic_to(self, matroid: Matroid, certificate: bool=False) -> Union[bool, tuple[bool, Union[dict[T,Any], None]]]:
+        """Check whether the matroid and a given one are isomorphic.
+        Two matroids M and N are isomorphic if there is a bijection f from the ground set of M to the ground set of N
+        such that a subset X is independent in M if and only if f(X) is independent in N.
+
+        Args:
+            matroid (Matroid): A matroid
+            certificate (bool, optional): If this is True, also returns an isomorphism as a dictionary. Defaults to False.
+
+
+        Returns:
+            Union[bool, tuple[bool, Union[dict[T,Any],None]]]: True if the two matroids are isomorphic, False otherwise.
+                                           If certificate is True, also returns a dictionary representing a isomorphism.
+        """
+        if certificate:
+            return (self.is_isomorphic_to(matroid), self.isomorphism_to(matroid))
+        return (self.rank() == matroid.rank()) and (self.isomorphism_to(matroid) is not None)
+    
+    def isomorphism_to(self, matroid: Matroid) -> Union[dict[T, Any], None]:
+        """Return an isomorphism from the matroid to a given one.
+        The isomorphism is constructed with respect to nonbases.
+
+        Args:
+            matroid (Matroid): A matroid.
+
+        Returns:
+            Union[dict[T, Any], None]: If there exists an isomorphism, return the dictionary representing it, otherwise None.
+        """
+        if self.size != matroid.size:
+            return None
+        if self.rank() != matroid.rank():
+            return None
+        
+        E1 = self.ground_set
+        E2 = matroid.ground_set
+        Nbs1 = self.nonbases
+        Nbs2 = matroid.nonbases
+
+        if len(Nbs1) != len(Nbs2):
+            return None
+        
+        for perms in permutations(E2, matroid.size):
+            morphism = dict(zip(E1, perms))
+            transformed = [*map(lambda Nb: {*map(lambda e: morphism[e], Nb)} ,map(list, Nbs1))]
+            if all(Nb in Nbs2 for Nb in transformed):
+                return morphism
+        return None
     
     # ----------------------------------------------------------------------------------------------- #
     #                                           Duality                                               #
