@@ -296,6 +296,17 @@ class Matroid(object, metaclass=MatroidMetaClass):
         r = self.rank_function
         return r(X)
     
+    def closure(self, subset: set[T]) -> set[T]:
+        """Find the closure of a given subset.
+
+        Args:
+            subset (set[T]): A subset of the ground set of the matroid.
+
+        Returns:
+            set[T]: The closure of a given subset.
+        """
+        return self.closure_function(subset)
+    
     def fundamental_circuit(self, e: T, B: set[T]) -> set[T]:
         """Find the fundamental circuit C(e, B) of e with respect to B.
         Let B be a basis of a matroid M. If e ∈ E - B, then B ∪ {e} contains a unique circuit, C(e,B).
