@@ -879,6 +879,16 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return (not self.coloops) and self.coparallel_classes_are_trivial
     
+    @property
+    def is_paving(self) -> bool:
+        """Check whether the matroid is paving or not.
+        A matroid is called paving if it has no circuit of size less than r(M).
+
+        Returns:
+            bool: True if the matroid is paving, False otherwise.
+        """
+        return all(map(lambda C: self.rank(C) >= self.rank() ,self.circuits))
+    
     # ----------------------------------------------------------------------------------------------- #
     #                                          Utilities                                              #
     # ----------------------------------------------------------------------------------------------- #
