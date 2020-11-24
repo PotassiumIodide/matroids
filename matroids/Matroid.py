@@ -683,6 +683,32 @@ class Matroid(object, metaclass=MatroidMetaClass):
 
         # E = E1 ⊔ E2 (disjoint union), Cs = Cs1 ⊔ Cs2 (disjoint union)
         return Matroid((self.ground_set | matroid.ground_set, self.circuits + matroid.circuits), axiom=MatroidAxiom.CIRCUITS, axiom_check=False)
+    
+    def free_product(self, matroid: Matroid) -> Matroid:
+        """Calculate the free product of this and another matroids whose ground sets are disjoint.
+
+        Args:
+            matroid (Matroid): A matroid.
+
+        Raises:
+            ValueError: When the ground sets are not disjoint.
+
+        Returns:
+            Matroid: The free product of this and the other matroids.
+        """
+        if not self.ground_set.isdisjoint(matroid.ground_set):
+            raise ValueError("The ground sets of two matroids must be disjoint!!")
+        
+        # E = E1 ⊔ E2 (disjoint union)
+        E1 = self.ground_set
+        E2 = matroid.ground_set
+        E = E1 | E2
+        # Bs = { B ⊆ E1 ⊔ E2 : |B| = r(M1) + r(M2), B ∩ E1 ∈ Is1, B ∩ E2 ∈ Ss2 }
+        size = self.rank() + matroid.rank()
+        Is1 = self.independent_sets
+        Ss2 = matroid.spanning_sets
+        Bs = [B for B in map(set, combinations(E, size)) if (B & E1 in Is1) and (B & E2 in Ss2)]
+        return Matroid((E, Bs))
 
     # ----------------------------------------------------------------------------------------------- #
     #                                      Other Properties                                           #
