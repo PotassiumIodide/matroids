@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from itertools import combinations, permutations
+from functools import cached_property
 from typing import Any, Callable, TypeVar, Union
 
 from matroids.MatroidMetaClass import MatroidMetaClass
@@ -39,6 +40,7 @@ from matroids.construct import (
 T = TypeVar('T')
 
 class Matroid(object, metaclass=MatroidMetaClass):
+    __axiom = MatroidAxiom.BASES
     def __init__(self, matroid: tuple[set[T],list[set[T]]], axiom: MatroidAxiom=MatroidAxiom.BASES, axiom_check: bool=True):
         """!!!!! - Caution - !!!!!
         It is not recommended to use this Matroid class directly.
@@ -193,20 +195,19 @@ class Matroid(object, metaclass=MatroidMetaClass):
     # ----------------------------------------------------------------------------------------- #
     #                                Axiomatic Properties                                       #
     # ----------------------------------------------------------------------------------------- #
-    @property
-    @abstractmethod
+    @cached_property
     def independent_sets(self) -> list[set[T]]:
         if self.axiom is MatroidAxiom.INDEPENDENT_SETS:
             return self.__second
         return independent_sets.from_bases_matroid((self.ground_set, self.bases))
 
-    @property
+    @cached_property
     def dependent_sets(self) -> list[set[T]]:
         if self.axiom is MatroidAxiom.DEPENDENT_SETS:
             return self.__second
         return dependent_sets.from_bases_matroid((self.ground_set, self.independent_sets))
 
-    @property
+    @cached_property
     def bases(self) -> list[set[T]]:
         if self.axiom is MatroidAxiom.BASES:
             return self.__second
@@ -231,31 +232,31 @@ class Matroid(object, metaclass=MatroidMetaClass):
         if self.axiom is MatroidAxiom.SPANNING_SETS:
             return bases.from_spanning_matroid((self.__first, self.__second))
         
-    @property
+    @cached_property
     def circuits(self) -> list[set[T]]:
         if self.axiom is MatroidAxiom.CIRCUITS:
             return self.__second
         return circuits.from_bases_matroid((self.ground_set, self.independent_sets))
 
-    @property
+    @cached_property
     def rank_function(self) -> Callable[[set[T]], int]:
         if self.axiom is MatroidAxiom.RANK_FUNCTION:
             return self.__second
         return rank_function.from_bases_matroid((self.ground_set, self.independent_sets))
     
-    @property
+    @cached_property
     def nulity_function(self) -> Callable[[set[T]], int]:
         if self.axiom is MatroidAxiom.NULITY_FUNCTION:
             return self.__second
         return nulity_function.from_bases_matroid((self.ground_set, self.independent_sets))
     
-    @property
+    @cached_property
     def closure_function(self) -> Callable[[set[T]], set[T]]:
         if self.axiom is MatroidAxiom.CLOSURE_FUNCTION:
             return self.__second
         return closure_function.from_bases_matroid((self.ground_set, self.independent_sets))
 
-    @property
+    @cached_property
     def flats(self) -> list[set[T]]:
         if self.axiom is MatroidAxiom.FLATS:
             return self.__second
@@ -265,19 +266,19 @@ class Matroid(object, metaclass=MatroidMetaClass):
     def closed_sets(self) -> list[set[T]]:
         return self.flats
     
-    @property
+    @cached_property
     def open_sets(self) -> list[set[T]]:
         if self.axiom is MatroidAxiom.OPEN_SETS:
             return self.__second
         return open_sets.from_bases_matroid((self.ground_set, self.independent_sets))
     
-    @property
+    @cached_property
     def hyperplanes(self) -> list[set[T]]:
         if self.axiom is MatroidAxiom.HYPERPLANES:
             return self.__second
         return hyperplanes.from_bases_matroid((self.ground_set, self.independent_sets))
     
-    @property
+    @cached_property
     def spanning_sets(self) -> list[set[T]]:
         if self.axiom is MatroidAxiom.SPANNING_SETS:
             return self.__second
@@ -431,7 +432,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return [C for C in self.circuits if len(C) == 3]
     
-    @property
+    @cached_property
     def nonbases(self) -> list[set[T]]:
         """Return the set of all non-bases in the matroid.
         A non-basis is a set with cardinality r which is not a basis.
@@ -522,7 +523,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         Bs_ast = [ self.E - B for B in self.bases ]
         return Matroid((self.E, Bs_ast), axiom_check=False)
 
-    @property
+    @cached_property
     def coindependent_sets(self) -> list[set[T]]:
         """Construct the coindependent sets; the independent sets of the dual matroid.
 
@@ -531,7 +532,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return self.dual.independent_sets
     
-    @property
+    @cached_property
     def codependent_sets(self) -> list[set[T]]:
         """Construct the codependent sets; the dependent sets of the dual matroid.
 
@@ -540,7 +541,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return self.dual.dependent_sets
     
-    @property
+    @cached_property
     def cobases(self) -> list[set[T]]:
         """Construct the cobases; the bases of the dual matroid.
 
@@ -549,7 +550,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return [ self.E - B for B in self.bases ]
     
-    @property
+    @cached_property
     def cocircuits(self) -> list[set[T]]:
         """Construct the cocircuits; the circuits of the dual matroid.
 
@@ -558,7 +559,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return self.dual.circuits
     
-    @property
+    @cached_property
     def corank_function(self) -> Callable[[set[T]], int]:
         """Construct the corank function; the rank function of the dual matroid.
 
@@ -570,7 +571,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         # r*(X) = r(E - X) + |X| - r(M)
         return lambda X: r(E - X) + len(X) - r(E)
     
-    @property
+    @cached_property
     def coclosure_function(self) -> Callable[[set[T]], set[T]]:
         """Construct the coclosure function; the closure function of the dual matroid.
 
@@ -579,7 +580,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return self.dual.closure_function
     
-    @property
+    @cached_property
     def coflats(self) -> list[set[T]]:
         """Construct the coflats; the flats of the dual matroid.
 
@@ -588,7 +589,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return self.dual.flats
     
-    @property
+    @cached_property
     def coopen_sets(self) -> list[set[T]]:
         """Construct the coopen sets; the open sets of the dual matroid.
 
@@ -597,7 +598,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return self.dual.open_sets
     
-    @property
+    @cached_property
     def cohyperplanes(self) -> list[set[T]]:
         """Construct the cohyperplanes; the hyperplanes of the matroid.
 
@@ -606,7 +607,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return self.dual.hyperplanes
     
-    @property
+    @cached_property
     def cospanning_sets(self) -> list[set[T]]:
         """Construct the cospanning sets; the spanning sets of the matroid.
 

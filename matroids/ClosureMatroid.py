@@ -22,7 +22,7 @@ from .core.types import MatroidAxiom
 T = TypeVar("T")
 
 class ClosureMatroid(Matroid):
-    __axiom = MatroidAxiom.RANK_FUNCTION
+    __axiom = MatroidAxiom.CLOSURE_FUNCTION
 
     def __init__(self, matroid: tuple[set[T],list[set[T]]]):
         if not satisfies_closure_axiom(matroid):
