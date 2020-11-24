@@ -659,20 +659,8 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         if not self.ground_set.isdisjoint(matroid.ground_set):
             raise ValueError("The ground sets of two matroids must be disjoint!!")
-        
-        E1 = self.ground_set
-        E2 = matroid.ground_set
-        Bs1 = self.bases
-        Bs2 = matroid.bases
 
-        # E(M1 ⊕ M2) = E1 ∪ E2
-        E = E1 | E2
-        # Bs(M1 ⊕ M2) = { B1 ∪ B2 : B1 ∈ Bs1, B2 ∈ Bs2 }
-        Bs_ = [ B1 | B2 for B1, B2 in product(Bs1, Bs2) ]
-        # Remove redundant
-        Bs = [*map(set, list({*map(tuple, Bs_)}))]
-        return Matroid((E, Bs))
-
+        return Matroid((self.ground_set | matroid.ground_set, self.circuits + matroid.circuits), axiom=MatroidAxiom.CIRCUITS)
 
     # ----------------------------------------------------------------------------------------------- #
     #                                      Other Properties                                           #
@@ -778,4 +766,3 @@ class Matroid(object, metaclass=MatroidMetaClass):
         E = {*range(1,size+1)}
         Bs = [ set(X) for X, symbol in zip(combinations(E, rank), encoded_matroid) if symbol == basis_symbol ]
         return Matroid((E, Bs))
-    
