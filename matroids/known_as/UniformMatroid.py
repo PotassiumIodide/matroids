@@ -36,7 +36,7 @@ class UniformMatroid(Matroid):
     
     @property
     def bases(self) -> list[set[int]]:
-        # Bs(U_{k,n}) = { B ⊆ E : |B| == k }
+        # Bs(U_{k,n}) = { B ⊆ E : |B| = k }
         return [ B for B in powset(self.E) if len(B) == self.k ]
     
     @property
@@ -61,6 +61,39 @@ class UniformMatroid(Matroid):
     def dual(self) -> UniformMatroid:
         # U_{k,n}* = U_{n-k,n}
         return UniformMatroid(self.n - self.k, self.n)
+    
+    @property
+    def coindependent_sets(self) -> list[set[int]]:
+        # Is*(U_{k,n}) = { I* ⊆ E : |I*| ≦ n - k }
+        return [ I_ast for I_ast in powset(self.E) if len(I_ast) <= self.n - self.k ]
+    
+    @property
+    def codependent_sets(self) -> list[set[int]]:
+        # Ds*(U_{k,n}) = { D* ⊆ E : |D*| > n - k }
+        return [ D_ast for D_ast in powset(self.E) if len(D_ast) > self.n - self.k ]
+
+    @property
+    def cobases(self) -> list[set[int]]:
+        # Bs*(U_{k,n}) = { B* ⊆ E : |B*| = n - k }
+        return [ B_ast for B_ast in powset(self.E) if len(B_ast) == self.n - self.k ]
+    
+    @property
+    def cocircuits(self) -> list[set[int]]:
+        # Cs*(U_{0,n}) = ∅
+        if self.k == 0:
+            return []        
+        # Cs*(U_{k,n}) = { C* ⊆ E : |C*| = n - k + 1 } (k ≠ 0)
+        return [C_ast for C_ast in powset(self.E) if len(C_ast) == self.n - self.k + 1]
+
+    @property
+    def corank_function(self) -> Callable[[set[int]], int]:
+        # r*(X) = |X| if |X| < n - k, n - k if |X| ≧ n - k
+        return lambda X: min({len(X), self.n - self.k})
+    
+    @property
+    def coclosure_function(self) -> Callable[[set[int]], set[int]]:
+        # cl*(X) = X if |X| ≦ n - k, E if |X| > n - k
+        return lambda X: X if len(X) <= self.n - self.k else self.E
 
 
 class FreeMatroid(UniformMatroid):
@@ -76,4 +109,3 @@ class TrivialMatroid(UniformMatroid):
 class EmptyMatroid(UniformMatroid):
     def __init__(self):
         super().__init__(0, 0)
-    
