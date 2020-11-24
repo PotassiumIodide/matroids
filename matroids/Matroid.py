@@ -147,6 +147,14 @@ class Matroid(object, metaclass=MatroidMetaClass):
         if isinstance(X, Matroid):
             return self.union(X)
         return self.restrict_to(X)
+    
+    def __len__(self) -> int:
+        """Return the size of the ground set.
+
+        Returns:
+            int: the size of the ground set.
+        """
+        return self.size
 
     @property
     def ground_set(self) -> set[T]:
@@ -252,6 +260,10 @@ class Matroid(object, metaclass=MatroidMetaClass):
         if self.axiom is MatroidAxiom.SPANNING_SETS:
             return self.__second
         return spanning_sets.from_bases_matroid((self.ground_set, self.independent_sets))
+
+    # ----------------------------------------------------------------------------------------- #
+    #                                    Basic Properties                                       #
+    # ----------------------------------------------------------------------------------------- #
     
     def rank(self, subset: Union[set[T], None]=None) -> int:
         """Calculate the rank of a given subset. If no subset is given, returns the rank of the matroid.
@@ -373,6 +385,16 @@ class Matroid(object, metaclass=MatroidMetaClass):
            list[set[T]]: The set of all triangles in the matroid.
         """
         return [C for C in self.circuits if len(C) == 3]
+    
+    @property
+    def nonbases(self) -> list[set[T]]:
+        """Return the set of all non-bases in the matroid.
+        A non-basis is a set with cardinality r which is not a basis.
+
+        Returns:
+            list[set[T]]: The list of all non-bases.
+        """
+        return [NB for NB in map(set, combinations(self.ground_set, self.rank())) if self.rank(NB) < len(NB)]
     
     # ----------------------------------------------------------------------------------------------- #
     #                                           Duality                                               #
