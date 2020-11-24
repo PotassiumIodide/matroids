@@ -43,8 +43,9 @@ class Matroid(object, metaclass=MatroidMetaClass):
         self.__ground_set = matroid[0]
         self.__bases = matroid[1]
     
-    def __add__(self, matroid: Matroid) -> Matroid:
+    def __mul__(self, matroid: Matroid) -> Matroid:
         """Calculate the direct sum or 1-sum of this and another matroids whose ground sets are disjoint.
+        It can be calculate by the operation `*` (because it corresponds to the product in category theory).
 
         Args:
             matroid (Matroid): A matroid.
