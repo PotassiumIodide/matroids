@@ -6,10 +6,23 @@ from math import inf
 from typing import Callable, TypeVar, Union
 
 from matroids.MatroidMetaClass import MatroidMetaClass
-from matroids.core.checker import satisfies_bases_axiom
 from matroids.core.exception import MatroidAxiomError
 from matroids.core.set_operator import powset
+from matroids.core.types import MatroidAxiom
 
+from matroids.core.checker import (
+    satisfies_independent_axiom,
+    satisfies_dependent_axiom,
+    satisfies_bases_axiom,
+    satisfies_circuits_axiom,
+    satisfies_rank_function_axiom,
+    satisfies_nulity_function_axiom,
+    satisfies_closure_axiom,
+    satisfies_flats_axiom,
+    satisfies_open_sets_axiom,
+    satisfies_hyperplanes_axiom,
+    satisfies_spanning_sets_axiom,
+)
 from matroids.construct import (
     independent_sets,
     dependent_sets,
@@ -27,7 +40,7 @@ from matroids.construct import (
 T = TypeVar('T')
 
 class Matroid(object, metaclass=MatroidMetaClass):
-    def __init__(self, matroid: tuple[set[T],list[set[T]]]):
+    def __init__(self, matroid: tuple[set[T],list[set[T]]], axiom: MatroidAxiom=MatroidAxiom.BASES):
         """!!!!! - Caution - !!!!!
         This is implemented only for giving the default settings for dual of the matroid.
         Though this class is exactly the same as BasesMatroid class, it is not recommended to use this Matroid class directly.
@@ -36,12 +49,25 @@ class Matroid(object, metaclass=MatroidMetaClass):
             matroid (tuple[set[T], list[set[T]]]): The pair of a ground set and bases
 
         Raises:
-            MatroidAxiomError: If the given pair is not a matroid under the axiom of bases.
+            MatroidAxiomError: If the given pair is not a matroid.
         """
-        if not satisfies_bases_axiom(matroid):
-            raise MatroidAxiomError(f"The given family doesn't satisfy the axiom of bases!")
-        self.__ground_set = matroid[0]
-        self.__bases = matroid[1]
+        if not any([
+            axiom is MatroidAxiom.INDEPENDENT_SETS and satisfies_independent_axiom(matroid),
+            axiom is MatroidAxiom.DEPENDENT_SETS and satisfies_dependent_axiom(matroid),
+            axiom is MatroidAxiom.BASES and satisfies_bases_axiom(matroid),
+            axiom is MatroidAxiom.CIRCUITS and satisfies_circuits_axiom(matroid),
+            axiom is MatroidAxiom.RANK_FUNCTION and satisfies_rank_function_axiom(matroid),
+            axiom is MatroidAxiom.NULITY_FUNCTION and satisfies_nulity_function_axiom(matroid),
+            axiom is MatroidAxiom.CLOSURE_FUNCTION and satisfies_closure_axiom(matroid),
+            axiom is MatroidAxiom.FLATS and satisfies_flats_axiom(matroid),
+            axiom is MatroidAxiom.OPEN_SETS and satisfies_open_sets_axiom(matroid),
+            axiom is MatroidAxiom.HYPERPLANES and satisfies_hyperplanes_axiom(matroid),
+            axiom is MatroidAxiom.SPANNING_SETS and satisfies_spanning_sets_axiom(matroid),
+        ]):
+            raise MatroidAxiomError(f"The given family doesn't satisfy {axiom.name}!")
+        self.__first = matroid[0]
+        self.__second = matroid[1]
+        self.__axiom = axiom
     
     def __mul__(self, matroid: Matroid) -> Matroid:
         """Calculate the direct sum or 1-sum of this and another matroids whose ground sets are disjoint.
@@ -105,7 +131,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
 
     @property
     def ground_set(self) -> set[T]:
-        return self.__ground_set
+        return self.__first
     
     @property
     def E(self) -> set[T]:
@@ -114,12 +140,10 @@ class Matroid(object, metaclass=MatroidMetaClass):
     @property
     def size(self) -> int:
         return len(self.ground_set)
-
-    # ----------------------------------------------------------------------------------------- #
-    # By defaults, the class Matroid forces you to give a construction of bases, and construct  #
-    # other attributes from the bases.                                                          #
-    # Since the algorithms can be the worst, each method should be overridden if necessary.     #
-    # ----------------------------------------------------------------------------------------- #
+    
+    @property
+    def axiom(self) -> MatroidAxiom:
+        return self.__axiom
 
     # ----------------------------------------------------------------------------------------- #
     #                                Axiomatic Properties                                       #
@@ -127,46 +151,87 @@ class Matroid(object, metaclass=MatroidMetaClass):
     @property
     @abstractmethod
     def independent_sets(self) -> list[set[T]]:
+        if self.axiom is MatroidAxiom.INDEPENDENT_SETS:
+            return self.__second
         return independent_sets.from_bases_matroid((self.ground_set, self.bases))
 
     @property
     def dependent_sets(self) -> list[set[T]]:
+        if self.axiom is MatroidAxiom.DEPENDENT_SETS:
+            return self.__second
         return dependent_sets.from_bases_matroid((self.ground_set, self.independent_sets))
 
     @property
     def bases(self) -> list[set[T]]:
-        return self.__bases
+        if self.axiom is MatroidAxiom.BASES:
+            return self.__second
+        if self.axiom is MatroidAxiom.INDEPENDENT_SETS:
+            return bases.from_independent_matroid((self.__first, self.__second))
+        if self.axiom is MatroidAxiom.DEPENDENT_SETS:
+            return bases.from_dependent_matroid((self.__first, self.__second))
+        if self.axiom is MatroidAxiom.CIRCUITS:
+            return bases.from_circuits_matroid((self.__first, self.__second))
+        if self.axiom is MatroidAxiom.RANK_FUNCTION:
+            return bases.from_rank_matroid((self.__first, self.__second))
+        if self.axiom is MatroidAxiom.NULITY_FUNCTION:
+            return bases.from_nulity_matroid((self.__first, self.__second))
+        if self.axiom is MatroidAxiom.CLOSURE_FUNCTION:
+            return bases.from_closure_matroid((self.__first, self.__second))
+        if self.axiom is MatroidAxiom.FLATS:
+            return bases.from_flats_matroid((self.__first, self.__second))
+        if self.axiom is MatroidAxiom.OPEN_SETS:
+            return bases.from_open_matroid((self.__first, self.__second))
+        if self.axiom is MatroidAxiom.HYPERPLANES:
+            return bases.from_hyperplanes_matroid((self.__first, self.__second))
+        if self.axiom is MatroidAxiom.SPANNING_SETS:
+            return bases.from_spanning_matroid((self.__first, self.__second))
         
     @property
     def circuits(self) -> list[set[T]]:
+        if self.axiom is MatroidAxiom.CIRCUITS:
+            return self.__second
         return circuits.from_bases_matroid((self.ground_set, self.independent_sets))
 
     @property
     def rank_function(self) -> Callable[[set[T]], int]:
+        if self.axiom is MatroidAxiom.RANK_FUNCTION:
+            return self.__second
         return rank_function.from_bases_matroid((self.ground_set, self.independent_sets))
     
     @property
     def nulity_function(self) -> Callable[[set[T]], int]:
+        if self.axiom is MatroidAxiom.NULITY_FUNCTION:
+            return self.__second
         return nulity_function.from_bases_matroid((self.ground_set, self.independent_sets))
     
     @property
     def closure_function(self) -> Callable[[set[T]], set[T]]:
+        if self.axiom is MatroidAxiom.CLOSURE_FUNCTION:
+            return self.__second
         return closure_function.from_bases_matroid((self.ground_set, self.independent_sets))
 
     @property
     def flats(self) -> list[set[T]]:
+        if self.axiom is MatroidAxiom.FLATS:
+            return self.__second
         return flats.from_bases_matroid((self.ground_set, self.independent_sets))
     
     @property
     def open_sets(self) -> list[set[T]]:
+        if self.axiom is MatroidAxiom.OPEN_SETS:
+            return self.__second
         return open_sets.from_bases_matroid((self.ground_set, self.independent_sets))
     
     @property
     def hyperplanes(self) -> list[set[T]]:
+        if self.axiom is MatroidAxiom.HYPERPLANES:
+            return self.__second
         return hyperplanes.from_bases_matroid((self.ground_set, self.independent_sets))
     
     @property
     def spanning_sets(self) -> list[set[T]]:
+        if self.axiom is MatroidAxiom.SPANNING_SETS:
+            return self.__second
         return spanning_sets.from_bases_matroid((self.ground_set, self.independent_sets))
     
     def rank(self, subset: Union[set[T], None]=None) -> int:
@@ -541,7 +606,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
                 raise ValueError("The set for the restriction must be a subset of the ground set!")
             # Cs|X = { C ⊆ X : C ∈ Cs }
             CsX = [C for C in self.circuits if C <= X]
-            return Matroid((X, bases.from_circuits_matroid((X, CsX))))
+            return Matroid((X, CsX), axiom=MatroidAxiom.CIRCUITS)
         
         return self.restrict_to({X})
 
@@ -714,3 +779,4 @@ class Matroid(object, metaclass=MatroidMetaClass):
         E = {*range(1,size+1)}
         Bs = [ set(X) for X, symbol in zip(combinations(E, rank), encoded_matroid) if symbol == basis_symbol ]
         return Matroid((E, Bs))
+    
