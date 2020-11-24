@@ -87,6 +87,50 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return self.direct_sum(matroid)
     
+    def __sub__(self, X: Union[set[T], T]) -> Matroid:
+        """Delete a given set X from the matroid.
+        For faster calculation and saving memory, the circuits are used in this operation.
+
+        Args:
+            X (Union[set[T], T]): A subset or an element of the ground set of the matroid.
+
+        Raises:
+            ValueError: if the given set X is not included in the ground set.
+
+        Returns:
+            Matroid: The deletion of X from the matroid
+        """
+        return self.delete(X)
+    
+    def __mul__(self, matroid: Matroid) -> Matroid:
+        """Calculate the free product of this and another matroids whose ground sets are disjoint.
+
+        Args:
+            matroid (Matroid): A matroid.
+
+        Raises:
+            ValueError: When the ground sets are not disjoint.
+
+        Returns:
+            Matroid: The free product of this and the other matroids.
+        """
+        return self.free_product(matroid)
+
+    def __truediv__(self, X: Union[set[T], T]) -> Matroid:
+        """Contract a given set X from the matroid.
+        For faster calculation and saving memory, the circuits are used in this operation.
+
+        Args:
+            X (Union[set[T], T]): A subset or an element of the ground set of the matroid.
+
+        Raises:
+            ValueError: if the given set X is not included in the ground set.
+
+        Returns:
+            Matroid: The contraction of X from the matroid
+        """
+        return self.contract(X)
+
     def __or__(self, X: Union[set[T], T, Matroid]) -> Matroid:
         """If the given X is a set or index, restrict the matroid to X.
         If the given X is a matroid, return the union of this matroid and X.
@@ -103,36 +147,6 @@ class Matroid(object, metaclass=MatroidMetaClass):
         if isinstance(X, Matroid):
             return self.union(X)
         return self.restrict_to(X)
-    
-    def __sub__(self, X: Union[set[T], T]) -> Matroid:
-        """Delete a given set X from the matroid.
-        For faster calculation and saving memory, the circuits are used in this operation.
-
-        Args:
-            X (Union[set[T], T]): A subset or an element of the ground set of the matroid.
-
-        Raises:
-            ValueError: if the given set X is not included in the ground set.
-
-        Returns:
-            Matroid: The deletion of X from the matroid
-        """
-        return self.delete(X)
-
-    def __truediv__(self, X: Union[set[T], T]) -> Matroid:
-        """Contract a given set X from the matroid.
-        For faster calculation and saving memory, the circuits are used in this operation.
-
-        Args:
-            X (Union[set[T], T]): A subset or an element of the ground set of the matroid.
-
-        Raises:
-            ValueError: if the given set X is not included in the ground set.
-
-        Returns:
-            Matroid: The contraction of X from the matroid
-        """
-        return self.contract(X)
 
     @property
     def ground_set(self) -> set[T]:
