@@ -262,6 +262,10 @@ class Matroid(object, metaclass=MatroidMetaClass):
         return flats.from_bases_matroid((self.ground_set, self.independent_sets))
     
     @property
+    def closed_sets(self) -> list[set[T]]:
+        return self.flats
+    
+    @property
     def open_sets(self) -> list[set[T]]:
         if self.axiom is MatroidAxiom.OPEN_SETS:
             return self.__second
@@ -306,6 +310,18 @@ class Matroid(object, metaclass=MatroidMetaClass):
             set[T]: The closure of a given subset.
         """
         return self.closure_function(subset)
+    
+    def is_closed(self, subset: set[T]) -> bool:
+        """Check a given subset is closed or not.
+        A closed set of M is a flat, that is, it satisfies cl(X) = X.
+
+        Args:
+            subset (set[T]): A subset of the ground set of the matroid.
+
+        Returns:
+            bool: True if a given subset is closed, False otherwise.
+        """
+        return self.closure(subset) == subset
     
     def fundamental_circuit(self, e: T, B: set[T]) -> set[T]:
         """Find the fundamental circuit C(e, B) of e with respect to B.
@@ -966,3 +982,27 @@ class Matroid(object, metaclass=MatroidMetaClass):
         E = {*range(1,size+1)}
         Bs = [ set(X) for X, symbol in zip(combinations(E, rank), encoded_matroid) if symbol == basis_symbol ]
         return Matroid((E, Bs))
+    
+    def is_independent(self, X: set[T]) -> bool:
+        """Check whether a given subset X is independent or not.
+        It can be checked faster than X in self.independent_set.
+
+        Args:
+            X (set[T]): A subset of the ground set of the matroid.
+
+        Returns:
+            bool: True if a given subset is independent, False otherwise.
+        """
+        return len(X) == self.rank(X)
+
+    def is_coindependent(self, X: set[T]) -> bool:
+        """Check whether a given subset X is coindependent or not.
+        It can be checked faster than X in self.coindependent_set.
+
+        Args:
+            X (set[T]): A subset of the ground set of the matroid.
+
+        Returns:
+            bool: True if a given subset is coindependent, False otherwise.
+        """
+        return len(X) == self.corank(X)
