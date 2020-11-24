@@ -1,3 +1,4 @@
+from functools import cached_property
 from typing import Callable, TypeVar
 
 from .Matroid import Matroid
@@ -39,23 +40,23 @@ class NulityMatroid(Matroid):
     def ground_set(self) -> set[T]:
         return self.__ground_set
     
-    @property
+    @cached_property
     def independent_sets(self) -> list[set[T]]:
         return independent_sets.from_nulity_matroid((self.ground_set, self.nulity_function))
     
-    @property
+    @cached_property
     def dependent_sets(self) -> list[set[T]]:
         return dependent_sets.from_nulity_matroid((self.ground_set, self.nulity_function))
     
-    @property
+    @cached_property
     def bases(self) -> list[set[T]]:
         return bases.from_nulity_matroid((self.ground_set, self.nulity_function))
     
-    @property
+    @cached_property
     def circuits(self) -> list[set[T]]:
         return circuits.from_nulity_matroid((self.ground_set, self.nulity_function))
     
-    @property
+    @cached_property
     def rank_function(self) -> Callable[[set[T]], int]:
         return rank_function.from_nulity_matroid((self.ground_set, self.nulity_function))
     
@@ -63,22 +64,22 @@ class NulityMatroid(Matroid):
     def nulity_function(self) -> Callable[[set[T]], int]:
         return self.__nulity_function
     
-    @property
+    @cached_property
     def closure_function(self) -> Callable[[set[T]], set[T]]:
         return closure_function.from_nulity_matroid((self.ground_set, self.nulity_function))
     
-    @property
+    @cached_property
     def flats(self) -> list[set[T]]:
         return flats.from_nulity_matroid((self.ground_set, self.nulity_function))
     
-    @property
+    @cached_property
     def open_sets(self) -> list[set[T]]:
         return open_sets.from_nulity_matroid((self.ground_set, self.nulity_function))
     
-    @property
+    @cached_property
     def hyperplanes(self) -> list[set[T]]:
         return hyperplanes.from_nulity_matroid((self.ground_set, self.nulity_function))
     
-    @property
+    @cached_property
     def spanning_sets(self) -> list[set[T]]:
         return spanning_sets.from_nulity_matroid((self.ground_set, self.nulity_function))

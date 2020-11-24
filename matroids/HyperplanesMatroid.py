@@ -1,5 +1,5 @@
+from functools import cached_property
 from typing import Callable, TypeVar
-
 
 from .Matroid import Matroid
 
@@ -40,39 +40,39 @@ class HyperplanesMatroid(Matroid):
     def ground_set(self) -> set[T]:
         return self.__ground_set
     
-    @property
+    @cached_property
     def independent_sets(self) -> list[set[T]]:
         return independent_sets.from_hyperplanes_matroid((self.ground_set, self.hyperplanes))
     
-    @property
+    @cached_property
     def dependent_sets(self) -> list[set[T]]:
         return dependent_sets.from_hyperplanes_matroid((self.ground_set, self.hyperplanes))
     
-    @property
+    @cached_property
     def bases(self) -> list[set[T]]:
         return bases.from_hyperplanes_matroid((self.ground_set, self.hyperplanes))
     
-    @property
+    @cached_property
     def circuits(self) -> list[set[T]]:
         return circuits.from_hyperplanes_matroid((self.ground_set, self.hyperplanes))
     
-    @property
+    @cached_property
     def rank_function(self) -> Callable[[set[T]], int]:
         return rank_function.from_hyperplanes_matroid((self.ground_set, self.hyperplanes))
     
-    @property
+    @cached_property
     def nulity_function(self) -> Callable[[set[T]], int]:
         return nulity_function.from_hyperplanes_matroid((self.ground_set, self.hyperplanes))
     
-    @property
+    @cached_property
     def closure_function(self) -> Callable[[set[T]], set[T]]:
         return closure_function.from_hyperplanes_matroid((self.ground_set, self.hyperplanes))
     
-    @property
+    @cached_property
     def flats(self) -> list[set[T]]:
         return flats.from_hyperplanes_matroid((self.ground_set, self.hyperplanes))
     
-    @property
+    @cached_property
     def open_sets(self) -> list[set[T]]:
         return open_sets.from_hyperplanes_matroid((self.ground_set, self.hyperplanes))
     
@@ -80,6 +80,6 @@ class HyperplanesMatroid(Matroid):
     def hyperplanes(self) -> list[set[T]]:
         return self.__hyperplanes
     
-    @property
+    @cached_property
     def spanning_sets(self) -> list[set[T]]:
         return spanning_sets.from_hyperplanes_matroid((self.ground_set, self.hyperplanes))

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import abstractmethod
 from itertools import combinations, permutations
 from functools import cached_property
 from typing import Any, Callable, TypeVar, Union
