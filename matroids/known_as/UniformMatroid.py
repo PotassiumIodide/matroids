@@ -7,6 +7,8 @@ from matroids.Matroid import Matroid
 
 class UniformMatroid(Matroid):
     def __init__(self, k: int, n: int):
+        if k > n:
+            raise ValueError("The rank must be smaller than the size!!")
         self.__k = k
         self.__n = n
     
