@@ -42,8 +42,7 @@ T = TypeVar('T')
 class Matroid(object, metaclass=MatroidMetaClass):
     def __init__(self, matroid: tuple[set[T],list[set[T]]], axiom: MatroidAxiom=MatroidAxiom.BASES):
         """!!!!! - Caution - !!!!!
-        This is implemented only for giving the default settings for dual of the matroid.
-        Though this class is exactly the same as BasesMatroid class, it is not recommended to use this Matroid class directly.
+        It is not recommended to use this Matroid class directly.
 
         Args:
             matroid (tuple[set[T], list[set[T]]]): The pair of a ground set and bases
@@ -672,7 +671,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         Bs_ = [ B1 | B2 for B1, B2 in product(Bs1, Bs2) ]
         # Remove redundant
         Bs = [*map(set, list({*map(tuple, Bs_)}))]
-        return Matroid(E, Bs)
+        return Matroid((E, Bs))
 
 
     # ----------------------------------------------------------------------------------------------- #
