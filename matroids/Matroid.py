@@ -355,7 +355,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         Returns:
             bool: True if a given element e is a loop, False otherwise.
         """
-        return {e} in self.circuits
+        return e in self.loops
     
     def are_parallel(self, f: T, g: T) -> bool:
         """Check whether given elements f and g are parallel or not.
@@ -376,7 +376,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         Returns:
             list[set[T]]: The set of all the loops in the matroid.
         """
-        return { e for e in self.ground_set if self.is_loop(e) }
+        return self.closure(set())
 
     @property    
     def parallel_classes(self) -> list[set[T]]:
