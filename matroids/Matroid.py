@@ -48,7 +48,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
             matroid (tuple[set[T], list[set[T]]]): The pair of a ground set and bases
             axiom (MatroidAxiom): A matroid axiom for constructing a matroid.
             axiom_check (bool, optional): If this is False, the check of axom will be skipped, and so recommended to be True.
-                                          Defaults to True
+                                          Defaults to True.
 
         Raises:
             MatroidAxiomError: If the given pair is not a matroid.
@@ -373,7 +373,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         # Bs* = { E - B : B ∈ Bs }
         Bs_ast = [ self.E - B for B in self.bases ]
-        return Matroid((self.E, Bs_ast))
+        return Matroid((self.E, Bs_ast), axiom_check=False)
 
     @property
     def coindependent_sets(self) -> list[set[T]]:
@@ -611,7 +611,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
                 raise ValueError("The set for the restriction must be a subset of the ground set!")
             # Cs|X = { C ⊆ X : C ∈ Cs }
             CsX = [C for C in self.circuits if C <= X]
-            return Matroid((X, CsX), axiom=MatroidAxiom.CIRCUITS)
+            return Matroid((X, CsX), axiom=MatroidAxiom.CIRCUITS, axiom_check=False)
         
         return self.restrict_to({X})
 
@@ -664,7 +664,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         r2 = matroid.rank_function
         # r(X) = min{ r1(Y) + r2(Y) + |X - Y| : Y ⊆ X }
         r = lambda X: min(r1(Y) + r2(Y) + len(X - Y) for Y in powset(X))
-        return Matroid((self.ground_set | matroid.ground_set, r), axiom=MatroidAxiom.RANK_FUNCTION)
+        return Matroid((self.ground_set | matroid.ground_set, r), axiom=MatroidAxiom.RANK_FUNCTION, axiom_check=False)
     
     def direct_sum(self, matroid: Matroid) -> Matroid:
         """Calculate the direct sum or 1-sum of this and another matroids whose ground sets are disjoint.
@@ -682,7 +682,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
             raise ValueError("The ground sets of two matroids must be disjoint!!")
 
         # E = E1 ⊔ E2 (disjoint union), Cs = Cs1 ⊔ Cs2 (disjoint union)
-        return Matroid((self.ground_set | matroid.ground_set, self.circuits + matroid.circuits), axiom=MatroidAxiom.CIRCUITS)
+        return Matroid((self.ground_set | matroid.ground_set, self.circuits + matroid.circuits), axiom=MatroidAxiom.CIRCUITS, axiom_check=False)
 
     # ----------------------------------------------------------------------------------------------- #
     #                                      Other Properties                                           #
