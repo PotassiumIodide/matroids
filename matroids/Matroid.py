@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from itertools import combinations, product
+from itertools import combinations
 from math import inf
 from typing import Callable, TypeVar, Union
 
@@ -40,30 +40,34 @@ from matroids.construct import (
 T = TypeVar('T')
 
 class Matroid(object, metaclass=MatroidMetaClass):
-    def __init__(self, matroid: tuple[set[T],list[set[T]]], axiom: MatroidAxiom=MatroidAxiom.BASES):
+    def __init__(self, matroid: tuple[set[T],list[set[T]]], axiom: MatroidAxiom=MatroidAxiom.BASES, axiom_check: bool=True):
         """!!!!! - Caution - !!!!!
         It is not recommended to use this Matroid class directly.
 
         Args:
             matroid (tuple[set[T], list[set[T]]]): The pair of a ground set and bases
+            axiom (MatroidAxiom): A matroid axiom for constructing a matroid.
+            axiom_check (bool, optional): If this is False, the check of axom will be skipped, and so recommended to be True.
+                                          Defaults to True
 
         Raises:
             MatroidAxiomError: If the given pair is not a matroid.
         """
-        if not any([
-            axiom is MatroidAxiom.INDEPENDENT_SETS and satisfies_independent_axiom(matroid),
-            axiom is MatroidAxiom.DEPENDENT_SETS and satisfies_dependent_axiom(matroid),
-            axiom is MatroidAxiom.BASES and satisfies_bases_axiom(matroid),
-            axiom is MatroidAxiom.CIRCUITS and satisfies_circuits_axiom(matroid),
-            axiom is MatroidAxiom.RANK_FUNCTION and satisfies_rank_function_axiom(matroid),
-            axiom is MatroidAxiom.NULITY_FUNCTION and satisfies_nulity_function_axiom(matroid),
-            axiom is MatroidAxiom.CLOSURE_FUNCTION and satisfies_closure_axiom(matroid),
-            axiom is MatroidAxiom.FLATS and satisfies_flats_axiom(matroid),
-            axiom is MatroidAxiom.OPEN_SETS and satisfies_open_sets_axiom(matroid),
-            axiom is MatroidAxiom.HYPERPLANES and satisfies_hyperplanes_axiom(matroid),
-            axiom is MatroidAxiom.SPANNING_SETS and satisfies_spanning_sets_axiom(matroid),
-        ]):
-            raise MatroidAxiomError(f"The given family doesn't satisfy {axiom.name}!")
+        if axiom_check:
+            if not any([
+                axiom is MatroidAxiom.INDEPENDENT_SETS and satisfies_independent_axiom(matroid),
+                axiom is MatroidAxiom.DEPENDENT_SETS and satisfies_dependent_axiom(matroid),
+                axiom is MatroidAxiom.BASES and satisfies_bases_axiom(matroid),
+                axiom is MatroidAxiom.CIRCUITS and satisfies_circuits_axiom(matroid),
+                axiom is MatroidAxiom.RANK_FUNCTION and satisfies_rank_function_axiom(matroid),
+                axiom is MatroidAxiom.NULITY_FUNCTION and satisfies_nulity_function_axiom(matroid),
+                axiom is MatroidAxiom.CLOSURE_FUNCTION and satisfies_closure_axiom(matroid),
+                axiom is MatroidAxiom.FLATS and satisfies_flats_axiom(matroid),
+                axiom is MatroidAxiom.OPEN_SETS and satisfies_open_sets_axiom(matroid),
+                axiom is MatroidAxiom.HYPERPLANES and satisfies_hyperplanes_axiom(matroid),
+                axiom is MatroidAxiom.SPANNING_SETS and satisfies_spanning_sets_axiom(matroid),
+            ]):
+                raise MatroidAxiomError(f"The given family doesn't satisfy {axiom.name}!")
         self.__first = matroid[0]
         self.__second = matroid[1]
         self.__axiom = axiom
@@ -83,19 +87,21 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return self.direct_sum(matroid)
     
-    def __or__(self, X: Union[set[T], T]) -> Matroid:
-        """Restrict the matroid to X.
-        For faster calculation and saving memory, the circuits are used in this operation.
+    def __or__(self, X: Union[set[T], T, Matroid]) -> Matroid:
+        """If the given X is a set or index, restrict the matroid to X.
+        If the given X is a matroid, return the union of this matroid and X.
 
         Args:
-            X (Union[set[T], T]): A subset or an element of the ground set of the matroid.
+            X (Union[set[T], T, Matroid]): A subset or an element of the ground set of the matroid, or a matroid.
         
         Raises:
             ValueError: if the given set X is not included in the ground set.
 
         Returns:
-            Matroid: The restriction of the matroid to X
+            Matroid: The restriction of the matroid to X or the union of this matroid and X.
         """
+        if isinstance(X, Matroid):
+            return self.union(X)
         return self.restrict_to(X)
     
     def __sub__(self, X: Union[set[T], T]) -> Matroid:
