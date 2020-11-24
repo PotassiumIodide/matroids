@@ -612,6 +612,17 @@ class Matroid(object, metaclass=MatroidMetaClass):
         # r*(X) = r(E - X) + |X| - r(M)
         return self.rank(self.ground_set - X) + len(X) - self.rank()
     
+    def coclosure(self, subset: set[T]) -> set[T]:
+        """Find the coclosure of a given subset of the ground set of the matroid.
+
+        Args:
+            subset (set[T]): A subset of the ground set.
+
+        Returns:
+            set[T]: The closure of a given subset.
+        """
+        return self.closure_function(subset)
+    
     def fundamental_cocircuit(self, e: T, B: set[T]) -> set[T]:
         """Find the fundamental cocircuit C(e, B) of e with respect to B.
         Let B be a basis of the matroid. If e ∈ B, denote C_{M*}(e, E - B) by C*(e,B).
