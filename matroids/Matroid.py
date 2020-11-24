@@ -645,6 +645,21 @@ class Matroid(object, metaclass=MatroidMetaClass):
 
         return (self.dual - {X}).dual
     
+    def union(self, matroid: Matroid) -> Matroid:
+        """Calculate the union of this and another matroids.
+
+        Args:
+            matroid (Matroid): A matroid.
+
+        Returns:
+            Matroid: The union of this and the other matroids.
+        """
+        r1 = self.rank_function
+        r2 = matroid.rank_function
+        # r(X) = min{ r1(Y) + r2(Y) + |X - Y| : Y ⊆ X }
+        r = lambda X: min(r1(Y) + r2(Y) + len(X - Y) for Y in powset(X))
+        return Matroid((self.ground_set | matroid.ground_set, r), axiom=MatroidAxiom.RANK_FUNCTION)
+    
     def direct_sum(self, matroid: Matroid) -> Matroid:
         """Calculate the direct sum or 1-sum of this and another matroids whose ground sets are disjoint.
 
@@ -660,6 +675,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         if not self.ground_set.isdisjoint(matroid.ground_set):
             raise ValueError("The ground sets of two matroids must be disjoint!!")
 
+        # E = E1 ⊔ E2 (disjoint union), Cs = Cs1 ⊔ Cs2 (disjoint union)
         return Matroid((self.ground_set | matroid.ground_set, self.circuits + matroid.circuits), axiom=MatroidAxiom.CIRCUITS)
 
     # ----------------------------------------------------------------------------------------------- #
