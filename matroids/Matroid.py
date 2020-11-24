@@ -670,7 +670,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         Returns:
             bool: True if a given element e is a coloop, False otherwise.
         """
-        return {e} in self.cocircuits
+        return e in self.coloops
     
     def are_coparallel(self, f: T, g: T) -> bool:
         """Check whether given elements f and g are coparallel or not.
@@ -691,7 +691,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         Returns:
             list[set[T]]: The set of all the coloops in the matroid.
         """
-        return { e for e in self.ground_set if self.is_coloop(e) }
+        return self.coclosure(set())
 
     @property    
     def coparallel_classes(self) -> list[set[T]]:
