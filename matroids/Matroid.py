@@ -1006,3 +1006,27 @@ class Matroid(object, metaclass=MatroidMetaClass):
             bool: True if a given subset is coindependent, False otherwise.
         """
         return len(X) == self.corank(X)
+    
+    def is_basis(self, X: set[T]) -> bool:
+        """Check whether a given subset X is a basis or not.
+        It can be checked faster than X in self.bases.
+
+        Args:
+            X (set[T]): A subset of the ground set of the matroid.
+
+        Returns:
+            bool: True if a given subset is a basis, False otherwise.
+        """
+        return (len(X) == self.rank()) and (len(X) == self.rank(X))
+    
+    def is_cobasis(self, X: set[T]) -> bool:
+        """Check whether a given subset X is a cobasis or not.
+        It can be checked faster than X in self.cobases.
+
+        Args:
+            X (set[T]): A subset of the ground set of the matroid.
+
+        Returns:
+            bool: True if a given subset is a cobasis, False otherwise.
+        """
+        return (len(X) == self.corank()) and (len(X) == self.corank(X))
