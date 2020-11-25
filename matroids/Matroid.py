@@ -981,6 +981,26 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return all(map(lambda C: self.rank(C) >= self.rank() ,self.circuits))
     
+    @property
+    def is_self_dual(self) -> bool:
+        """Check whether the matroid is self-dual or not.
+        The matroid M is self-dual if M ≅ M*.
+
+        Returns:
+            bool: True if the matroid is self-dual, False otherwise.
+        """
+        return self.is_isomorphic_to(self.dual)
+    
+    @property
+    def is_identically_self_dual(self) -> bool:
+        """Check whether the matroid is identically self-dual or not.
+        The matroid M is identically self-dual if M = M*.
+
+        Returns:
+            bool: True if the matroid is identically self-dual, False otherwise.
+        """
+        return self.is_equal_to(self.dual)
+    
     # ----------------------------------------------------------------------------------------------- #
     #                                          Utilities                                              #
     # ----------------------------------------------------------------------------------------------- #
