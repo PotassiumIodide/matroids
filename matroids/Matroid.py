@@ -1,8 +1,7 @@
 from __future__ import annotations
 
 from itertools import combinations, permutations
-from functools import cached_property, reduce
-from operator import or_
+from functools import cached_property
 from typing import Any, Callable, TypeVar, Union
 
 from matroids.MatroidMetaClass import MatroidMetaClass
@@ -950,6 +949,38 @@ class Matroid(object, metaclass=MatroidMetaClass):
     # ----------------------------------------------------------------------------------------------- #
     #                                          Utilities                                              #
     # ----------------------------------------------------------------------------------------------- #
+    def relabel(self, transformer: Union[dict[T, Any], Callable[[T], Any], set[Any]]) -> Matroid:
+        """Relabel the elements in the matroid.
+        [Warning] Since each parameter uses cache, this operation does not change the original matroid
+        but construct a new one.
+
+        Args:
+            transformer (Union[dict[T, Any],Callable[[T],Any], set[Any]]):
+                A dictionary or a function from old elements to new ones, ora new ground set.
+
+        Returns:
+            Matroid: A relabeled matroid.
+        """
+        if isinstance(transformer, dict):
+            if set(transformer.keys()) != self.ground_set:
+                raise KeyError("The set of keys doesn't match the ground set!!")
+            if len(transformer.values()) != self.size:
+                raise ValueError("There are some duplicate values!!")
+            E = {*map(lambda e: transformer[e], list(self.ground_set))}
+            Cs = [*map(lambda C: {*map(lambda e: transformer[e], list(C))}, self.circuits)]
+            return Matroid((E, Cs), axiom=MatroidAxiom.CIRCUITS)
+
+        if isinstance(transformer, Callable):
+            if len({*map(transformer, self.ground_set)}) != self.size:
+                raise ValueError("The given function is not injective!!")
+            E = {*map(transformer, list(self.ground_set))}
+            Cs = [*map(lambda C: {*map(transformer, C)}, self.circuits)]
+            return Matroid((E, Cs), axiom=MatroidAxiom.CIRCUITS)
+        
+        if isinstance(transformer, set):
+            if len(transformer) != self.size:
+                raise ValueError("The number of elements is in sufficient!!")
+            return self.relabel(dict(zip(self.ground_set, transformer)))
 
     def encode(self, basis_symbol: str='*', non_basis_symbol='0', show_with_order: bool=False) -> str:
         """To encode matroids, we use RevLex-Index, which is used in Homepage of 
