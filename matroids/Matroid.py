@@ -961,6 +961,8 @@ class Matroid(object, metaclass=MatroidMetaClass):
         Returns:
             Matroid: A relabeled matroid.
         """
+        if self.is_empty:
+            return self
         if isinstance(transformer, dict):
             if set(transformer.keys()) != self.ground_set:
                 raise KeyError("The set of keys doesn't match the ground set!!")
@@ -981,6 +983,20 @@ class Matroid(object, metaclass=MatroidMetaClass):
             if len(transformer) != self.size:
                 raise ValueError("The number of elements is in sufficient!!")
             return self.relabel(dict(zip(self.ground_set, transformer)))
+    
+    def auto_relabel(self) -> Matroid:
+        """Initialize the label of the matroid.
+
+        Returns:
+            Matroid: The relabeled matroid.
+        """
+        if self.is_empty:
+            return self
+        
+        if isinstance(list(self.ground_set)[0], str):
+            return self.relabel(set("abcdefghijklmnopqrstuvwxyz"[:self.size]))
+        
+        return self.relabel(set(range(1,self.size+1)))
 
     def encode(self, basis_symbol: str='*', non_basis_symbol='0', show_with_order: bool=False) -> str:
         """To encode matroids, we use RevLex-Index, which is used in Homepage of 
