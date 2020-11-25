@@ -1,4 +1,5 @@
 import pytest
+from math import inf
 
 from matroids.core.checker import (
     satisfies_independent_axiom,
@@ -11,6 +12,7 @@ from matroids.core.checker import (
     satisfies_open_sets_axiom,
     satisfies_hyperplanes_axiom,
     satisfies_spanning_sets_axiom,
+    satisfies_girth_function_axiom,
 )
 
 
@@ -226,3 +228,31 @@ def test_satisfies_hyperplanes_axiom(maybe_matroid, expected):
 ])
 def test_satisfies_spanning_sets_axiom(maybe_matroid, expected):
     assert satisfies_spanning_sets_axiom(maybe_matroid) == expected
+
+
+def g3(X):
+    if X < {1,2}:
+        return inf
+    elif X == {1,2}:
+        return 2
+    else:
+        return 1
+
+
+@pytest.mark.parametrize('maybe_matroid, expected', [
+    (( {1,2,3}, lambda X: 1 if X else inf )                                ,  True),
+    (( {1,2,3}, lambda X: inf if X <= {1} else 1 )                         ,  True),
+    (( {1,2,3}, g3 )                                                       ,  True),
+    (( {1,2,3}, lambda X: inf if len(X) <= 1 else 2 )                      ,  True),
+    (( {1,2,3}, lambda X: inf if X <= {1,2} else 1 )                       ,  True),
+    (( {1,2,3}, lambda X: 2 if X in [{2,3},{1,2,3}] else inf )             ,  True),
+    (( {1,2,3}, lambda X: 3 if X == {1,2,3} else inf )                     ,  True),
+    (( {1,2,3}, lambda X: inf )                                            ,  True),
+    (( {1,2,3}, lambda X: 0 if X else len(X) - 1 )                         , False),
+    (( {1,2,3}, lambda X: len(X) if X == {1,2,3} or not X else len(X) - 1 ), False),
+    (( {1,2,3}, lambda X: 2 * len(X))                                      , False),
+    (( {1,2,3}, lambda X: len(X) - f(X) )                                  , False),
+    (( set()  , lambda X: len(X) - 1 )                                     , False),
+])
+def test_satisfies_girth_function_axiom(maybe_matroid, expected):
+    assert satisfies_girth_function_axiom(maybe_matroid) == expected

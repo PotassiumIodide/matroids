@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from itertools import combinations, permutations
 from functools import cached_property
+from math import inf
 from typing import Any, Callable, TypeVar, Union
 
 from matroids.MatroidMetaClass import MatroidMetaClass
@@ -311,6 +312,23 @@ class Matroid(object, metaclass=MatroidMetaClass):
         """
         return self.closure_function(subset)
     
+    def girth(self, subset: Union[set[T], None]=None) -> Union[int, float]:
+        """Calculate the girth of a matroid restricted to a given subset.
+        The girth is the minimal size of circuits. If the matroid has no circuit, g(M) = ∞.
+
+        Args:
+            subset (Union[set[T], None], optional): A subset of the ground set of the matroid. Defaults to self.ground_set.
+
+        Returns:
+            Union[int, float]: The girth 
+        """
+        X = subset if subset is not None else self.ground_set
+        Cs_X = [C for C in self.circuits if C <= X]
+        if Cs_X:
+            return min(map(len, Cs_X))
+        else:
+            return inf
+        
     def is_closed(self, subset: set[T]) -> bool:
         """Check a given subset is closed or not.
         A closed set of M is a flat, that is, it satisfies cl(X) = X.

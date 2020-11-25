@@ -1,5 +1,6 @@
 from itertools import combinations
-from typing import Callable, TypeVar
+from math import inf
+from typing import Callable, TypeVar, Union
 
 from .set_operator import powset
 
@@ -447,4 +448,46 @@ def satisfies_spanning_sets_axiom( maybe_matroid: tuple[set[T], list[set[T]]]
             if not any(map(lambda s: S2 - {s} in Ss, larger - smaller)):
                 return False
     
+    return True
+
+def satisfies_girth_function_axiom( maybe_matroid: tuple[set[T], Callable[[set[T]], Union[int, float]]]
+                                  , clearly_decrementable: bool=False
+                                  , clearly_monotonic_decrease: bool=False
+                                  , clearly_symmetric_finite: bool=False) -> bool:
+    """Judge whether the given pair of a ground set and a collection of subsets is a matroid.
+    This is done due to the axiom of a girth function.
+
+    Args:
+        maybe_matroid (tuple[set[T], Callable[[set[T]], Union[int, float]]]): A matroid defined by a girth function.
+        clearly_decrementable (bool, optional): If this is True, the check of (G1) will be skipped. Defaults to False.
+        clearly_monotonic_decrease (bool, optional): If this is True, the check of (G2) will be skipped. Defaults to False.
+        clearly_symmetric_finite (bool, optional): If this is True, the check of (G3) will be skipped. Defaults to False.
+
+    Returns:
+        bool: True if the given family satisfies the axiom of a girth function, False otherwise.
+    """
+    E, g = maybe_matroid
+
+    # (G1) X ⊆ E and g(X) < ∞ => ∃Y ⊊ X s.t. g(X) = g(Y) = |Y|.
+    if not clearly_decrementable:
+        for X in powset(E):
+            if g(X) < inf:
+                if not any((g(X) == g(Y)) and (g(Y) == len(Y)) for Y in powset(X)):
+                    return False
+    
+    # (G2) X ⊆ Y ⊆ E => g(X) ≧ g(Y).
+    if not clearly_monotonic_decrease:
+        for Y in powset(E):
+            for X in powset(Y):
+                if g(X) < g(Y):
+                    return False
+    
+    # (G3) X, Y ⊆ E with X ≠ Y, g(X) = |X|, g(Y) = |Y|, and e ∈ X ∩ Y => g((X∪Y)\{e}) < ∞
+    if not clearly_symmetric_finite:
+        for X, Y in combinations(powset(E),2):
+            if (g(X) != len(X)) or (g(Y) != len(Y)) or X.isdisjoint(Y):
+                continue
+            for e in X & Y:
+                if g((X | Y) - {e}) == inf:
+                    return False
     return True
