@@ -816,6 +816,18 @@ class Matroid(object, metaclass=MatroidMetaClass):
             Matroid: The simplification of the matroid.
         """
         return self.restrict_to({*map(min, self.parallel_classes)})
+
+    @staticmethod
+    def si(matroid: Matroid) -> Matroid:
+        """Construct a simple matroid associated with a given matroid.
+
+        Args:
+            matroid (Matroid): A matroid.
+
+        Returns:
+            Matroid: The simplification of a given matroid.
+        """
+        return matroid.restrict_to({*map(min, matroid.parallel_classes)})
     
     def union(self, matroid: Matroid) -> Matroid:
         """Calculate the union of this and another matroids.
