@@ -320,7 +320,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
             subset (Union[set[T], None], optional): A subset of the ground set of the matroid. Defaults to self.ground_set.
 
         Returns:
-            Union[int, float]: The girth 
+            Union[int, float]: The girth of the matroid restricted to a given subset.
         """
         X = subset if subset is not None else self.ground_set
         Cs_X = [C for C in self.circuits if C <= X]
@@ -655,6 +655,23 @@ class Matroid(object, metaclass=MatroidMetaClass):
             set[T]: The closure of a given subset.
         """
         return self.closure_function(subset)
+    
+    def cogirth(self, subset: Union[set[T], None]=None) -> Union[int, float]:
+        """Calculate the cogirth of a matroid restricted to a given subset.
+        The cogirth is the minimal size of cocircuits. If the matroid has no cocircuit, g*(M) = ∞.
+
+        Args:
+            subset (Union[set[T], None], optional): A subset of the ground set of the matroid. Defaults to self.ground_set.
+
+        Returns:
+            Union[int, float]: The cogirth of the matroid restricted to a given subset. 
+        """
+        X = subset if subset is not None else self.ground_set
+        Cs_ast_X = [C_ast for C_ast in self.cocircuits if C_ast <= X]
+        if Cs_ast_X:
+            return min(map(len, Cs_ast_X))
+        else:
+            return inf
     
     def fundamental_cocircuit(self, e: T, B: set[T]) -> set[T]:
         """Find the fundamental cocircuit C(e, B) of e with respect to B.
