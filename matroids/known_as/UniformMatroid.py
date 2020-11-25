@@ -12,6 +12,10 @@ class UniformMatroid(Matroid):
         self.__k = k
         self.__n = n
     
+    def __repr__(self) -> str:
+        article = "an" if self.n in {8,11,18} or str(self.n)[0] == '8' else "a"
+        return f"The rank-{self.k} uniform matroid on {article} {self.n}-element set."
+    
     @property
     def k(self) -> int:
         return self.__k
@@ -94,18 +98,66 @@ class UniformMatroid(Matroid):
     def coclosure_function(self) -> Callable[[set[int]], set[int]]:
         # cl*(X) = X if |X| ≦ n - k, E if |X| > n - k
         return lambda X: X if len(X) <= self.n - self.k else self.E
+    
+    def description(self) -> str:
+        k, n = self.k, self.n
+        q = {2,3,4,5,7,8,9,11,13,16,17,19,23,25,27,29,31,32,37,41,43,47,49,53,59,61,64,67,71,73,79,81,83,89,97}
+        article = "an" if n in {8,11,18} or str(n)[0] == '8' else "a"
+        selfdual = "identically self-dual " if n == 2*k else ""
+        description = [f"The rank-{k} {selfdual}uniform matroid on {article} {n}-element set."]
+        if (k,n) == (2,4):
+            description.append("・The 4-point line; isomorphic to the rank-2 whirl.")
+            description.append("・The unique excluded minor for the class of binary matroids.")
+            description.append("・F-representable if and only if |F| ≧ 3; near-regular.")
+            description.append("・The unique 3-connected non-binary matroid M having an element e such that both M\e and M/e are binary.")
+            description.append("・The unique matroid M with at least four elements such that { M } is 2-rounded.")
+        if (k,n) in {(2,5), (3,5)}:
+            if (k,n) == (2,5):
+                description.append("・The 5-point line.")
+                description.append("・U_{2,5} is obtained from U_{3,5} by a Y-Δ exchange.")
+            else:
+                description.append("・The five points freely placed in the plane.")
+                description.append("・U_{3,5} is obtained from U_{2,5} by a Δ-Y exchange.")
+            description.append("・F-representable if and only if |F| ≧ 4.")
+            description.append("・One of the excluded minors for the class of ternary matroids.")
+            description.append("・Not graphic, not cographic, not regular, and not near-regular.")
+        if (k,n) == (3,6):
+            description.append("・Six points freely placed in the plane; the tipless free 3-spike.")
+            description.append("・F-representable if and only if |F|≧ 4.")
+            description.append("・Not graphic, not cographic, not regular, not near-regular.")
+            description.append("・The unique relaxation of P6.")
+        else:
+            if ((n-2) in q) and (k in {2, n-2}):
+                description.append(f"・Excluded minor for GF({n-2})-representability.")
+            description.append("・Transversal, a strict gammoid, a gammoid.")
+            description.append("・Automorphism group is the symmetric group.")
+            description.append("・Every minor is also uniform.")
+            if not ((n > 0 and 0 in {k, n-k}) or (n > 3 and 1 in {k, n-k})):
+                description.append("・3-connected.")
+            description.append("・Algebraic over all fields.")
+        return "\n".join(description)
 
 
 class FreeMatroid(UniformMatroid):
     def __init__(self, n: int):
         super().__init__(n, n)
+    
+    def __repr__(self) -> str:
+        article = "an" if self.n in {8,11,18} or str(self.n)[0] == '8' else "a"
+        return f"The rank-{self.n} free matroid on {article} {self.n}-element set."
 
 
 class TrivialMatroid(UniformMatroid):
     def __init__(self, n: int):
         super().__init__(0, n)
-
+    
+    def __repr__(self) -> str:
+        article = "an" if self.n in {8,11,18} or str(self.n)[0] == '8' else "a"
+        return f"The trivial matroid on {article} {self.n}-element set."
 
 class EmptyMatroid(UniformMatroid):
     def __init__(self):
         super().__init__(0, 0)
+    
+    def __repr__(self) -> str:
+        return "The empty matroid."
