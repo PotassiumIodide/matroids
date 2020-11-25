@@ -808,6 +808,14 @@ class Matroid(object, metaclass=MatroidMetaClass):
             return (self.dual - X).dual
 
         return (self.dual - {X}).dual
+
+    def simplification(self) -> Matroid:
+        """Construct a simple matroid associated with the matroid.
+
+        Returns:
+            Matroid: The simplification of the matroid.
+        """
+        return self.restrict_to({*map(min, self.parallel_classes)})
     
     def union(self, matroid: Matroid) -> Matroid:
         """Calculate the union of this and another matroids.
