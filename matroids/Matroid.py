@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from itertools import combinations, permutations
-from functools import cached_property
+from functools import cached_property, reduce
+from operator import or_
 from typing import Any, Callable, TypeVar, Union
 
 from matroids.MatroidMetaClass import MatroidMetaClass
@@ -408,8 +409,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         E = self.ground_set
         parallels = [{g for g in E if self.are_parallel(f,g) and (not self.is_loop(g))} for f in E if not self.is_loop(f)]
         parallel_sets = [*map(set, list({*map(tuple, parallels)}))] # Remove redundants
-        max_size = max(map(len, parallel_sets))
-        return [parallel_class for parallel_class in parallel_sets if len(parallel_class) == max_size]
+        return [pc for pc in parallel_sets if all(map(lambda ps: not pc < ps, parallel_sets))]
     
     @property
     def parallel_classes_are_trivial(self) -> bool:
