@@ -1,6 +1,6 @@
 from matroids.Matroid import Matroid
 
-class NonPuppusMatroid(Matroid):
+class NonPappusMatroid(Matroid):
     def __init__(self):
         pass
 
