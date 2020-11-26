@@ -4,6 +4,9 @@ class P7(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "P7: Ternary near-regular dyadic matroid of rank 3 on 7 elements, type 1+"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7}

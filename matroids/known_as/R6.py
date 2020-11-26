@@ -4,6 +4,9 @@ class R6(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "R6: Identically self-dual ternary connected matroid of rank 3 on 6 elements, type 2+"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6}

@@ -4,6 +4,9 @@ class P9(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "P9: Binary matroid of rank 4 on 9 elements, type (1, 1) with no 4-wheel minor"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7,8,9}

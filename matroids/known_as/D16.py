@@ -4,6 +4,9 @@ class D16(CircuitsMatroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "D16: Binary matroid of rank 8 on 16 elements, type (0, 0)"
+
     @property
     def ground_set(self) -> list[set[int]]:
         return {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}

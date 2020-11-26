@@ -4,6 +4,9 @@ class NotP8(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "Not P8: Ternary matroid of rank 4 on 8 elements, type 0-"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7,8}

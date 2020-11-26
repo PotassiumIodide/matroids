@@ -4,6 +4,9 @@ class Q6(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "Q6: Quaternary self-dual matroid of rank 3 on 6 elements"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6}

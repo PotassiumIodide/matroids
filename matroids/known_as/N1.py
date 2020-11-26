@@ -4,6 +4,9 @@ class N1(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "N1: Ternary matroid of rank 5 on 10 elements, type 0+"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7,8,9,10}

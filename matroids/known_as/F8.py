@@ -4,6 +4,9 @@ class F8(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "F8: Smallest non-representable matroid of rank 4 on 8 elements"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7,8}

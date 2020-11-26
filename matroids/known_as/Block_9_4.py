@@ -4,6 +4,9 @@ class Block_9_4(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "Block(9, 4): Paving matroid of rank 4 on 9 elements whose non-spanning circuits form the blocks of a 2-(9,4,3) design."
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7,8,9}

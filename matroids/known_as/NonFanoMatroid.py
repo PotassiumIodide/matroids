@@ -4,6 +4,9 @@ class NonFanoMatroid(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "Non-Fano Matroid F7-: Ternary matroid of rank 3 on 7 elements, type 0-"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7}

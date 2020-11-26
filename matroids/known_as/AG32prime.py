@@ -4,6 +4,9 @@ class AG32prime(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "AG(3, 2)': Matroid of rank 4 on 8 elements"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7,8}

@@ -4,6 +4,9 @@ class R10(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "R10: Self-dual regular matroid of rank 5 on 10 elements with 162 bases"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7,8,9,10}

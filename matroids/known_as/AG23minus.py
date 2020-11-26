@@ -4,6 +4,9 @@ class AG23minus(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "AG(2,3)\e: Matroid of rank 3 on 8 elements."
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7,8}

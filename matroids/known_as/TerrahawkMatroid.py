@@ -1,8 +1,11 @@
 from matroids.Matroid import Matroid
 
-class Terrahawk(Matroid):
+class TerrahawkMatroid(Matroid):
     def __init__(self):
         pass
+
+    def __repr__(self) -> str:
+        return "Terrahawk Matroid: Binary matroid of rank 8 on 16 elements, type (0, 4)"
 
     @property
     def ground_set(self) -> set[int]:

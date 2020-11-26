@@ -4,6 +4,9 @@ class T12(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "T12: Binary self-dual matroid of rank 6 on 12 elements, type (2, None)"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7,8,9,10,11,12}

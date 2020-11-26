@@ -4,6 +4,9 @@ class P8(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "P8: Ternary self-dual dyadic matroid of rank 4 on 8 elements, type 2+"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7,8}

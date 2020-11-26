@@ -4,6 +4,9 @@ class NonPappusMatroid(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "Non-Pappus Matroid: Non-representable matroid of rank 3 on 9 elements"
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7,8,9}

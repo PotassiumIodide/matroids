@@ -4,6 +4,9 @@ class L8(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "L8: Identically self-dual matroid of rank 4 on 8 elements"
+
     @property
     def ground_set(self) -> list[set[int]]:
         return {1,2,3,4,5,6,7,8}

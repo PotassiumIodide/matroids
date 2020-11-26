@@ -5,6 +5,9 @@ class ExtendedBinaryGolayCode(Matroid):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return "Extended Binary Golay Code: Binary matroid of rank 12 on 24 elements, type (12, 0)" 
+
     @property
     def ground_set(self) -> set[int]:
         return {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24}
