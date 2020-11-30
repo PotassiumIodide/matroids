@@ -7,7 +7,7 @@ from typing import Any, Callable, TypeVar, Union
 
 from matroids.MatroidMetaClass import MatroidMetaClass
 from matroids.core.exception import MatroidAxiomError
-from matroids.core.set_operator import powset
+from matroids.core.set_operator import powset, revlex_sort_key
 from matroids.core.types import MatroidAxiom
 
 from matroids.core.checker import (
@@ -1070,12 +1070,12 @@ class Matroid(object, metaclass=MatroidMetaClass):
         Returns:
             str: Encoded matroid with respect to bases.
         """
-        encoded = "".join(basis_symbol if set(X) in self.bases else non_basis_symbol for X in combinations(self.ground_set, self.rank()))
+        encoded = "".join(basis_symbol if set(X) in self.bases else non_basis_symbol for X in sorted(combinations(self.ground_set, self.rank()), key=revlex_sort_key))
         if not show_with_order:
             return encoded
         
         return "\n".join(
-            "".join(str(X[i]) for X in combinations(self.ground_set, self.rank()))
+            "".join(str(X[i]) for X in sorted(combinations(self.ground_set, self.rank()), key=revlex_sort_key))
                       for i in range(self.rank())
             ) + f"\n{encoded}"
         
@@ -1102,7 +1102,7 @@ class Matroid(object, metaclass=MatroidMetaClass):
         if any(symbol not in (basis_symbol, non_basis_symbol) for symbol in encoded_matroid):
             raise ValueError(f"A given matroid isn't encoded properly.")
         E = {*range(1,size+1)}
-        Bs = [ set(X) for X, symbol in zip(combinations(E, rank), encoded_matroid) if symbol == basis_symbol ]
+        Bs = [ set(X) for X, symbol in zip(sorted(combinations(E, rank), key=revlex_sort_key), encoded_matroid) if symbol == basis_symbol ]
         return Matroid((E, Bs))
     
     def is_independent(self, X: set[T]) -> bool:

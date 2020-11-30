@@ -1,5 +1,7 @@
+from functools import reduce
 from itertools import chain, combinations
-from typing import TypeVar
+from operator import or_
+from typing import Any, Iterable, TypeVar
 
 T = TypeVar('T')
 
@@ -78,3 +80,14 @@ def _search_node(setE={}, setU=[{}], setS={}, num=0, d=0, length=0):
             ans.append(_search_node(setE, setU, setS | setU[i], num+1, i+1, length))
     return min(ans)
 
+
+def revlex_sort_key(s: set[T]) -> tuple[T]:
+    """This is the key for sorted function to sort a list of set in reverse lexicographic order.
+
+    Args:
+        s (set[T]): A set.
+
+    Returns:
+        tuple[list[T]]: Sorted list in reverse lexicographic order.
+    """
+    return tuple(reversed(s))
